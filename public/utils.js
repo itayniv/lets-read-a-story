@@ -486,14 +486,17 @@ function createSyntStarthWithEffects()  {
 
 function addSentenceAfterbutton(){
   //add Sentence
-  addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
+
+  setTimeout(() => {
+    addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
+
+  }, 500);
 
   //delete this button
   setTimeout(() => {
     let elm  = document.getElementById('one-more-sentence');
     fadeoutandDelete(elm);
-  }, 500);
-
+  }, 100);
 
 
 }

@@ -756,58 +756,72 @@
   }
 
   .progress-bar2 {
-    height: 4px;
-    border-radius: 1px;
+    height: 2px;
+    border-radius: 2px;
     /* transition-property: width, background-color; */
   }
 
   .progress-moved {
     width: 50%;
-    background-color: #a5a5a5;
+    background-color: #d8d7d7;
   }
 
 
-.one-more-sentence{
-  width: 60%;
-  text-align: center;
-  background: "white";
-  z-index: 100;
-  line-height: 60px;
-  font-size: 16px;
-  letter-spacing: .03em;
-  color: #a7a5a5;
-  font-family: 'Sumana', serif;
-  border: 2px solid #a7a5a5;
-}
+  .progress-moved:hover {
+    width: 50%;
+    background-color: #a7a5a5;
+  }
 
-.one-more-sentence:hover{
-  width: 60%;
-  text-align: center;
-  background: "white";
-  z-index: 100;
-  line-height: 60px;
-  font-size: 16px;
-  letter-spacing: .03em;
-  color: #a7a5a5;
-  font-family: 'Sumana', serif;
-  border: 2px solid #a7a5a5;
-  text-decoration: underline;
-}
 
-.one-more-sentence:focus{
-  width: 60%;
-  text-align: center;
-  background: "white";
-  z-index: 100;
-  line-height: 60px;
-  font-size: 16px;
-  letter-spacing: .03em;
-  color: #a7a5a5;
-  font-family: 'Sumana', serif;
-  border: 2px solid #a7a5a5;
-  text-decoration: underline;
-  outline: none;
-}
+  .progress-moved:focus {
+    width: 50%;
+    background-color: #a7a5a5;
+  }
+
+
+
+
+  .one-more-sentence{
+    /* width: 100%; */
+    text-align: center;
+    background: "white";
+    z-index: 100;
+    line-height: 60px;
+    font-size: 14px;
+    letter-spacing: .03em;
+    color: #cac5c5;
+    font-family: 'Sumana', serif;
+    border: none;
+  }
+
+  .one-more-sentence:hover{
+    /* width: 100%; */
+    text-align: center;
+    background: "white";
+    z-index: 100;
+    line-height: 60px;
+    font-size: 14px;
+    letter-spacing: .03em;
+    color: #a7a5a5;
+    font-family: 'Sumana', serif;
+    border: none;
+    text-decoration: underline;
+  }
+
+  .one-more-sentence:focus{
+    /* width: 100%; */
+    text-align: center;
+    background: "white";
+    z-index: 100;
+    line-height: 60px;
+    font-size: 14px;
+    letter-spacing: .03em;
+    color: #a7a5a5;
+    font-family: 'Sumana', serif;
+    border: none;
+    text-decoration: underline;
+    outline: none;
+  }
 
 
 

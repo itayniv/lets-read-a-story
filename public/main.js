@@ -362,9 +362,11 @@ function addSentence(result, source){
 
     //run loop again!
     setTimeout(() => {
-      addOneMoreSentence();
-
       if((sentanceNumber <= maxSentences )){
+        addOneMoreSentence();
+      } else{
+        addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
+        console.log("finished with the sentences");
       }
     }, 4500);
 
@@ -415,7 +417,7 @@ function addOneMoreButton(){
   let btn = document.createElement("BUTTON");
   btn.classList.add("one-more");
   btn.onclick = function() { resetStory(); };
-  let node = document.createTextNode("Read one more.");
+  let node = document.createTextNode("Read one more");
   btn.appendChild(node);
   document.getElementById("story").appendChild(div).appendChild(btn);
 
@@ -468,8 +470,12 @@ function addOneMoreSentence(){
     addedSentence = true;
   };
 
-  let node = document.createTextNode("Next Line ›");
-  btn.appendChild(node);
+
+  var para = document.createElement("span");
+  let nodepara = document.createTextNode("What happened next?");
+  para.appendChild(nodepara);
+
+  btn.appendChild(para);
   document.getElementById("story").appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
 
   let fadeinElement1 = document.getElementById("one-more-sentence");
@@ -492,6 +498,8 @@ function addOneMoreSentence(){
     } else {
       width++;
       prgsBar.style.width = width/10 + '%';
+      // prgsBar.style.width = 100 + '%';
+
     }
   }
 

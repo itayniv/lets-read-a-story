@@ -14,65 +14,168 @@ function enrichSketchClass(theSentance){
   //create new array called similarityArray
   let newSimilaritiesArray = [];
 
-  //fo all the words in that new sentence
+  //for all the words in that new sentence
   for (var i = 0; i < sentenceToArray.length; i++) {
 
     //if a word in the class apears inside the sentence
     if (squirrelArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
-      newSimilaritiesArray.push('squirrel');
-      // console.log("found a squirrel");
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+      let squirrelObject = {
+        class: 'squirrel',
+        word: thisWord
+      }
+
+      newSimilaritiesArray.push(squirrelObject);
+      // console.log("found a squirrel", squirrelObject);
+
     } else if(turtleArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a turtle");
-      newSimilaritiesArray.push('sea_turtle');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+      let sea_turtleObject = {
+        class: '',
+        word: thisWord
+      }
+
+      // console.log("found a turtle", sea_turtleObject);
+      newSimilaritiesArray.push(sea_turtleObject);
     }else if(basketArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a basket");
-      newSimilaritiesArray.push('basket');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let basketObject = {
+        class: '',
+        word: thisWord
+      }
+
+      // console.log("found a basket", basketObject);
+      newSimilaritiesArray.push(basketObject);
 
     }else if(spiderArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a spider");
-      newSimilaritiesArray.push('spider');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let spiderObject = {
+        class: '',
+        word: thisWord
+      }
+
+      // console.log("found a spider", spiderObject);
+      newSimilaritiesArray.push(spiderObject);
 
     }else if(sheepArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a sheep");
-      newSimilaritiesArray.push('sheep');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let sheepObject = {
+        class: 'sheep',
+        word: thisWord
+      }
+
+      // console.log("found a sheep", sheepObject);
+      newSimilaritiesArray.push(sheepObject);
 
     }else if(dogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a dog");
-      newSimilaritiesArray.push('dog');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let dogObject = {
+        class: 'dog',
+        word: thisWord
+      }
+
+      // console.log("found a dog", dogObject);
+      newSimilaritiesArray.push(dogObject);
 
     }else if(mosquitoArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a mosquito");
-      newSimilaritiesArray.push('mosquito');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let mosquitoObject = {
+        class: 'mosquito',
+        word: thisWord
+      }
+
+      // console.log("found a mosquito", mosquitoObject);
+      newSimilaritiesArray.push(mosquitoObject);
 
     }else if(swanArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a swan");
-      newSimilaritiesArray.push('swan');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let swanObject = {
+        class: 'swan',
+        word: thisWord
+      }
+
+      // console.log("found a swan", swanObject);
+      newSimilaritiesArray.push(swanObject);
 
     }else if(birdsArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a bird");
-      newSimilaritiesArray.push('bird');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let birdObject = {
+        class: 'bird',
+        word: thisWord
+      }
+
+      // console.log("found a bird", birdObject);
+      newSimilaritiesArray.push(birdObject);
     }
     else if(lionArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a lion");
-      newSimilaritiesArray.push('lion');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let lionObject = {
+        class: 'lion',
+        word: thisWord
+      }
+
+      // console.log("found a lion", lionObject);
+      newSimilaritiesArray.push(lionObject);
     }
     else if(owlArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a owl");
-      newSimilaritiesArray.push('owl');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let owlObject = {
+        class: 'owl',
+        word: thisWord
+      }
+
+      // console.log("found a owl", owlObject);
+      newSimilaritiesArray.push(owlObject);
     }
     else if(catArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a cat");
-      newSimilaritiesArray.push('cat');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let catObject = {
+        class: 'cat',
+        word: thisWord
+      }
+      // console.log("found a cat", catObject);
+      newSimilaritiesArray.push(catObject);
     }
     else if(frogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
-      // console.log("found a frog");
-      newSimilaritiesArray.push('frog');
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let frogObject = {
+        class: 'frog',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(frogObject);
     }
     else {
-      // console.log("didnt find anything");
       // didnt find any words do nothing
+      // console.log("didnt find anything");
     }
   }
+  // console.log('newSimilaritiesArray', newSimilaritiesArray)
   return newSimilaritiesArray;
 }
 
@@ -290,10 +393,6 @@ function noteLength(locationX){
 }
 
 
-function convertRange( value, r1, r2 ) {
-  return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
-}
-
 
 
 function fadeout(element) {
@@ -497,6 +596,9 @@ function addSentenceAfterbutton(){
     let elm  = document.getElementById('one-more-sentence');
     fadeoutandDelete(elm);
   }, 100);
+}
 
 
+function convertRange( value, r1, r2 ) {
+  return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
 }

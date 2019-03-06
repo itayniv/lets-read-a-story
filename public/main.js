@@ -100,9 +100,7 @@ let catArr = ["tiger", "tiger's", "tigers", "cats"];
 let owlArr = ["owl's"];
 let frogArr = ["frogs", "frog's"]
 
-function convertRange( value, r1, r2 ) {
-  return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
-}
+
 //
 // ///// speech part
 //
@@ -316,13 +314,28 @@ function addSentence(result, source){
       let thisAnimalColor = getRandomColor();
 
       //run check to see if there is an illustration that fits here
-      let thisClass = ifInClass(result);
+      let thisClassObject = ifInClass(result);
+      let thisClass;
 
+      if(thisClassObject != undefined){
+        thisClass = thisClassObject.class;
 
-      var str = result;
-      var res = str.split(" ");
+      }
+      //TOdo
 
-      console.log(res, String(thisClass) );
+      let str = result.toLowerCase();
+      let res = str.split(" ");
+
+      for (var i = 0; i < res.length; i++) {
+        // console.log(res[i]);
+
+        //this is the class!
+        // console.log(thisClass);
+      }
+
+      // console.log(str, thisClass,firstPos, lastPos );
+
+      // console.log(res, String(thisClass) );
       //if the source is not "net" than do the following
       let para = document.createElement("p");
 
@@ -366,7 +379,7 @@ function addSentence(result, source){
         addOneMoreSentence();
       } else{
         addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
-        console.log("finished with the sentences");
+        // console.log("finished with the sentences");
       }
     }, 4500);
 
@@ -919,6 +932,7 @@ function ifInClass(theSentance){
   //if you can still add sentences
   if (sentanceNumber <= maxSentences ){
 
+
     //get theSentance to lower case
     let sentance = theSentance.toLowerCase();
 
@@ -931,36 +945,69 @@ function ifInClass(theSentance){
     //split sentence to array
     let sentenceToArray = newsentance.split(" ");
 
+    let tempArray = [];
+    for (var i = 0; i < sentenceToArray.length; i++) {
+      tempArray.push({
+        // add words as classes now, later to be tested as classes
+        class: sentenceToArray[i],
+        word:sentenceToArray[i]
+      })
+    }
+
+    //convert sentenceToArray to an array of objects
+    sentenceToArray = tempArray;
+    // console.log('sentenceToArray before', sentenceToArray);
+
     //clear the array called similarityArray
     similaritiesArray = [];
 
     let addClasses = enrichSketchClass(newsentance);
 
+    // console.log('addClasses', addClasses);
 
     for (var i = 0; i < addClasses.length; i++) {
-      console.log(`add ${addClasses[i]} to array`);
-      sentenceToArray.push(addClasses[i]);
+      // console.log(`add ${addClasses[i].class} to array`);
+      sentenceToArray.push({
+        class: addClasses[i].class,
+        word: addClasses[i].word
+      });
     }
-    // console.log(sentenceToArray);
+
+    // console.log('sentenceToArray after',sentenceToArray);
+
     //fo all the words in that new sentence
     for (var i = 0; i < sentenceToArray.length; i++) {
 
       //if a word in the class apears inside the sentence
-      if (drawingClasses.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+      if (drawingClasses.indexOf(sentenceToArray[i].class.toLowerCase()) > -1) {
 
         // great! found words, now push those word into similaritiesArray
-        similaritiesArray.push(sentenceToArray[i]);
+        similaritiesArray.push({
+          word:sentenceToArray[i].word,
+          class:sentenceToArray[i].class
+        });
       } else {
         // didnt find any words do nothing
 
       }
     }
 
+
+    // console.log(similaritiesArray)
+
     //if found words that match
     if (similaritiesArray.length > 0){
       //TODO set a current sketch class
-      currIllustration = similaritiesArray[0]
-      return currIllustration;
+      currIllustration = similaritiesArray[0].class;
+
+      currIllustrationObject = {
+        class: similaritiesArray[0].class,
+        word: similaritiesArray[0].word
+      }
+
+      console.log('curr Illustration object',currIllustrationObject);
+
+      return currIllustrationObject;
       //add that sketch class to the document
     }
   }

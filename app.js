@@ -80,7 +80,7 @@ sockets.on('connection', function(socket){
   // send current state to this client that connected only
   // console.log(`a user connected`,socket.id);
   //
-  
+
 
 
   socket.on('sendSeedSentance', function(data){
@@ -135,7 +135,7 @@ function findVector(sentance, n = 20){
     // console.log(embedings[closeset[i].wordKey].message);
     sentencesResults.push(embedings[closeset[i].wordKey].message);
   }
-  console.log(sentencesResults);
+  // console.log(sentencesResults);
   sockets.emit('sentencesResults', sentencesResults);
 
 

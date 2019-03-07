@@ -509,6 +509,29 @@
   }
 
 
+.pause-and-play{
+  height: 25px;
+  width: 25px;
+  content: "";
+  margin: auto;
+  opacity: .15;
+}
+
+.pause-and-play:hover{
+  /* background-image: url("./images/pause.svg"); */
+  height: 25px;
+  width: 25px;
+  content: "";
+  margin: auto;
+  opacity: .25;
+}
+
+
+
+
+.pause-play-container{
+  padding-top: 30px;
+}
 
 
   .container-fluid{
@@ -762,19 +785,19 @@
   }
 
   .progress-moved {
-    width: 50%;
+    width: 0%;
     background-color: #d8d7d7;
   }
 
 
   .progress-moved:hover {
-    width: 50%;
+    width: 0%;
     background-color: #a7a5a5;
   }
 
 
   .progress-moved:focus {
-    width: 50%;
+    width: 0%;
     background-color: #a7a5a5;
   }
 

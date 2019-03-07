@@ -87,7 +87,7 @@ let drawingClasses = ["alarm_clock",	"ambulance",	"angel", "ant", "antyoga","bac
 "windmill",	"yoga",	"yogabicycle",	"everything"];
 
 let birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens"];
-let swanArr = ["crane","cranes", "goose","ducks", "peacock", "peacocks" ];
+let swanArr = ["crane", "cranes", "goose","ducks", "peacock", "peacocks" , "heron", "herons"];
 let mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
 let dogArr = ["goats", "wolf", "fox","dogs", "boar", "weasels", "weasel" ];
 let sheepArr = ["lamb"];
@@ -258,7 +258,7 @@ function runjsonCheck(json, checkword){
     // json.stories[key].story.length
     //run over 4 sentences
     for (var i = 0; i < Math.ceil(json.stories[key].story.length/3); i++) {
-      // console.log(json.stories[key].story.length);
+
       //convert line to lower case
       let lineInStory = json.stories[key].story[i];
       lineInStory = lineInStory.toLowerCase();
@@ -273,16 +273,11 @@ function runjsonCheck(json, checkword){
 
   // pick a randon sentance from that array.
   let randomSentance = Math.floor(Math.random() * Math.floor(sentanceContainer.length));
-
   socket.emit('sendSeedSentance', {'animal': checkword, 'randomSentance': sentanceContainer[randomSentance]});
 
   // add the sentance to the page
   addSentence(sentanceContainer[randomSentance], 'notnet');
 
-  // add the sketch to the page
-  setTimeout(() => {
-    loadASketch(checkword);
-  }, 2000);
 }
 
 
@@ -311,39 +306,76 @@ function addSentence(result, source){
     } else {
 
       //random color
-      let thisAnimalColor = getRandomColor();
+      // let thisAnimalColor
+      sketchColor = getRandomColor();
 
       //run check to see if there is an illustration that fits here
       let thisClassObject = ifInClass(result);
       let thisClass;
 
+      //if the object is not undefined then set thisClass to the object's class
       if(thisClassObject != undefined){
         thisClass = thisClassObject.class;
-
       }
-      //TOdo
 
-      let str = result.toLowerCase();
-      let res = str.split(" ");
+      // console.log('this Class', thisClass);
+      // console.log('this Class Object', thisClassObject);
+
+
+      //Color the word --> TODO
+
+      // let str = result.toLowerCase();
+      let resultToLower = result.toLowerCase();
+      let res = result.split(" ");
+      let resLower = resultToLower.split(' ');
+      // console.log(thisClassObject.word)
+      // console.log(res);
+
+
+
+      let paragraph = document.createElement('p');
+      paragraph.classList.add("voice");
+
+      console.log(thisClassObject);
+
 
       for (var i = 0; i < res.length; i++) {
-        // console.log(res[i]);
+        let wordSpan = document.createElement('span')
+        wordSpan.innerHTML = res[i] + ' ';
+        wordSpan.id = resLower[i];
 
-        //this is the class!
-        // console.log(thisClass);
+
+        if(thisClassObject != undefined){
+          if((wordSpan.id == thisClass) || (wordSpan.id == thisClassObject.word)){
+            wordSpan.style.color = sketchColor;
+            console.log('hit', wordSpan.id, thisClassObject)
+          }
+        }
+
+
+        //add all spans to paragraph
+        paragraph.appendChild(wordSpan);
+
       }
 
-      // console.log(str, thisClass,firstPos, lastPos );
 
-      // console.log(res, String(thisClass) );
-      //if the source is not "net" than do the following
-      let para = document.createElement("p");
+      document.getElementById("story").appendChild(div).appendChild(paragraph);
 
-      //add class to paragraph
-      para.classList.add("voice");
-      let node = document.createTextNode(result);
-      para.appendChild(node);
-      document.getElementById("story").appendChild(div).appendChild(para);
+      console.log(paragraph);
+
+
+      // //create a P element
+      // let para = document.createElement("p");
+      //
+      // //add class to paragraph
+      // para.classList.add("voice");
+      //
+      // //create a text node
+      // let node = document.createTextNode(result);
+      // para.appendChild(node);
+
+
+      // document.getElementById("story").appendChild(div).appendChild(para);
 
       //change animal color in the text
 
@@ -376,8 +408,10 @@ function addSentence(result, source){
     //run loop again!
     setTimeout(() => {
       if((sentanceNumber <= maxSentences )){
+        //add the add one more sentence button
         addOneMoreSentence();
       } else{
+        //add another sentence --> go to end
         addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
         // console.log("finished with the sentences");
       }
@@ -385,32 +419,8 @@ function addSentence(result, source){
 
   } else {
 
-    //if sentanceNumber is larger than the maxSentences
-
-    var div = document.createElement("div");
-    div.id = `paragraph${sentanceNumber+1}`;
-    div.style.background = "white";
-    div.style.color = "white";
-    div.style.opacity = 0;
-    div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
-    div.style.paddingBottom = "150px";
-
-    let para = document.createElement("p");
-    para.classList.add("voice");
-    let node = document.createTextNode("The End.");
-    para.appendChild(node);
-    document.getElementById("story").appendChild(div).appendChild(para);
-
-    let fadeinElement = document.getElementById(`paragraph${sentanceNumber+1}`);
-
-    //fade the sentence into the page.
-    setTimeout(() => {
-      fadein(fadeinElement);
-    }, 1200);
-
-    setTimeout(() => {
-      addOneMoreButton();
-    }, 4000);
+    //if sentanceNumber is larger than the maxSentences then end story
+    endStory();
   }
 }
 
@@ -418,7 +428,7 @@ function addSentence(result, source){
 function addOneMoreButton(){
   //if sentanceNumber is larger than the maxSentences
 
-  var div = document.createElement("div");
+  let div = document.createElement("div");
   div.id = "read-one-more";
   div.style.background = "white";
   div.style.color = "white";
@@ -463,14 +473,45 @@ function addOneMoreSentence(){
   div.style.width = "24%";
   div.style.paddingTop = "30px";
 
+
   // //create loder element
   let progressDiv = document.createElement("div");
   progressDiv.id = "one-more-sentence-loader";
   progressDiv.classList.add("progress-moved");
 
   let progress = document.createElement("div");
-  progressDiv.id = "progress";
-  progressDiv.classList.add("progress-bar2");
+  progress.id = "progress";
+  progress.classList.add("progress-bar2");
+
+  //create the pause/play container
+  let pauseAndPlay = document.createElement("div");
+  pauseAndPlay.classList.add('pause-play-container')
+  pauseAndPlay.id = "pauseAndPlay";
+
+  //pauseBool
+  let pauseBool = true;
+
+  //create the putton
+  let pauseImage = document.createElement("div");
+  pauseImage.classList.add('pause-and-play');
+  pauseImage.id = 'pause-button';
+  pauseImage.style.backgroundImage = "url('./images/pause.svg')";
+
+  // pauseImage.background-image: url("./images/pause.svg");
+
+  pauseImage.onclick = function() {
+    if(pauseBool){
+      pauseBool = false;
+      document.getElementById("pause-button").style.backgroundImage = "url('./images/play.svg')";
+    } else{
+      pauseBool = true;
+      document.getElementById("pause-button").style.backgroundImage = "url('./images/pause.svg')";
+
+    }
+  };
+
+  console.log(pauseImage);
+
 
   //add a boolean to indicate if its pressed
   let addedSentence = false;
@@ -484,12 +525,14 @@ function addOneMoreSentence(){
   };
 
 
-  var para = document.createElement("span");
+  let para = document.createElement("span");
   let nodepara = document.createTextNode("What happened next?");
   para.appendChild(nodepara);
 
   btn.appendChild(para);
   document.getElementById("story").appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
+  document.getElementById("one-more-sentence").appendChild(pauseAndPlay).appendChild(pauseImage);
+
 
   let fadeinElement1 = document.getElementById("one-more-sentence");
 
@@ -501,7 +544,7 @@ function addOneMoreSentence(){
   let id = setInterval(frame, 10);
 
   //call the prgsBar to animate it later
-  let prgsBar  = document.getElementById('progress');
+  let prgsBar  = document.getElementById('one-more-sentence-loader');
 
   function frame() {
     //if timer hasnt reached the end and button was not pressed
@@ -509,8 +552,11 @@ function addOneMoreSentence(){
       clearInterval(id);
       addSentenceAfterbutton();
     } else {
-      width++;
-      prgsBar.style.width = width/10 + '%';
+      if (pauseBool){
+        width++;
+        prgsBar.style.width = width/10 + '%';
+      }
+
       // prgsBar.style.width = 100 + '%';
 
     }
@@ -525,9 +571,7 @@ function resetStory(){
   fadeOutElement.style.display = "none";
   fadeOutElement.style.opacity = "0.0";
 
-  console.log(fadeOutElement);
   fadeOutElement.parentNode.removeChild(fadeOutElement);
-  console.log(fadeOutElement);
 
 
   setTimeout(() => {
@@ -574,8 +618,10 @@ function buttonPressed(clicked_id){
 
   //first animal illustration
   currIllustration = animalOneLower;
+  // let thisclass = ifInClass()
+  let animalOneSearch = animalOneLower + ' ';
 
-  console.log("pressed", animalOneLower);
+  console.log("pressed", animalOneSearch);
   // fade out buttons and prompt
   setTimeout(() => {
     let fadeoutComponent1 = document.getElementById("characterOne");
@@ -587,7 +633,7 @@ function buttonPressed(clicked_id){
 
   // create the story name
   let para = document.createElement("p");
-  let node = document.createTextNode(`A story about a ${animalOneLower}`);
+  let node = document.createTextNode(`A story about a ${animalOneSearch}`);
 
   para.appendChild(node);
   para.style.display = "none";
@@ -605,9 +651,13 @@ function buttonPressed(clicked_id){
 
   // run the storycheck
   setTimeout(() => {
-    runjsonCheck(fablesJson, animalOneLower);
+    runjsonCheck(fablesJson, animalOneSearch);
   }, 1500);
-  //run the check function
+
+  // add the sketch to the page
+  setTimeout(() => {
+    loadASketch(currIllustration);
+  }, 2000);
 }
 
 
@@ -658,7 +708,7 @@ var sketchRnnDrawing = function( drawingOne ) {
     drawingOne.createCanvas(canvasWidth, canvasHeight);
     drawingOne.background(255);
     previous_pen = 'down';
-    sketchColor = getRandomColor();
+    // sketchColor = getRandomColor();
 
     drawingOne.loop();
   };
@@ -777,7 +827,6 @@ function loadASketch(drawing){
     // dimElement(dimThis);
   }
 
-  //TODO align
   setTimeout(() => {
     let elm  = document.getElementById(`drawing${sentanceNumber}`);
     elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -932,7 +981,6 @@ function ifInClass(theSentance){
   //if you can still add sentences
   if (sentanceNumber <= maxSentences ){
 
-
     //get theSentance to lower case
     let sentance = theSentance.toLowerCase();
 
@@ -992,20 +1040,14 @@ function ifInClass(theSentance){
       }
     }
 
-
-    // console.log(similaritiesArray)
-
     //if found words that match
     if (similaritiesArray.length > 0){
-      //TODO set a current sketch class
       currIllustration = similaritiesArray[0].class;
 
       currIllustrationObject = {
         class: similaritiesArray[0].class,
         word: similaritiesArray[0].word
       }
-
-      console.log('curr Illustration object',currIllustrationObject);
 
       return currIllustrationObject;
       //add that sketch class to the document

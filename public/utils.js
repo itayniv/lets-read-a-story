@@ -602,3 +602,33 @@ function addSentenceAfterbutton(){
 function convertRange( value, r1, r2 ) {
   return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
 }
+
+
+
+
+function endStory(){
+  var div = document.createElement("div");
+  div.id = `paragraph${sentanceNumber+1}`;
+  div.style.background = "white";
+  div.style.color = "white";
+  div.style.opacity = 0;
+  div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
+  div.style.paddingBottom = "150px";
+
+  let para = document.createElement("p");
+  para.classList.add("voice");
+  let node = document.createTextNode("The End.");
+  para.appendChild(node);
+  document.getElementById("story").appendChild(div).appendChild(para);
+
+  let fadeinElement = document.getElementById(`paragraph${sentanceNumber+1}`);
+
+  //fade the sentence into the page.
+  setTimeout(() => {
+    fadein(fadeinElement);
+  }, 1200);
+
+  setTimeout(() => {
+    addOneMoreButton();
+  }, 4000);
+}

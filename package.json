@@ -14,5 +14,26 @@
     "timepiece": "^0.4.0",
     "tone": "^0.11.11",
     "wikipedia-js": "0.0.6"
-  }
+  },
+  "description": "Let’s Read A Story, will be an immersive interactive storytelling application for kids, parents and children’s books lovers that helps create new, short interactive children stories that spark curiosity and imagination through dialog with a machine learning driven conversational bot.",
+  "main": "app.js",
+  "devDependencies": {
+    "eslint": "^5.15.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/itayniv/lets-read-a-story.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/itayniv/lets-read-a-story/issues"
+  },
+  "homepage": "https://github.com/itayniv/lets-read-a-story#readme"
 }

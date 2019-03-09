@@ -359,9 +359,23 @@ function addSentence(result, source){
       }
 
 
-      document.getElementById("story").appendChild(div).appendChild(paragraph);
+      //create button buttonContainer
+      let reBranchContainer = document.createElement("div");
+      reBranchContainer.id = 'rebranch-container';
 
-      console.log(paragraph);
+      //create the putton
+      let reBranch = document.createElement("div");
+      reBranch.classList.add('rebranch-button');
+      reBranch.id = 'rebranch-button';
+      reBranch.style.backgroundImage = "url('./images/branch.svg')";
+
+      reBranchContainer.appendChild(reBranch);
+
+
+      document.getElementById("story").appendChild(div).appendChild(paragraph);
+      document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
+
+
 
 
       // //create a P element
@@ -533,7 +547,6 @@ function addOneMoreSentence(){
   document.getElementById("story").appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
   document.getElementById("one-more-sentence").appendChild(pauseAndPlay).appendChild(pauseImage);
 
-
   let fadeinElement1 = document.getElementById("one-more-sentence");
 
   fadein(fadeinElement1);
@@ -561,7 +574,6 @@ function addOneMoreSentence(){
 
     }
   }
-
 }
 
 

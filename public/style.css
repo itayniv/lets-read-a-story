@@ -526,7 +526,21 @@
   opacity: .25;
 }
 
+.rebranch-button{
+  height: 25px;
+  width: 25px;
+  content: "";
+  margin: auto;
+  opacity: .15;
+}
 
+/* .rebranch-button:hover{
+  height: 25px;
+  width: 25px;
+  content: "";
+  margin: auto;
+  opacity: .25;
+} */
 
 
 .pause-play-container{

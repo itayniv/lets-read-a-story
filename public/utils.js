@@ -2,22 +2,22 @@
 
 ///------> Utils
 
-function enrichSketchClass(theSentance){
+function enrichSketchClass(theSentance) {
 
   let enrichClass;
-  //get theSentance to lower case
+  // get theSentance to lower case
   let sentance = theSentance.toLowerCase();
 
-  //split sentence to array
+  // split sentence to array
   let sentenceToArray = sentance.split(" ");
 
-  //create new array called similarityArray
+  // create new array called similarityArray
   let newSimilaritiesArray = [];
 
-  //for all the words in that new sentence
+  // for all the words in that new sentence
   for (var i = 0; i < sentenceToArray.length; i++) {
 
-    //if a word in the class apears inside the sentence
+    // if a word in the class apears inside the sentence
     if (squirrelArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
@@ -29,7 +29,7 @@ function enrichSketchClass(theSentance){
       newSimilaritiesArray.push(squirrelObject);
       // console.log("found a squirrel", squirrelObject);
 
-    } else if(turtleArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    } else if(turtleArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
       let sea_turtleObject = {
@@ -39,7 +39,7 @@ function enrichSketchClass(theSentance){
 
       // console.log("found a turtle", sea_turtleObject);
       newSimilaritiesArray.push(sea_turtleObject);
-    }else if(basketArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    }else if(basketArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -51,7 +51,7 @@ function enrichSketchClass(theSentance){
       // console.log("found a basket", basketObject);
       newSimilaritiesArray.push(basketObject);
 
-    }else if(spiderArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    }else if(spiderArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -63,7 +63,7 @@ function enrichSketchClass(theSentance){
       // console.log("found a spider", spiderObject);
       newSimilaritiesArray.push(spiderObject);
 
-    }else if(sheepArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    }else if(sheepArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -75,7 +75,7 @@ function enrichSketchClass(theSentance){
       // console.log("found a sheep", sheepObject);
       newSimilaritiesArray.push(sheepObject);
 
-    }else if(dogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    }else if(dogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -87,7 +87,7 @@ function enrichSketchClass(theSentance){
       // console.log("found a dog", dogObject);
       newSimilaritiesArray.push(dogObject);
 
-    }else if(mosquitoArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    }else if(mosquitoArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -99,11 +99,11 @@ function enrichSketchClass(theSentance){
       // console.log("found a mosquito", mosquitoObject);
       newSimilaritiesArray.push(mosquitoObject);
 
-    }else if(swanArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    }else if(swanArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
-      let thisWord = sentenceToArray[i].toLowerCase();
+      const thisWord = sentenceToArray[i].toLowerCase();
 
-      let swanObject = {
+      const swanObject = {
         class: 'swan',
         word: thisWord
       }
@@ -113,9 +113,9 @@ function enrichSketchClass(theSentance){
 
     }else if(birdsArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
 
-      let thisWord = sentenceToArray[i].toLowerCase();
+      const thisWord = sentenceToArray[i].toLowerCase();
 
-      let birdObject = {
+      const birdObject = {
         class: 'bird',
         word: thisWord
       }
@@ -182,7 +182,7 @@ function enrichSketchClass(theSentance){
 
 
 ///convert daim to note
-function convertDiamToNoteMajor(locationY){
+function convertDiamToNoteMajor(locationY) {
 
   let newlocationY = clamp(locationY, -60, 60)
 
@@ -248,7 +248,7 @@ function clamp(num, min, max) {
   return num <= min ? min : num >= max ? max : num;
 }
 
-function convertDiamToNoteMinor(locationY){
+function convertDiamToNoteMinor(locationY) {
 
   let newlocationY = clamp(locationY, -60, 60)
 
@@ -589,11 +589,11 @@ function addSentenceAfterbutton(){
   setTimeout(() => {
     addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
 
-  }, 500);
+  }, 400);
 
   //delete this button
-  setTimeout(() => {
-    let elm  = document.getElementById('one-more-sentence');
+  setTimeout (() => {
+    const elm  = document.getElementById('one-more-sentence');
     fadeoutandDelete(elm);
   }, 100);
 }

@@ -1,4 +1,4 @@
-let posOne = new THREE.Vector3( 100, 0, 200 );
+let posOne = new THREE.Vector3(100, 0, 200);
 let drawingNumber = 0;
 let sentanceNumber = 0;
 let currColor = 0;
@@ -9,9 +9,9 @@ let phase = 4;
 let delta = 5;
 let deltaoneNumber = 0;
 let timecounter = 0;
-let pos = { x : 0, y: 0, z:0 };
-let newPos = {x: 0, y: 0, z:0 }
-let targetPos = { x : 0, y: 0, z: 0 };
+let pos = { x: 0, y: 0, z: 0 };
+let newPos = { x: 0, y: 0, z: 0 }
+let targetPos = { x: 0, y: 0, z: 0 };
 let phasesin = 0;
 let blinkOpacity = 0;
 let gameTime = 60;
@@ -20,11 +20,14 @@ let startingValue = 120;
 let similarSentences = [];
 let similaritiesArray = [];
 let sketchColor;
-let maxSentences = 6;
+const maxSentences = 6;
 let startStory = false;
 let penStrokesopening = 0;
 let viewportWidth;
 let viewportHeight;
+
+// set interval
+let buttonTimer;
 
 let penStrokes = 0;
 
@@ -63,42 +66,42 @@ let drawingRation = 1.6;
 
 
 
-let drawingClasses = ["alarm_clock",	"ambulance",	"angel", "ant", "antyoga","backpack",	"barn",	"basket",	"bear",	"bee",
-"beeflower",	"bicycle",	"bird",	"book",	"brain",
-"bridge",	"bulldozer",	"bus",	"butterfly",	"cactus",
-"calendar",	"castle",	"cat",	"catbus",	"catpig",
-"chair",	"couch", "crab",	"crabchair",	"crabrabbitfacepig",
-"cruise_ship",	"diving_board",	"dog",	"dogbunny",	"dolphin",
-"duck",	"elephant",	"elephantpig", "eye",	"face",
-"fan",	"fire_hydrant",	"firetruck",	"flamingo",	"flower",
-"floweryoga",	"frog",	"frogsofa",	"garden",	"hand",
-"hedgeberry",	"hedgehog",	"helicopter",	"kangaroo",	"key",
-"lantern",	"lighthouse",	"lion",	"lionsheep",	"lobster",
-"map",	"mermaid",	"monapassport",	"monkey",	"mosquito",
-"octopus",	"owl",	"paintbrush",	"palm_tree",	"parrot",
-"passport",	"peas",	"penguin",	"pig",	"pigsheep",
-"pineapple",	"pool",	"postcard",	"power_outlet",	"rabbit",
-"rabbitturtle",	"radio",	"radioface",	"rain",	"rhinoceros",
-"rifle",	"roller_coaster",	"sandwich",	"scorpion",	"sea_turtle",
-"sheep",	"skull",	"snail",	"snowflake",	"speedboat",
-"spider",	"squirrel",	"steak",	"stove",	"strawberry",
-"swan",	"swing_set",	"the_mona_lisa",	"tiger",	"toothbrush",
-"toothpaste",	"tractor",	"trombone",	"truck",	"whale",
-"windmill",	"yoga",	"yogabicycle",	"everything"];
+const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "backpack", "barn", "basket", "bear", "bee",
+  "beeflower", "bicycle", "bird", "book", "brain",
+  "bridge", "bulldozer", "bus", "butterfly", "cactus",
+  "calendar", "castle", "cat", "catbus", "catpig",
+  "chair", "couch", "crab", "crabchair", "crabrabbitfacepig",
+  "cruise_ship", "diving_board", "dog", "dogbunny", "dolphin",
+  "duck", "elephant", "elephantpig", "eye", "face",
+  "fan", "fire_hydrant", "firetruck", "flamingo", "flower",
+  "floweryoga", "frog", "frogsofa", "garden", "hand",
+  "hedgeberry", "hedgehog", "helicopter", "kangaroo", "key",
+  "lantern", "lighthouse", "lion", "lionsheep", "lobster",
+  "map", "mermaid", "monapassport", "monkey", "mosquito",
+  "octopus", "owl", "paintbrush", "palm_tree", "parrot",
+  "passport", "peas", "penguin", "pig", "pigsheep",
+  "pineapple", "pool", "postcard", "power_outlet", "rabbit",
+  "rabbitturtle", "radio", "radioface", "rain", "rhinoceros",
+  "rifle", "roller_coaster", "sandwich", "scorpion", "sea_turtle",
+  "sheep", "skull", "snail", "snowflake", "speedboat",
+  "spider", "squirrel", "steak", "stove", "strawberry",
+  "swan", "swing_set", "the_mona_lisa", "tiger", "toothbrush",
+  "toothpaste", "tractor", "trombone", "truck", "whale",
+  "windmill", "yoga", "yogabicycle", "everything"];
 
-let birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens"];
-let swanArr = ["crane", "cranes", "goose","ducks", "peacock", "peacocks" , "heron", "herons"];
-let mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
-let dogArr = ["goats", "wolf", "fox","dogs", "boar", "weasels", "weasel" ];
-let sheepArr = ["lamb"];
-let spiderArr = ["beetle"];
-let basketArr = ["pail"];
-let turtleArr = ["tortoise", "tortoises"];
-let squirrelArr =["hare"];
-let lionArr = ["lion's"];
-let catArr = ["tiger", "tiger's", "tigers", "cats"];
-let owlArr = ["owl's"];
-let frogArr = ["frogs", "frog's"]
+const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens"];
+const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons"];
+const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
+const dogArr = ["goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];
+const sheepArr = ["lamb"];
+const spiderArr = ["beetle"];
+const basketArr = ["pail"];
+const turtleArr = ["tortoise", "tortoises"];
+const squirrelArr = ["hare"];
+const lionArr = ["lion's"];
+const catArr = ["tiger", "tiger's", "tigers", "cats"];
+const owlArr = ["owl's"];
+const frogArr = ['frogs', "frog's"]
 
 
 //
@@ -176,19 +179,17 @@ function init() {
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
 
-  startBookX = viewportWidth/2;
-  startBookY = viewportHeight/2;
+  startBookX = viewportWidth / 2;
+  startBookY = viewportHeight / 2;
 
-  if (viewportWidth < 450 ){
+  if (viewportWidth < 450) {
     canvasWidth = 300;
     canvasHeight = 200;
 
-    startX = canvasWidth/2;
-    startY = canvasHeight/2;
+    startX = canvasWidth / 2;
+    startY = canvasHeight / 2;
 
     drawingRation = 1.6;
-
-
   }
 
 
@@ -198,7 +199,7 @@ function init() {
   }, 1000);
 }
 
-window.onload = function() {
+window.onload = function () {
 
   let fadeinElement2 = document.getElementById("start-container");
   fadeinElement2.style.visibility = "visible";
@@ -216,36 +217,41 @@ window.onload = function() {
 
   let fadeinElement1 = document.getElementById("start-background");
   fadeinButton(fadeinElement1);
-
 };
 
 
-function loadJsonfile(){
-  console.log("loadjson");
+function loadJsonfile() {
+  // console.log("loadjson");
   fetch('/aesopFables.json')
-  .then(function(response) {
-    return response.json();
-  })
-  .then(function(myJson) {
-    // console.log(myJson);
-    fablesJson = myJson;
-  });
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myJson) {
+      // console.log(myJson);
+      fablesJson = myJson;
+    });
 }
 
 
-socket.on('sentencesResults', function(result){
-  similarSentences = result;
+socket.on('sentencesResults', function (result) {
+  similarSentences = result.sentences;
+  sentimentContainer = result.sentiment;
+
+});
+
+// get the new seed response
+socket.on('NewSeedResult', function (result) {
+  insertNewSeed(result);
 });
 
 
-socket.on('sentencesSentiment', function(result){
-  // console.log(result);
-  sentimentContainer = result;
-});
+// socket.on('sentencesSentiment', function(result){
+//   // console.log(result);
+//   sentimentContainer = result;
+// });
 
 
-
-function runjsonCheck(json, checkword){
+function runjsonCheck(json, checkword) {
 
   // add a regex search for a specific given word
   let regex = new RegExp(checkword);
@@ -253,18 +259,18 @@ function runjsonCheck(json, checkword){
   //reset a sentance container that will hold all sentances related to the search
   sentanceContainer = [];
 
-  //run through all the sentences in the json file.
-  for (var key in json.stories) {
+  // run through all the sentences in the json file.
+  for (let key in json.stories) {
     // json.stories[key].story.length
     //run over 4 sentences
-    for (var i = 0; i < Math.ceil(json.stories[key].story.length/3); i++) {
+    for (var i = 0; i < Math.ceil(json.stories[key].story.length / 3); i++) {
 
       //convert line to lower case
       let lineInStory = json.stories[key].story[i];
       lineInStory = lineInStory.toLowerCase();
 
-      //does line contain search?
-      if (lineInStory.match(regex)){
+      // does line contain search?
+      if (lineInStory.match(regex)) {
         //push all the right sentences to an array.
         sentanceContainer.push(json.stories[key].story[i]);
       }
@@ -272,8 +278,8 @@ function runjsonCheck(json, checkword){
   }
 
   // pick a randon sentance from that array.
-  let randomSentance = Math.floor(Math.random() * Math.floor(sentanceContainer.length));
-  socket.emit('sendSeedSentance', {'animal': checkword, 'randomSentance': sentanceContainer[randomSentance]});
+  const randomSentance = Math.floor(Math.random() * Math.floor(sentanceContainer.length));
+  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': sentanceContainer[randomSentance] });
 
   // add the sentance to the page
   addSentence(sentanceContainer[randomSentance], 'notnet');
@@ -281,151 +287,124 @@ function runjsonCheck(json, checkword){
 }
 
 
-function addSentence(result, source){
+function addSentence(result, source) {
 
-  //if the current sentence is smaller than the entire length of the story
-  if (sentanceNumber <= maxSentences ){
-    //increase sentence number
-    sentanceNumber ++;
+  //  if the current sentence is smaller than the entire length of the story
+  if (sentanceNumber <= maxSentences) {
+    //  increase sentence number
+    sentanceNumber++;
 
-    //create div to hold new sentence
-    var div = document.createElement("div");
+    // create div to hold new sentence
+    const div = document.createElement('div');
     div.id = `paragraph${sentanceNumber}`;
-    div.style.background = "white";
-    div.style.color = "white";
-    div.style.opacity = 0;
-    div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
+    div.classList.add('paragraph-container');
 
-    //check source of the sentence
-    if (source == "net"){
-      let para = document.createElement("p");
+
+    // check source of the sentence
+    if (source == "net") {
+      let para = document.createElement('p');
       para.classList.add("net");
       let node = document.createTextNode(result);
       para.appendChild(node);
-      document.getElementById("story").appendChild(div).appendChild(para);
+      document.getElementById('story').appendChild(div).appendChild(para);
+
     } else {
 
-      //random color
+      // random color
       // let thisAnimalColor
       sketchColor = getRandomColor();
 
-      //run check to see if there is an illustration that fits here
+      //  run check to see if there is an illustration that fits here
       let thisClassObject = ifInClass(result);
       let thisClass;
 
-      //if the object is not undefined then set thisClass to the object's class
-      if(thisClassObject != undefined){
+      //  if the object is not undefined then set thisClass to the object's class
+      if (thisClassObject != undefined) {
         thisClass = thisClassObject.class;
       }
 
-      // console.log('this Class', thisClass);
-      // console.log('this Class Object', thisClassObject);
+
+      const resultToLower = result.toLowerCase();
+      const res = result.split(' ');
+      const resLower = resultToLower.split(' ');
+
+      const paragraph = document.createElement('p');
+      paragraph.classList.add('voice');
 
 
-      //Color the word --> TODO
-
-      // let str = result.toLowerCase();
-      let resultToLower = result.toLowerCase();
-      let res = result.split(" ");
-      let resLower = resultToLower.split(' ');
-      // console.log(thisClassObject.word)
-      // console.log(res);
-
-
-
-      let paragraph = document.createElement('p');
-      paragraph.classList.add("voice");
-
-      console.log(thisClassObject);
-
-
-      for (var i = 0; i < res.length; i++) {
-        let wordSpan = document.createElement('span')
+      for (let i = 0; i < res.length; i++) {
+        const wordSpan = document.createElement('span')
         wordSpan.innerHTML = res[i] + ' ';
         wordSpan.id = resLower[i];
 
-
-        if(thisClassObject != undefined){
-          if((wordSpan.id == thisClass) || (wordSpan.id == thisClassObject.word)){
+        if (thisClassObject != undefined) {
+          if ((wordSpan.id === thisClass) || (wordSpan.id === thisClassObject.word)) {
             wordSpan.style.color = sketchColor;
-            console.log('hit', wordSpan.id, thisClassObject)
           }
         }
 
-
-        //add all spans to paragraph
+        // add all spans to paragraph
         paragraph.appendChild(wordSpan);
-
       }
 
-
-      //create button buttonContainer
-      let reBranchContainer = document.createElement("div");
+      // create button container
+      const reBranchContainer = document.createElement('div');
       reBranchContainer.id = 'rebranch-container';
+      reBranchContainer.classList.add('rebranch-container');
 
-      //create the putton
-      let reBranch = document.createElement("div");
+      // create the putton
+      const reBranch = document.createElement('div');
       reBranch.classList.add('rebranch-button');
       reBranch.id = 'rebranch-button';
+      reBranch.onclick = function () { rebranchThis(sentanceNumber); };
       reBranch.style.backgroundImage = "url('./images/branch.svg')";
 
       reBranchContainer.appendChild(reBranch);
 
 
-      document.getElementById("story").appendChild(div).appendChild(paragraph);
+      const paragraphNumber = document.createElement('div');
+      paragraphNumber.classList.add('currnet-paragraph');
+      paragraphNumber.id = `paragraphNumber${sentanceNumber}`;
+      paragraphNumber.innerHTML = `${sentanceNumber} / ${maxSentences + 1}`
+
+
+      document.getElementById('story').appendChild(div).appendChild(paragraphNumber);
+      document.getElementById('story').appendChild(div).appendChild(paragraph);
+
       document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
 
 
-
-
-      // //create a P element
-      // let para = document.createElement("p");
-      //
-      // //add class to paragraph
-      // para.classList.add("voice");
-      //
-      // //create a text node
-      // let node = document.createTextNode(result);
-      // para.appendChild(node);
-
-
-      // document.getElementById("story").appendChild(div).appendChild(para);
-
-      //change animal color in the text
-
-
-
       setTimeout(() => {
-        //scroll into the sentence
+        // scroll into the sentence
 
-        let elm  = document.getElementById(`paragraph${sentanceNumber}`);
+        const elm = document.getElementById(`paragraph${sentanceNumber}`);
         elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
-        //fade the sentence into the page.
-        let fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
+        // fade the sentence into the page.
+        const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
         fadein(fadeinElement);
       }, 500);
 
-      //run sentence enrichment
+      // run sentence enrichment
 
 
-      if (sentanceNumber > 1){
-        if (thisClass != undefined){
+      if (sentanceNumber > 1) {
+        if (thisClass != undefined) {
           // console.log(`add ${thisClass} illustration here`);
           loadASketch(thisClass);
         } else {
-          //TODO console.log('dont add illustration here');
+          // TODO console.log('dont add illustration here');
         }
       }
     }
 
-    //run loop again!
+    // run loop again!
     setTimeout(() => {
-      if((sentanceNumber <= maxSentences )){
-        //add the add one more sentence button
+      if ((sentanceNumber <= maxSentences)) {
+        // add the add one more sentence button
         addOneMoreSentence();
-      } else{
-        //add another sentence --> go to end
+      } else {
+        // add another sentence --> go to end
         addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
         // console.log("finished with the sentences");
       }
@@ -433,98 +412,87 @@ function addSentence(result, source){
 
   } else {
 
-    //if sentanceNumber is larger than the maxSentences then end story
+    // if sentanceNumber is larger than the maxSentences then end story
     endStory();
   }
 }
 
 
-function addOneMoreButton(){
-  //if sentanceNumber is larger than the maxSentences
+function addOneMoreButton() {
+  // if sentanceNumber is larger than the maxSentences
 
-  let div = document.createElement("div");
-  div.id = "read-one-more";
-  div.style.background = "white";
-  div.style.color = "white";
+  const div = document.createElement('div');
+  div.id = 'read-one-more';
+  div.style.background = 'white';
+  div.style.color = 'white';
   div.style.opacity = 0;
-  div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
-  div.style.margin = "auto";
-  div.style.width = "24%";
+  div.style.filter = 'alpha(opacity=' + 0 * 0 + ')';
+  div.style.margin = 'auto';
+  div.style.width = '24%';
 
-  let btn = document.createElement("BUTTON");
-  btn.classList.add("one-more");
-  btn.onclick = function() { resetStory(); };
-  let node = document.createTextNode("Read one more");
+  const btn = document.createElement('BUTTON');
+  btn.classList.add('one-more');
+  btn.onclick = function () { resetStory(); };
+  const node = document.createTextNode('Read one more');
   btn.appendChild(node);
-  document.getElementById("story").appendChild(div).appendChild(btn);
+  document.getElementById('story').appendChild(div).appendChild(btn);
 
-  let fadeinElement1 = document.getElementById("read-one-more");
+  const fadeinElement1 = document.getElementById('read-one-more');
 
   fadein(fadeinElement1);
 
   setTimeout(() => {
-    let elm  = document.getElementById('read-one-more');
+    const elm = document.getElementById('read-one-more');
     elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 500);
 
 }
 
+function addOneMoreSentence() {
+  // After each sentence 'turn the page'
 
-
-
-
-
-function addOneMoreSentence(){
-  //After each sentence 'turn the page'
-
-  let div = document.createElement("div");
-  div.id = "one-more-sentence";
-  div.style.background = "white";
-  div.style.color = "white";
+  const div = document.createElement('div');
+  div.id = 'one-more-sentence';
+  div.style.background = 'white';
+  div.style.color = 'white';
   div.style.opacity = 0;
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
-  div.style.margin = "auto";
-  div.style.width = "24%";
   div.style.paddingTop = "30px";
 
 
   // //create loder element
-  let progressDiv = document.createElement("div");
-  progressDiv.id = "one-more-sentence-loader";
-  progressDiv.classList.add("progress-moved");
+  const progressDiv = document.createElement('div');
+  progressDiv.id = 'one-more-sentence-loader';
+  progressDiv.classList.add('progress-moved');
 
-  let progress = document.createElement("div");
-  progress.id = "progress";
-  progress.classList.add("progress-bar2");
+  const progress = document.createElement('div');
+  progress.id = 'progress';
+  progress.classList.add('progress-bar2');
 
-  //create the pause/play container
-  let pauseAndPlay = document.createElement("div");
+  // create the pause/play container
+  const pauseAndPlay = document.createElement('div');
   pauseAndPlay.classList.add('pause-play-container')
-  pauseAndPlay.id = "pauseAndPlay";
+  pauseAndPlay.id = 'pauseAndPlay';
 
-  //pauseBool
+  // pauseBool
   let pauseBool = true;
 
-  //create the putton
+  // create the putton
   let pauseImage = document.createElement("div");
   pauseImage.classList.add('pause-and-play');
   pauseImage.id = 'pause-button';
   pauseImage.style.backgroundImage = "url('./images/pause.svg')";
 
-  // pauseImage.background-image: url("./images/pause.svg");
-
-  pauseImage.onclick = function() {
-    if(pauseBool){
+  pauseImage.onclick = function () {
+    if (pauseBool) {
       pauseBool = false;
       document.getElementById("pause-button").style.backgroundImage = "url('./images/play.svg')";
-    } else{
+    } else {
       pauseBool = true;
       document.getElementById("pause-button").style.backgroundImage = "url('./images/pause.svg')";
 
     }
   };
-
-  console.log(pauseImage);
 
 
   //add a boolean to indicate if its pressed
@@ -533,11 +501,10 @@ function addOneMoreSentence(){
   let btn = document.createElement("BUTTON");
   btn.classList.add("one-more-sentence");
 
-  btn.onclick = function() {
+  btn.onclick = function () {
     addSentenceAfterbutton();
     addedSentence = true;
   };
-
 
   let para = document.createElement("span");
   let nodepara = document.createTextNode("What happened next?");
@@ -551,44 +518,77 @@ function addOneMoreSentence(){
 
   fadein(fadeinElement1);
 
-  //draw the progress bar
-  let width = 10;
-  //add a timer
-  let id = setInterval(frame, 10);
 
-  //call the prgsBar to animate it later
-  let prgsBar  = document.getElementById('one-more-sentence-loader');
+  // add a timer
+  buttonTimer = setInterval(timeOutTimer, 10);
 
-  function frame() {
-    //if timer hasnt reached the end and button was not pressed
+  // draw the progress bar
+  let width = 0;
+
+  // call the prgsBar to animate it later
+  let prgsBar = document.getElementById('one-more-sentence-loader');
+
+  function timeOutTimer() {
+    console.log('timer' + width);
+    // if timer hasnt reached the end and button was not pressed
     if ((width >= 1000) && (!addedSentence)) {
-      clearInterval(id);
+
+      clearInterval(buttonTimer);
       addSentenceAfterbutton();
+
     } else {
-      if (pauseBool){
+
+      if (pauseBool) {
         width++;
-        prgsBar.style.width = width/10 + '%';
+        prgsBar.style.width = width / 10 + '%';
       }
-
-      // prgsBar.style.width = 100 + '%';
-
     }
   }
 }
 
 
-function resetStory(){
+function rebranchThis(sentence) {
+  // console.log('sentence', sentence-1);
+  console.log(similarSentences[sentence - 1]);
+  socket.emit('rebranchSentence', { 'animal': 'checkword', 'rebranchSentance': similarSentences[sentence - 1] });
 
-  let fadeOutElement = document.getElementById("a-story-about");
-  fadeOutElement.style.display = "none";
-  fadeOutElement.style.opacity = "0.0";
+}
+
+function insertNewSeed(newSeedObject) {
+  // get the new sentences
+  const newSeedResults = newSeedObject.sentences;
+
+  //what sentence are we on right now?
+  const currSentence = sentanceNumber-1;
+
+  //cut the sumilar sentence array to the length of this
+  similarSentences.length = currSentence;
+
+  // concatinate both arrays
+  const concatinatedArray = similarSentences.concat(newSeedResults)
+  
+  similarSentences = concatinatedArray; 
+
+  setTimeout(() => {
+    // do somthing
+    clearInterval(buttonTimer);
+    addSentenceAfterbutton();
+  }, 600);
+}
+
+
+function resetStory() {
+
+  const fadeOutElement = document.getElementById('a-story-about');
+  fadeOutElement.style.display = 'none';
+  fadeOutElement.style.opacity = '0.0';
 
   fadeOutElement.parentNode.removeChild(fadeOutElement);
 
 
   setTimeout(() => {
-    let fadeOutElement1 = document.getElementById("story");
-    let fadeOutElement2 = document.getElementById("prompt");
+    const fadeOutElement1 = document.getElementById('story');
+    const fadeOutElement2 = document.getElementById('prompt');
 
     fadeout(fadeOutElement1);
     fadeout(fadeOutElement2);
@@ -599,17 +599,17 @@ function resetStory(){
     drawingNumber = 0;
     sentanceNumber = 0;
 
-    document.getElementById("story").remove();
+    document.getElementById('story').remove();
 
-    var div = document.createElement("div");
-    div.id = "story";
-    document.getElementById("story-container").appendChild(div);
+    let div = document.createElement('div');
+    div.id = 'story';
+    document.getElementById('story-container').appendChild(div);
   }, 1000);
 
   setTimeout(() => {
-    let fadeoutComponent1 = document.getElementById("characterOne");
-    let fadeinElement2 = document.getElementById("recordedText");
-    let fadeinElement3 = document.getElementById("prompt");
+    const fadeoutComponent1 = document.getElementById('characterOne');
+    const fadeinElement2 = document.getElementById('recordedText');
+    const fadeinElement3 = document.getElementById('prompt');
 
     fadein(fadeinElement2);
     fadein(fadeoutComponent1);
@@ -620,8 +620,7 @@ function resetStory(){
 }
 
 
-
-function buttonPressed(clicked_id){
+function buttonPressed(clicked_id) {
 
   let animalOne = clicked_id;
 
@@ -633,7 +632,6 @@ function buttonPressed(clicked_id){
   // let thisclass = ifInClass()
   let animalOneSearch = animalOneLower + ' ';
 
-  console.log("pressed", animalOneSearch);
   // fade out buttons and prompt
   setTimeout(() => {
     let fadeoutComponent1 = document.getElementById("characterOne");
@@ -673,7 +671,7 @@ function buttonPressed(clicked_id){
 }
 
 
-function startbuttonPressed(clicked_id){
+function startbuttonPressed(clicked_id) {
 
   sketch = null;
   startStory = true;
@@ -701,7 +699,7 @@ function startbuttonPressed(clicked_id){
   }, 1500);
 
   setTimeout(() => {
-    let elm  = document.getElementById(`startbutton`);
+    let elm = document.getElementById(`startbutton`);
     elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 2400);
 }
@@ -712,11 +710,11 @@ function startbuttonPressed(clicked_id){
 ///////sketchrnn
 
 //drawing class
-var sketchRnnDrawing = function( drawingOne ) {
+var sketchRnnDrawing = function (drawingOne) {
   // var x = 100;
   // var y = 100;
 
-  drawingOne.setup = function() {
+  drawingOne.setup = function () {
     drawingOne.createCanvas(canvasWidth, canvasHeight);
     drawingOne.background(255);
     previous_pen = 'down';
@@ -725,64 +723,64 @@ var sketchRnnDrawing = function( drawingOne ) {
     drawingOne.loop();
   };
 
-  drawingOne.draw = function() {
+  drawingOne.draw = function () {
     if (sketch) {
 
-      penStrokes ++;
+      penStrokes++;
       let penOffset = penStrokes % 4;
 
 
-      if (sentimentContainer[sentanceNumber] >= 0){
+      if (sentimentContainer[sentanceNumber] >= 0) {
         //sentiment is positive
 
         //for these animals play this synth
-        if( (currIllustration == 'lion') || (currIllustration == 'dog')|| (currIllustration == 'bear') ){
+        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
           // each 25th pen stroke
-          if ((penStrokes % 25 == 0) && (penOffset != 1)){
+          if ((penStrokes % 25 == 0) && (penOffset != 1)) {
 
             let noteLenngth = noteLength(sketch.dx);
-            if(noteLenngth == undefined){
+            if (noteLenngth == undefined) {
               noteLenngth = '6n';
             }
-            let notetoplayMajor = convertDiamToNoteMajor(sketch.dy)/4;
-            playNote2( noteLenngth, notetoplayMajor);
+            let notetoplayMajor = convertDiamToNoteMajor(sketch.dy) / 4;
+            playNote2(noteLenngth, notetoplayMajor);
           }
-        } else{
+        } else {
           //play this synth each 12th stroke
-          if ((penStrokes % 12 == 0)&& (penOffset != 1)){
+          if ((penStrokes % 12 == 0) && (penOffset != 1)) {
 
             let noteLenngth = noteLength(sketch.dx);
-            if(noteLenngth == undefined){
+            if (noteLenngth == undefined) {
               noteLenngth = '6n';
             }
-            playNote1( noteLenngth, convertDiamToNoteMajor(sketch.dy)*2);
+            playNote1(noteLenngth, convertDiamToNoteMajor(sketch.dy) * 2);
           }
         }
       } else {
         // Sentiment is negeative
 
         //for these animals play this synth
-        if( (currIllustration == 'lion') || (currIllustration == 'dog')|| (currIllustration == 'bear') ){
+        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
           // each 25th pen stroke
-          if ((penStrokes % 25 == 0) && (penOffset != 1)){
+          if ((penStrokes % 25 == 0) && (penOffset != 1)) {
 
             let noteLenngth = noteLength(sketch.dx);
-            if(noteLenngth == undefined){
+            if (noteLenngth == undefined) {
               noteLenngth = '6n';
             }
 
-            let notetoplayMinor = convertDiamToNoteMinor(sketch.dy)/4;
-            playNote2( noteLenngth, notetoplayMinor);
+            let notetoplayMinor = convertDiamToNoteMinor(sketch.dy) / 4;
+            playNote2(noteLenngth, notetoplayMinor);
           }
-        } else{
+        } else {
           //play this synth each 12th stroke
-          if ((penStrokes % 11 == 0) && (penOffset != 1)){
+          if ((penStrokes % 11 == 0) && (penOffset != 1)) {
 
             let noteLenngth = noteLength(sketch.dx);
-            if(noteLenngth == undefined){
+            if (noteLenngth == undefined) {
               noteLenngth = '6n';
             }
-            playNote1( noteLenngth, convertDiamToNoteMinor(sketch.dy)*2);
+            playNote1(noteLenngth, convertDiamToNoteMinor(sketch.dy) * 2);
           }
         }
       }
@@ -791,10 +789,10 @@ var sketchRnnDrawing = function( drawingOne ) {
       if (previous_pen == 'down') {
         drawingOne.stroke(sketchColor);
         drawingOne.strokeWeight(6);
-        drawingOne.line(x, y, x + sketch.dx/drawingRation, y + sketch.dy/drawingRation);
+        drawingOne.line(x, y, x + sketch.dx / drawingRation, y + sketch.dy / drawingRation);
       }
-      x += sketch.dx/drawingRation;
-      y += sketch.dy/drawingRation;
+      x += sketch.dx / drawingRation;
+      y += sketch.dy / drawingRation;
       previous_pen = sketch.pen;
 
       if (sketch.pen !== 'end') {
@@ -814,15 +812,13 @@ var sketchRnnDrawing = function( drawingOne ) {
 
 
 
-
-
-function loadASketch(drawing){
-  sketchmodel = ml5.SketchRNN(drawing, function() {
+function loadASketch(drawing) {
+  sketchmodel = ml5.SketchRNN(drawing, function () {
     startDrawing();
   });
 
   //create a div container for drawing
-  drawingNumber ++;
+  drawingNumber++;
 
   var div = document.createElement("div");
   div.id = `drawing${sentanceNumber}`;
@@ -833,24 +829,23 @@ function loadASketch(drawing){
 
   var drawingCanvas = new p5(sketchRnnDrawing, document.getElementById(`drawing${sentanceNumber}`));
 
-  if( sentanceNumber != 1){
+  if (sentanceNumber != 1) {
 
     // let dimThis  = document.getElementById(`paragraph${sentanceNumber-1}`);
     // dimElement(dimThis);
   }
 
   setTimeout(() => {
-    let elm  = document.getElementById(`drawing${sentanceNumber}`);
+    let elm = document.getElementById(`drawing${sentanceNumber}`);
     elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 2000);
 }
 
 
-
 //book animation
-function loadBookSketch(drawing){
+function loadBookSketch(drawing) {
 
-  sketchbookmodel = ml5.SketchRNN(drawing, function() {
+  sketchbookmodel = ml5.SketchRNN(drawing, function () {
     startDrawingbook();
   });
 
@@ -872,8 +867,8 @@ function loadBookSketch(drawing){
 
 //  Book animation in beginning
 function startDrawingbook() {
-  x = startBookX/2;
-  y = startBookY/2;
+  x = startBookX / 2;
+  y = startBookY / 2;
 
   sketchbookmodel.reset();
   sketchbookmodel.generate(gotBookSketch);
@@ -883,11 +878,11 @@ function startDrawingbook() {
 
 
 // book class
-var sketchRnnBook = function( drawingBook ) {
+var sketchRnnBook = function (drawingBook) {
   // var x = 100;
   // var y = 100;
 
-  drawingBook.setup = function() {
+  drawingBook.setup = function () {
     drawingBook.createCanvas(viewportWidth, viewportHeight);
     drawingBook.background(255);
     previous_pen = 'down';
@@ -895,31 +890,31 @@ var sketchRnnBook = function( drawingBook ) {
     sketchColor = getRandomColor();
   };
 
-  drawingBook.draw = function() {
+  drawingBook.draw = function () {
     if (bookSketch) {
       if (previous_pen == 'down') {
         //make music here
-        penStrokesopening ++;
+        penStrokesopening++;
 
-        if (penStrokesopening % 20 == 0){
+        if (penStrokesopening % 20 == 0) {
           let noteToPlay = convertDiamToNoteMajor(bookSketch.dy);
-          if(noteToPlay == undefined){
+          if (noteToPlay == undefined) {
             noteToPlay = 0;
           }
 
           let noteLenngth = noteLength(bookSketch.dx);
-          if(noteLenngth == undefined){
+          if (noteLenngth == undefined) {
             noteLenngth = '6n';
           }
-          playNoteStart( noteLenngth, noteToPlay);
+          playNoteStart(noteLenngth, noteToPlay);
         }
 
         drawingBook.stroke(sketchColor);
         drawingBook.strokeWeight(3);
-        drawingBook.line(x, y, x + bookSketch.dx/2, y + bookSketch.dy/2);
+        drawingBook.line(x, y, x + bookSketch.dx / 2, y + bookSketch.dy / 2);
       }
-      x += bookSketch.dx/2;
-      y += bookSketch.dy/2;
+      x += bookSketch.dx / 2;
+      y += bookSketch.dy / 2;
       previous_pen = bookSketch.pen;
 
       if (bookSketch.pen !== 'end') {
@@ -936,10 +931,10 @@ var sketchRnnBook = function( drawingBook ) {
         let randDrawing = drawingClasses[randomDrawingNumber];
         sketchColor = getRandomColor();
 
-        sketchBookmodel = ml5.SketchRNN(randDrawing, function() {
+        sketchBookmodel = ml5.SketchRNN(randDrawing, function () {
           // console.log("sketchmodelReady", randDrawing);
-          startBookX = Math.floor(Math.random() * (viewportWidth*2 -20) + 20);
-          startBookY = Math.floor(Math.random() * (viewportHeight*2 -20)+ 20);
+          startBookX = Math.floor(Math.random() * (viewportWidth * 2 - 20) + 20);
+          startBookY = Math.floor(Math.random() * (viewportHeight * 2 - 20) + 20);
           // console.log(startBookX,startBookY);
 
           setTimeout(() => {
@@ -948,7 +943,7 @@ var sketchRnnBook = function( drawingBook ) {
 
         });
         //stop looping in draw
-        if(startStory){
+        if (startStory) {
           drawingBook.noLoop();
           bookSketch = null;
 
@@ -967,7 +962,7 @@ var sketchRnnBook = function( drawingBook ) {
 
 
 function startDrawing() {
-  x = startX ;
+  x = startX;
   y = startY;
 
   sketchmodel.reset();
@@ -988,10 +983,10 @@ function gotBookSketch(err, s) {
 
 
 // drawingClasses
-function ifInClass(theSentance){
+function ifInClass(theSentance) {
 
   //if you can still add sentences
-  if (sentanceNumber <= maxSentences ){
+  if (sentanceNumber <= maxSentences) {
 
     //get theSentance to lower case
     let sentance = theSentance.toLowerCase();
@@ -1010,7 +1005,7 @@ function ifInClass(theSentance){
       tempArray.push({
         // add words as classes now, later to be tested as classes
         class: sentenceToArray[i],
-        word:sentenceToArray[i]
+        word: sentenceToArray[i]
       })
     }
 
@@ -1043,8 +1038,8 @@ function ifInClass(theSentance){
 
         // great! found words, now push those word into similaritiesArray
         similaritiesArray.push({
-          word:sentenceToArray[i].word,
-          class:sentenceToArray[i].class
+          word: sentenceToArray[i].word,
+          class: sentenceToArray[i].class
         });
       } else {
         // didnt find any words do nothing
@@ -1053,7 +1048,7 @@ function ifInClass(theSentance){
     }
 
     //if found words that match
-    if (similaritiesArray.length > 0){
+    if (similaritiesArray.length > 0) {
       currIllustration = similaritiesArray[0].class;
 
       currIllustrationObject = {

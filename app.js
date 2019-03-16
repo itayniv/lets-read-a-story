@@ -1,19 +1,17 @@
-var express = require('express');
-var http = require('http');
-var path = require("path");
-var io = require('socket.io');
-var bodyParser = require('body-parser')
-var express = require('express');
-var Sentiment = require('sentiment');
+const express = require('express');
+const http = require('http');
+const path = require('path');
+const io = require('socket.io');
+const bodyParser = require('body-parser')
+const Sentiment = require('sentiment');
 
-//require the word2vec class
-var Word2Vec = require('./sentence2vec.js')
+// require the word2vec class
+const Word2Vec = require('./sentence2vec.js')
 console.log(Word2Vec);
-var embedings = require('./public/word_embeadings.json')
+const embedings = require('./public/word_embeadings.json')
 
 // console.log(test);
-var userID = 0;
-
+const userID = 0;
 
 
 // console.log(embedings[0].message);
@@ -24,27 +22,19 @@ var userID = 0;
 
 // distance(v1, v2)
 
-let sentance1 = embedings[0].message;
-let embeding1 = embedings[0].message_embedding;
+// let sentance1 = embedings[0].message;
+// let embeding1 = embedings[0].message_embedding;
 
 
-
-
-
-var app = express();
-var server  = http.createServer(app);
+const app = express();
+let server  = http.createServer(app);
 
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
 
-var width = 16;
-var height = 16;
-var seqarraystate = [];
-
-
-var port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 
 function init(){
@@ -53,41 +43,49 @@ function init(){
 init();
 
 
-app.get('/GetGridSize', function(req,res){
-  res.setHeader('Content-Type', 'application/json');
-  var obj = {
-    "array": seqarraystate,
-    "width": width,
-    "height": height,
-    "userNumber": userID
-  }
-  res.send(obj)
-});
+// app.get('/GetGridSize', function(req,res) {
+//   res.setHeader('Content-Type', 'application/json');
+//   var obj = {
+//     "array": seqarraystate,
+//     "width": width,
+//     "height": height,
+//     "userNumber": userID
+//   }
+//   res.send(obj)
+// });
 
 
 server = app.listen(port, function () {
   console.log('Example app listening on port 3000!')
 });
 
-
-
 /// socket work/////
 
-var sockets = io(server);
+const sockets = io(server);
 // configure socket handlers
-sockets.on('connection', function(socket){
+sockets.on('connection', function(socket) {
 
   // send current state to this client that connected only
   // console.log(`a user connected`,socket.id);
-  //
+  socket.on('sendSeedSentance', function(data) {
+    const seedSentance = data.randomSentance;
+    let similarSentences = findVector(seedSentance);
+    sockets.emit('sentencesResults', similarSentences);
 
-
-
-  socket.on('sendSeedSentance', function(data){
-    // console.log(data.randomSentance)
-    let seedSentance = data.randomSentance;
-    findVector(seedSentance);
   });
+
+
+  socket.on('rebranchSentence', function(data) {
+    const rebranchSentence = data.rebranchSentance;
+    let similarSentences = findVector(rebranchSentence);
+    console.log(similarSentences);
+    sockets.emit('NewSeedResult', similarSentences);
+
+
+  });
+
+
+  
 
 });
 
@@ -102,11 +100,11 @@ function findAverageVector(){
 
 
 
-function findVector(sentance, n = 20){
+function findVector(sentance, n = 20) {
   let vec;
   let sentencesResults = [];
 
-  for(let i = 0; i < Object.keys(embedings).length; i++){
+  for (let i = 0; i < Object.keys(embedings).length; i++) {
     if(embedings[i].message === sentance){
       vec = embedings[i].message_embedding;
     }
@@ -126,7 +124,7 @@ function findVector(sentance, n = 20){
   });
 
   //narrowdown to n results
-  let closeset = sentences.slice(0, n);
+  const closeset = sentences.slice(0, n);
 
   //fetch sentences from json
   let closestKeys = Object.keys(closeset);
@@ -135,28 +133,21 @@ function findVector(sentance, n = 20){
     // console.log(embedings[closeset[i].wordKey].message);
     sentencesResults.push(embedings[closeset[i].wordKey].message);
   }
-  
-  sockets.emit('sentencesResults', sentencesResults);
 
+  const sentimentResults = [];
 
-  let sentimentResults = [];
-
-  for (var i = 0; i < sentencesResults.length; i++) {
-    let sentiment = new Sentiment();
-    let result = sentiment.analyze(sentencesResults[i]);
+  for (let i = 0; i < sentencesResults.length; i++) {
+    const sentiment = new Sentiment();
+    const result = sentiment.analyze(sentencesResults[i]);
     // console.log(result);    // Score: -2, Comparative: -0.666
-
-
     sentimentResults.push(result.score);
 
   }
 
-  // console.log(sentimentResults);
-  sockets.emit('sentencesSentiment', sentimentResults);
+  const similarityObject = {
+    sentences: sentencesResults,
+    sentiment: sentimentResults
+  }
 
-
-
+  return similarityObject;
 }
-
-//run a similarity check
-// findVector(embedings[900].message);

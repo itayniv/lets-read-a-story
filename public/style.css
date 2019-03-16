@@ -133,12 +133,12 @@
   }
 
   .voice {
-    padding-top: 40px;
+    padding-top: 20;
     padding-bottom: 40px;
     font-family: 'Sumana', serif;
     color: #15235a;
-    font-size: 30px;
-    line-height: 50px;
+    font-size: 27px;
+    line-height: 42px;
   }
 
   .generate-button {
@@ -509,6 +509,23 @@
   }
 
 
+  .page-number{
+    position: fixed;
+    left: 94%;
+    color: #6d6d6d;
+    margin-left: 0px;
+  }
+
+  .currnet-paragraph{
+    font-family: 'Sumana', serif;
+    font-weight: 600;
+    color: #bbbbbb;
+    font-size: 12px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+
+  }
+
 .pause-and-play{
   height: 25px;
   width: 25px;
@@ -526,12 +543,41 @@
   opacity: .25;
 }
 
+.rebranch-container{
+  /* width: 100%; */
+  /* height: 100%; */
+  position: absolute;
+  top: 50%;
+  right: -80px;
+  /* left: 50%; */
+}
+
+
+
+.paragraph-container{
+  background: white;
+    color: white;
+    opacity: 0.0;
+    display: block;
+    position: relative;
+
+}
+
+
 .rebranch-button{
   height: 25px;
   width: 25px;
   content: "";
   margin: auto;
-  opacity: .15;
+  opacity: .05;
+}
+
+.rebranch-button:hover{
+  height: 25px;
+  width: 25px;
+  content: "";
+  margin: auto;
+  opacity: .2;
 }
 
 /* .rebranch-button:hover{
@@ -819,6 +865,9 @@
 
 
   .one-more-sentence{
+
+    margin: 0 auto;
+    display: block;
     /* width: 100%; */
     text-align: center;
     background: "white";
@@ -833,6 +882,8 @@
 
   .one-more-sentence:hover{
     /* width: 100%; */
+    margin: 0 auto;
+    display: block;
     text-align: center;
     background: "white";
     z-index: 100;
@@ -847,6 +898,8 @@
 
   .one-more-sentence:focus{
     /* width: 100%; */
+    margin: 0 auto;
+    display: block;
     text-align: center;
     background: "white";
     z-index: 100;

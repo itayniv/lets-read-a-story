@@ -138,9 +138,9 @@ const frogArr = ['frogs', "frog's"]
 // };
 //
 // function splitInput(inputText){
-//   var newtextArr = inputText.toLowerCase().split(" ");
+//   let newtextArr = inputText.toLowerCase().split(" ");
 //
-//   for (var i = 0; i < newtextArr.length; i++) {
+//   for (let i = 0; i < newtextArr.length; i++) {
 //     storyBuild.push(newtextArr[i]);
 //   }
 //   // console.log(newtextArr);
@@ -263,7 +263,7 @@ function runjsonCheck(json, checkword) {
   for (let key in json.stories) {
     // json.stories[key].story.length
     //run over 4 sentences
-    for (var i = 0; i < Math.ceil(json.stories[key].story.length / 3); i++) {
+    for (let i = 0; i < Math.ceil(json.stories[key].story.length / 3); i++) {
 
       //convert line to lower case
       let lineInStory = json.stories[key].story[i];
@@ -529,7 +529,7 @@ function addOneMoreSentence() {
   let prgsBar = document.getElementById('one-more-sentence-loader');
 
   function timeOutTimer() {
-    console.log('timer' + width);
+
     // if timer hasnt reached the end and button was not pressed
     if ((width >= 1000) && (!addedSentence)) {
 
@@ -537,7 +537,6 @@ function addOneMoreSentence() {
       addSentenceAfterbutton();
 
     } else {
-
       if (pauseBool) {
         width++;
         prgsBar.style.width = width / 10 + '%';
@@ -549,31 +548,63 @@ function addOneMoreSentence() {
 
 function rebranchThis(sentence) {
   // console.log('sentence', sentence-1);
-  console.log(similarSentences[sentence - 1]);
   socket.emit('rebranchSentence', { 'animal': 'checkword', 'rebranchSentance': similarSentences[sentence - 1] });
 
 }
 
 function insertNewSeed(newSeedObject) {
   // get the new sentences
-  const newSeedResults = newSeedObject.sentences;
+  let newSeedResults = newSeedObject.sentences;
+  console.log(newSeedResults);
 
-  //what sentence are we on right now?
-  const currSentence = sentanceNumber-1;
+  // first element removed
+  
+  newSeedResults.shift(); 
+  // newSeedResults.shift();
 
-  //cut the sumilar sentence array to the length of this
+  // newSeedResults[0] = '';
+
+  console.log(newSeedResults, 'deletedarray');
+
+
+  // what sentence are we on right now?
+  let currSentence = sentanceNumber - 1;
+
+  // cut the sumilar sentence array to the length of this
   similarSentences.length = currSentence;
 
   // concatinate both arrays
-  const concatinatedArray = similarSentences.concat(newSeedResults)
-  
-  similarSentences = concatinatedArray; 
+  let concatinatedArray = similarSentences.concat(newSeedResults);
+
+  similarSentences = concatinatedArray;
+
+  // add 'newseed' span to page number
+  let thisPageNumber = document.getElementById(`paragraphNumber${sentanceNumber}`);
+
+  // check for recent seed holder
+  for (let i = 0; i < (currSentence+1); i++) {
+
+    let thisSpanNumber = document.getElementById(`currentSeed${i+1}`);
+    if (thisSpanNumber != null) {
+      thisSpanNumber.innerHTML = ' ';
+    }
+    
+
+  }
+
+  const currentSeedSpan = document.createElement('span')
+  currentSeedSpan.innerHTML = 'Current Seed';
+  currentSeedSpan.id = `currentSeed${sentanceNumber}`;
+  currentSeedSpan.classList.add('current-seed');
+
+
+  thisPageNumber.appendChild(currentSeedSpan);
+
 
   setTimeout(() => {
-    // do somthing
     clearInterval(buttonTimer);
     addSentenceAfterbutton();
-  }, 600);
+  }, 300);
 }
 
 
@@ -647,15 +678,17 @@ function buttonPressed(clicked_id) {
 
   para.appendChild(node);
   para.style.display = "none";
-  para.classList.add("title-text-name");
-  para.id = "a-story-about";
+  para.style.opacity = '0.0';
 
-  var element = document.getElementById("prompt");
+  para.classList.add('title-text-name');
+  para.id = 'a-story-about';
+
+  let element = document.getElementById('prompt');
   element.appendChild(para);
 
   // fade in the story name
   setTimeout(() => {
-    fadeInelement = document.getElementById("a-story-about");
+    fadeInelement = document.getElementById('a-story-about');
     fadein(fadeInelement);
   }, 1000);
 
@@ -677,24 +710,23 @@ function startbuttonPressed(clicked_id) {
   startStory = true;
 
   setTimeout(() => {
-    let fadeoutComponent1 = document.getElementById("book");
+    let fadeoutComponent1 = document.getElementById('book');
     fadeout(fadeoutComponent1);
   }, 300);
 
   setTimeout(() => {
-    let fadeoutComponent = document.getElementById("start-button");
-    let fadeoutComponent1 = document.getElementById("start-background");
+    let fadeoutComponent = document.getElementById('start-button');
+    let fadeoutComponent1 = document.getElementById('start-background');
     fadeout(fadeoutComponent1);
     fadeout(fadeoutComponent);
-
 
 
   }, 500);
 
   setTimeout(() => {
-    let fadeinComponent2 = document.getElementById("characterOne");
+    let fadeinComponent2 = document.getElementById('characterOne');
     fadein(fadeinComponent2);
-    let fadeinComponent1 = document.getElementById("prompt");
+    let fadeinComponent1 = document.getElementById('prompt');
     fadein(fadeinComponent1);
   }, 1500);
 
@@ -704,15 +736,10 @@ function startbuttonPressed(clicked_id) {
   }, 2400);
 }
 
-//
+// --> sketchrnn
 
-
-///////sketchrnn
-
-//drawing class
-var sketchRnnDrawing = function (drawingOne) {
-  // var x = 100;
-  // var y = 100;
+// drawing class
+let sketchRnnDrawing = function (drawingOne) {
 
   drawingOne.setup = function () {
     drawingOne.createCanvas(canvasWidth, canvasHeight);
@@ -820,14 +847,14 @@ function loadASketch(drawing) {
   //create a div container for drawing
   drawingNumber++;
 
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.id = `drawing${sentanceNumber}`;
   div.style.background = "white";
   div.style.color = "white";
   div.style.paddingBottom = "0px";
   document.getElementById("story").appendChild(div);
 
-  var drawingCanvas = new p5(sketchRnnDrawing, document.getElementById(`drawing${sentanceNumber}`));
+  let drawingCanvas = new p5(sketchRnnDrawing, document.getElementById(`drawing${sentanceNumber}`));
 
   if (sentanceNumber != 1) {
 
@@ -852,7 +879,7 @@ function loadBookSketch(drawing) {
   //create a div container for drawing
   // drawingNumber ++;
 
-  var div = document.createElement("div");
+  const div = document.createElement("div");
   div.id = "bookillustration";
   div.style.background = "white";
   div.style.color = "white";
@@ -862,7 +889,7 @@ function loadBookSketch(drawing) {
   div.style.top = "0px";
   document.getElementById("book").appendChild(div);
 
-  var drawingBookCanvas = new p5(sketchRnnBook, document.getElementById("bookillustration"));
+  let drawingBookCanvas = new p5(sketchRnnBook, document.getElementById("bookillustration"));
 }
 
 //  Book animation in beginning
@@ -878,9 +905,7 @@ function startDrawingbook() {
 
 
 // book class
-var sketchRnnBook = function (drawingBook) {
-  // var x = 100;
-  // var y = 100;
+let sketchRnnBook = function (drawingBook) {
 
   drawingBook.setup = function () {
     drawingBook.createCanvas(viewportWidth, viewportHeight);
@@ -1001,7 +1026,7 @@ function ifInClass(theSentance) {
     let sentenceToArray = newsentance.split(" ");
 
     let tempArray = [];
-    for (var i = 0; i < sentenceToArray.length; i++) {
+    for (let i = 0; i < sentenceToArray.length; i++) {
       tempArray.push({
         // add words as classes now, later to be tested as classes
         class: sentenceToArray[i],
@@ -1020,7 +1045,7 @@ function ifInClass(theSentance) {
 
     // console.log('addClasses', addClasses);
 
-    for (var i = 0; i < addClasses.length; i++) {
+    for (let i = 0; i < addClasses.length; i++) {
       // console.log(`add ${addClasses[i].class} to array`);
       sentenceToArray.push({
         class: addClasses[i].class,
@@ -1031,7 +1056,7 @@ function ifInClass(theSentance) {
     // console.log('sentenceToArray after',sentenceToArray);
 
     //fo all the words in that new sentence
-    for (var i = 0; i < sentenceToArray.length; i++) {
+    for (let i = 0; i < sentenceToArray.length; i++) {
 
       //if a word in the class apears inside the sentence
       if (drawingClasses.indexOf(sentenceToArray[i].class.toLowerCase()) > -1) {

@@ -508,6 +508,16 @@
     color: #888888;
   }
 
+  .current-seed{
+    color: #bbbbbb;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 400;
+    font-size: 12px;
+    padding-bottom: 0px;
+    padding-top: 1px;
+    padding-right: 5px;
+    padding-left: 15px;
+  }
 
   .page-number{
     position: fixed;
@@ -517,13 +527,12 @@
   }
 
   .currnet-paragraph{
-    font-family: 'Sumana', serif;
-    font-weight: 600;
+    font-family: 'Fira Sans', sans-serif;
+    font-weight: 400;
     color: #bbbbbb;
     font-size: 12px;
     padding-bottom: 20px;
     padding-top: 20px;
-
   }
 
 .pause-and-play{

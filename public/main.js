@@ -352,10 +352,18 @@ function addSentence(result, source) {
       reBranchContainer.id = 'rebranch-container';
       reBranchContainer.classList.add('rebranch-container');
 
+      // remove prev rebranch
+      const prevRebranchButton = document.getElementById(`rebranch-button${sentanceNumber-1}`);
+      const thisObjectID = `rebranch-button${sentanceNumber-1}`;
+      if (prevRebranchButton!=null) {
+        fadeoutandDeletecurrOpacity(prevRebranchButton, thisObjectID);
+      }
+     
+      
       // create the putton
       const reBranch = document.createElement('div');
       reBranch.classList.add('rebranch-button');
-      reBranch.id = 'rebranch-button';
+      reBranch.id = `rebranch-button${sentanceNumber}`;
       reBranch.onclick = function () { rebranchThis(sentanceNumber); };
       reBranch.style.backgroundImage = "url('./images/branch.svg')";
 
@@ -555,17 +563,10 @@ function rebranchThis(sentence) {
 function insertNewSeed(newSeedObject) {
   // get the new sentences
   let newSeedResults = newSeedObject.sentences;
-  console.log(newSeedResults);
 
   // first element removed
   
   newSeedResults.shift(); 
-  // newSeedResults.shift();
-
-  // newSeedResults[0] = '';
-
-  console.log(newSeedResults, 'deletedarray');
-
 
   // what sentence are we on right now?
   let currSentence = sentanceNumber - 1;
@@ -588,7 +589,6 @@ function insertNewSeed(newSeedObject) {
     if (thisSpanNumber != null) {
       thisSpanNumber.innerHTML = ' ';
     }
-    
 
   }
 
@@ -665,15 +665,15 @@ function buttonPressed(clicked_id) {
 
   // fade out buttons and prompt
   setTimeout(() => {
-    let fadeoutComponent1 = document.getElementById("characterOne");
-    let fadeoutComponent2 = document.getElementById("recordedText");
+    let fadeoutComponent1 = document.getElementById('characterOne');
+    let fadeoutComponent2 = document.getElementById('recordedText');
 
     fadeout(fadeoutComponent1);
     fadeout(fadeoutComponent2);
   }, 100);
 
   // create the story name
-  let para = document.createElement("p");
+  let para = document.createElement('p');
   let node = document.createTextNode(`A story about a ${animalOneSearch}`);
 
   para.appendChild(node);
@@ -985,7 +985,6 @@ let sketchRnnBook = function (drawingBook) {
 };
 
 
-
 function startDrawing() {
   x = startX;
   y = startY;
@@ -1053,7 +1052,6 @@ function ifInClass(theSentance) {
       });
     }
 
-    // console.log('sentenceToArray after',sentenceToArray);
 
     //fo all the words in that new sentence
     for (let i = 0; i < sentenceToArray.length; i++) {

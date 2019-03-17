@@ -409,8 +409,8 @@ function fadeout(element) {
 }
 
 function fadeoutandDelete(element) {
-  var op = 1;  // initial opacity
-  var timer = setInterval(function () {
+  let op = 1;  // initial opacity
+  let timer = setInterval(function () {
     if (op <= 0.001){
       clearInterval(timer);
       element.style.display = 'none';
@@ -419,6 +419,21 @@ function fadeoutandDelete(element) {
     element.style.opacity = op;
     element.style.filter = 'alpha(opacity=' + op * 100 + ")";
     op -= op * 0.4;
+  }, 20);
+}
+
+function fadeoutandDeletecurrOpacity(element, objectID) {
+
+  let op = document.getElementById(objectID).style.opacity;
+  let timer = setInterval(function () {
+    if (op <= 0.001){
+      clearInterval(timer);
+      element.style.display = 'none';
+      element.remove();
+    }
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    op -= op * 0.1;
   }, 20);
 }
 

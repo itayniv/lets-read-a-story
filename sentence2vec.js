@@ -1,7 +1,7 @@
 // Word Vectors
-// Based on: https://github.com/turbomaze/word2vecjson
+// Based on: https://github.com/turbomaze/Sentence2Vecjson
 
-class Word2Vec {
+class Sentence2Vec {
 
   static magnitude(a) {
     let sum = a.reduce((sum, val) => {
@@ -63,4 +63,4 @@ class Word2Vec {
 }
 
 
-module.exports = Word2Vec;
+module.exports = Sentence2Vec;

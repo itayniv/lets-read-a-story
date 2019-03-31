@@ -598,8 +598,9 @@ function createSyntStarthWithEffects()  {
 }
 
 
-function addSentenceAfterbutton(){
-  //add Sentence
+function addSentenceAfterbutton() {
+  // add Sentence
+  console.log('addsentence Now');
 
   setTimeout(() => {
     addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
@@ -617,6 +618,7 @@ function addSentenceAfterbutton(){
 function convertRange( value, r1, r2 ) {
   return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
 }
+
 
 
 
@@ -646,4 +648,80 @@ function endStory(){
   setTimeout(() => {
     addOneMoreButton();
   }, 4000);
+}
+
+
+function identifyAnimalsIntent(theSentance) {
+
+  //get theSentance to lower case
+  const sentance = theSentance.toLowerCase();
+
+  //remove, ! . ?
+  let newsentance = sentance.replace('.', '');
+  newsentance = newsentance.replace(',', '');
+  newsentance = newsentance.replace('?', '');
+  newsentance = newsentance.replace('!', '');
+
+  //split sentence to array
+  let sentenceToArray = newsentance.split(" ");
+
+  let tempArray = [];
+
+  for (let i = 0; i < sentenceToArray.length; i++) {
+    tempArray.push({
+      // add words as classes now, later to be tested as classes
+      class: sentenceToArray[i],
+      word: sentenceToArray[i]
+    })
+  }
+
+  //convert sentenceToArray to an array of objects
+  sentenceToArray = tempArray;
+
+  //clear the array called similarityArray
+  similaritiesArray = [];
+
+  let addClasses = enrichSketchClass(newsentance);
+
+  // console.log('addClasses', addClasses);
+
+  for (let i = 0; i < addClasses.length; i++) {
+    // console.log(`add ${addClasses[i].class} to array`);
+    sentenceToArray.push({
+      class: addClasses[i].class,
+      word: addClasses[i].word
+    });
+  }
+
+
+  // for all the words in that new sentence
+  for (let i = 0; i < sentenceToArray.length; i++) {
+
+    // if a word in the class apears inside the sentence
+    if (drawingClasses.indexOf(sentenceToArray[i].class.toLowerCase()) > -1) {
+
+      // great! found words, now push those word into similaritiesArray
+      similaritiesArray.push({
+        word: sentenceToArray[i].word,
+        class: sentenceToArray[i].class
+      });
+    } else {
+      // didnt find any words do nothing
+
+    }
+  }
+
+  //if found words that match
+  if (similaritiesArray.length > 0) {
+    currIllustration = similaritiesArray[0].class;
+
+    currIllustrationObject = {
+      class: similaritiesArray[0].class,
+      word: similaritiesArray[0].word
+    }
+
+    return currIllustrationObject;
+    //add that sketch class to the document
+  }
+
 }

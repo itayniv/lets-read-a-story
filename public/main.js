@@ -104,69 +104,6 @@ const owlArr = ["owl's"];
 const frogArr = ['frogs', "frog's"]
 
 
-//
-// ///// speech part
-//
-// const SpeechRecognition = webkitSpeechRecognition;
-// const getSpeech = () => {
-//   const recognition = new SpeechRecognition();
-//   recognition.lang = 'en-US';
-//   recognition.start();
-//   // recognition.continuous = false;
-//   recognition.interimResults = true;
-//   // console.log('started rec');
-//
-//   recognition.onresult = event => {
-//     const speechResult = event.results[0][0].transcript;
-//     // console.log('result: ' + speechResult);
-//     // console.log('confidence: ' + event.results[0][0].confidence);
-//
-//     generateNewInput(speechResult);
-//
-//   };
-//
-//   recognition.onend = () => {
-//     // console.log('it is over');
-//     // for "endless" mode, comment out the next line and uncomment getSpeech()
-//     // recognition.stop();
-//     getSpeech();
-//   };
-//
-//   recognition.onerror = event => {
-//     // console.log('something went wrong: ' + event.error);
-//   };
-// };
-//
-// function splitInput(inputText){
-//   let newtextArr = inputText.toLowerCase().split(" ");
-//
-//   for (let i = 0; i < newtextArr.length; i++) {
-//     storyBuild.push(newtextArr[i]);
-//   }
-//   // console.log(newtextArr);
-//   // console.log('textarray input', newtextArr);
-// }
-//
-//
-// function generateNewInput(text){
-//
-//   walk(text); // word2vec
-//
-//   let thistextToString = text.toLowerCase().split(" ");
-//   splitInput(text);
-//   let storyBuildText = storyBuild.toString();
-//   // console.log(storyBuildText);
-//   let replace = storyBuildText.replace(/,/g, " "); // replace ','
-//   // console.log(replace);
-//   generate(replace);
-//
-//   addSentence(text, "voice / input");
-//
-// }
-//
-//
-// ///// speech part
-
 init();
 
 function modelReady() {
@@ -175,6 +112,7 @@ function modelReady() {
 }
 
 function init() {
+  getSpeech();
 
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
@@ -256,7 +194,7 @@ function runjsonCheck(json, checkword) {
   // add a regex search for a specific given word
   let regex = new RegExp(checkword);
 
-  //reset a sentance container that will hold all sentances related to the search
+  // reset a sentance container that will hold all sentances related to the search
   sentanceContainer = [];
 
   // run through all the sentences in the json file.
@@ -513,6 +451,8 @@ function addOneMoreSentence() {
     addSentenceAfterbutton();
     addedSentence = true;
   };
+
+
 
   let para = document.createElement("span");
   let nodepara = document.createTextNode("What happened next?");
@@ -1007,6 +947,7 @@ function gotBookSketch(err, s) {
 
 
 // drawingClasses
+
 function ifInClass(theSentance) {
 
   //if you can still add sentences

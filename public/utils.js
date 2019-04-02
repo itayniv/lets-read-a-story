@@ -1,6 +1,26 @@
+// ------> Utils
+
+// resize canvas
+const originalResize = (evt) => {
+  canvasWidth = document.getElementById('drawing-container').offsetWidth;
+  canvasHeight = document.getElementById('drawing-container').offsetHeight;
+};
 
 
-///------> Utils
+(() => {
+  resizeTaskId = null;
+
+  window.addEventListener('resize', evt => {
+    if (resizeTaskId !== null) {
+      clearTimeout(resizeTaskId);
+    }
+
+    resizeTaskId = setTimeout(() => {
+      resizeTaskId = null;
+      originalResize(evt);
+    }, 100);
+  });
+})();
 
 function enrichSketchClass(theSentance) {
 
@@ -9,13 +29,13 @@ function enrichSketchClass(theSentance) {
   let sentance = theSentance.toLowerCase();
 
   // split sentence to array
-  let sentenceToArray = sentance.split(" ");
+  let sentenceToArray = sentance.split(' ');
 
   // create new array called similarityArray
   let newSimilaritiesArray = [];
 
   // for all the words in that new sentence
-  for (var i = 0; i < sentenceToArray.length; i++) {
+  for (let i = 0; i < sentenceToArray.length; i++) {
 
     // if a word in the class apears inside the sentence
     if (squirrelArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
@@ -29,7 +49,7 @@ function enrichSketchClass(theSentance) {
       newSimilaritiesArray.push(squirrelObject);
       // console.log("found a squirrel", squirrelObject);
 
-    } else if(turtleArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (turtleArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
       let sea_turtleObject = {
@@ -39,7 +59,7 @@ function enrichSketchClass(theSentance) {
 
       // console.log("found a turtle", sea_turtleObject);
       newSimilaritiesArray.push(sea_turtleObject);
-    }else if(basketArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (basketArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -51,7 +71,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a basket", basketObject);
       newSimilaritiesArray.push(basketObject);
 
-    }else if(spiderArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (spiderArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -63,7 +83,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a spider", spiderObject);
       newSimilaritiesArray.push(spiderObject);
 
-    }else if(sheepArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (sheepArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -75,7 +95,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a sheep", sheepObject);
       newSimilaritiesArray.push(sheepObject);
 
-    }else if(dogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (dogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -87,7 +107,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a dog", dogObject);
       newSimilaritiesArray.push(dogObject);
 
-    }else if(mosquitoArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (mosquitoArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -99,7 +119,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a mosquito", mosquitoObject);
       newSimilaritiesArray.push(mosquitoObject);
 
-    }else if(swanArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+    } else if (swanArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       const thisWord = sentenceToArray[i].toLowerCase();
 
@@ -111,7 +131,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a swan", swanObject);
       newSimilaritiesArray.push(swanObject);
 
-    }else if(birdsArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    } else if (birdsArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       const thisWord = sentenceToArray[i].toLowerCase();
 
@@ -123,7 +143,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a bird", birdObject);
       newSimilaritiesArray.push(birdObject);
     }
-    else if(lionArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    else if (lionArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -135,7 +155,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a lion", lionObject);
       newSimilaritiesArray.push(lionObject);
     }
-    else if(owlArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    else if (owlArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -147,7 +167,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a owl", owlObject);
       newSimilaritiesArray.push(owlObject);
     }
-    else if(catArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    else if (catArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -158,7 +178,7 @@ function enrichSketchClass(theSentance) {
       // console.log("found a cat", catObject);
       newSimilaritiesArray.push(catObject);
     }
-    else if(frogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1){
+    else if (frogArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
 
@@ -188,57 +208,57 @@ function convertDiamToNoteMajor(locationY) {
 
   let sketchNotationArray = [];
   let note;
-  switch (Math.floor(convertRange( newlocationY, [ -60, 60 ], [ -1, 15 ] ))) {
+  switch (Math.floor(convertRange(newlocationY, [-60, 60], [-1, 15]))) {
     case -1:
-    note = 0;
-    break;
+      note = 0;
+      break;
     case 0:
-    note = 0;
-    break;
+      note = 0;
+      break;
     case 1:
-    note = 246.94;
-    break;
+      note = 246.94;
+      break;
     case 2:
-    note = 277.183;
-    break;
+      note = 277.183;
+      break;
     case 3:
-    note = 311.127;
-    break;
+      note = 311.127;
+      break;
     case 4:
-    note = 329.63;
-    break;
+      note = 329.63;
+      break;
     case 5:
-    note = 369.99;
-    break;
+      note = 369.99;
+      break;
     case 6:
-    note = 415.305;
-    break;
+      note = 415.305;
+      break;
     case 7:
-    note = 466.1638;
-    break;
+      note = 466.1638;
+      break;
     case 8:
-    note =  493.8833;
-    break;
+      note = 493.8833;
+      break;
     case 9:
-    note = 554.3653;
-    break;
+      note = 554.3653;
+      break;
     case 10:
-    note = 622.254;
-    break;
+      note = 622.254;
+      break;
     case 11:
-    note = 659.2551;
-    break;
+      note = 659.2551;
+      break;
     case 12:
-    note = 739.9888;
-    break;
+      note = 739.9888;
+      break;
     case 13:
-    note = 830.6094;
-    break;
+      note = 830.6094;
+      break;
     case 14:
-    note = 932.3275;
-    break;
+      note = 932.3275;
+      break;
     case 15:
-    note = 987.7666;
+      note = 987.7666;
   }
   return note;
 }
@@ -254,138 +274,138 @@ function convertDiamToNoteMinor(locationY) {
 
   let sketchNotationArray = [];
   let note;
-  switch (Math.floor(convertRange( newlocationY, [ -60, 60 ], [ -1, 15 ] ))) {
+  switch (Math.floor(convertRange(newlocationY, [-60, 60], [-1, 15]))) {
     case -1:
-    note = 0;
-    break;
+      note = 0;
+      break;
     case 0:
-    note = 0;
-    break;
+      note = 0;
+      break;
     case 1:
-    note = 246.94;
-    break;
+      note = 246.94;
+      break;
     case 2:
-    note = 277.183;
-    break;
+      note = 277.183;
+      break;
     case 3:
-    note = 293.665;
-    break;
+      note = 293.665;
+      break;
     case 4:
-    note = 329.63;
-    break;
+      note = 329.63;
+      break;
     case 5:
-    note = 369.99;
-    break;
+      note = 369.99;
+      break;
     case 6:
-    note = 391.995;
-    break;
+      note = 391.995;
+      break;
     case 7:
-    note = 440.0000;
-    break;
+      note = 440.0000;
+      break;
     case 8:
-    note =  493.8833;
-    break;
+      note = 493.8833;
+      break;
     case 9:
-    note = 554.3653;
-    break;
+      note = 554.3653;
+      break;
     case 10:
-    note = 587.3295;
-    break;
+      note = 587.3295;
+      break;
     case 11:
-    note = 659.2551;
-    break;
+      note = 659.2551;
+      break;
     case 12:
-    note = 739.9888;
-    break;
+      note = 739.9888;
+      break;
     case 13:
-    note = 783.9909;
-    break;
+      note = 783.9909;
+      break;
     case 14:
-    note = 880.0000;
-    break;
+      note = 880.0000;
+      break;
     case 15:
-    note = 987.7666;
+      note = 987.7666;
   }
   return note;
 }
 
 
 
-function noteLength(locationX){
+function noteLength(locationX) {
 
   let noteLength;
   let note;
   let newlocationX = clamp(locationX, -60, 60)
 
-  switch (Math.floor(convertRange( newlocationX, [ -60, 60 ], [ -1, 22 ] ))) {
+  switch (Math.floor(convertRange(newlocationX, [-60, 60], [-1, 22]))) {
     case 0:
-    noteLength = "4n";
-    break;
+      noteLength = "4n";
+      break;
     case 1:
-    noteLength = "4n";
-    break;
+      noteLength = "4n";
+      break;
     case 2:
-    noteLength = "5n";
-    break;
+      noteLength = "5n";
+      break;
     case 3:
-    noteLength = "5n";
-    break;
+      noteLength = "5n";
+      break;
     case 4:
-    noteLength = "6n";
-    break;
+      noteLength = "6n";
+      break;
     case 5:
-    noteLength = "6n";
-    break;
+      noteLength = "6n";
+      break;
     case 6:
-    noteLength = "8n";
-    break;
+      noteLength = "8n";
+      break;
     case 7:
-    noteLength = "8n";
-    break;
+      noteLength = "8n";
+      break;
     case 8:
-    noteLength = "8n";
-    break;
+      noteLength = "8n";
+      break;
     case 9:
-    noteLength = "8n";
-    break;
+      noteLength = "8n";
+      break;
     case 10:
-    noteLength = "10n";
-    break;
+      noteLength = "10n";
+      break;
     case 11:
-    noteLength = "10n";
-    break;
+      noteLength = "10n";
+      break;
     case 12:
-    noteLength = "10n";
-    break;
+      noteLength = "10n";
+      break;
     case 13:
-    noteLength = "12n";
-    break;
+      noteLength = "12n";
+      break;
     case 14:
-    noteLength = '12n';
-    break;
+      noteLength = '12n';
+      break;
     case 15:
-    noteLength = "12n";
-    break;
+      noteLength = "12n";
+      break;
     case 16:
-    noteLength = "12n";
-    break;
+      noteLength = "12n";
+      break;
     case 17:
-    noteLength = "14n";
-    break;
+      noteLength = "14n";
+      break;
     case 18:
-    noteLength = "14n";
-    break;
+      noteLength = "14n";
+      break;
     case 19:
-    noteLength = "14n";
-    break;
+      noteLength = "14n";
+      break;
     case 20:
-    noteLength = "16n";
-    break;
+      noteLength = "16n";
+      break;
     case 21:
-    noteLength = "16n";
-    break;
+      noteLength = "16n";
+      break;
     case 22:
-    noteLength = "18n";
+      noteLength = "18n";
 
   }
   // console.log("here",noteLength, locationX);
@@ -398,7 +418,7 @@ function noteLength(locationX){
 function fadeout(element) {
   var op = 1;  // initial opacity
   var timer = setInterval(function () {
-    if (op <= 0.001){
+    if (op <= 0.001) {
       clearInterval(timer);
       element.style.display = 'none';
     }
@@ -408,10 +428,25 @@ function fadeout(element) {
   }, 20);
 }
 
+
+
+function slowFadeOut(element) {
+  var op = 1;  // initial opacity
+  var timer = setInterval(function () {
+    if (op <= 0.001) {
+      clearInterval(timer);
+      element.style.display = 'none';
+    }
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    op -= op * 0.25;
+  }, 20);
+}
+
 function fadeoutandDelete(element) {
   let op = 1;  // initial opacity
   let timer = setInterval(function () {
-    if (op <= 0.001){
+    if (op <= 0.001) {
       clearInterval(timer);
       element.style.display = 'none';
       element.remove();
@@ -426,7 +461,7 @@ function fadeoutandDeletecurrOpacity(element, objectID) {
 
   let op = document.getElementById(objectID).style.opacity;
   let timer = setInterval(function () {
-    if (op <= 0.001){
+    if (op <= 0.001) {
       clearInterval(timer);
       element.style.display = 'none';
       element.remove();
@@ -441,7 +476,7 @@ function fadeoutandDeletecurrOpacity(element, objectID) {
 function dimElement(element) {
   var op = 1;  // initial opacity
   var timer = setInterval(function () {
-    if (op <= 0.2){
+    if (op <= 0.2) {
       clearInterval(timer);
       // element.style.display = 'none';
     }
@@ -453,10 +488,10 @@ function dimElement(element) {
 
 
 function fadein(element) {
-  var op = 0.1;  // initial opacity
+  let op = 0.1;  // initial opacity
   element.style.display = 'block';
-  var timer = setInterval(function () {
-    if (op >= 1){
+  let timer = setInterval(function () {
+    if (op >= 1) {
       clearInterval(timer);
     }
     element.style.opacity = op;
@@ -469,7 +504,7 @@ function fadeinButton(element) {
   var op = 0.01;  // initial opacity
   element.style.display = 'inline-block';
   var timer = setInterval(function () {
-    if (op >= 1){
+    if (op >= 1) {
       clearInterval(timer);
     }
     element.style.opacity = op;
@@ -518,7 +553,7 @@ let synthStart = createSyntStarthWithEffects();
 
 
 
-function createSyntOnehWithEffects()  {
+function createSyntOnehWithEffects() {
   let vol = new Tone.Volume(-20).toMaster();
 
   let reverb = new Tone.Freeverb(0.02).connect(vol);
@@ -545,7 +580,7 @@ function createSyntOnehWithEffects()  {
 
 
 
-function createSyntTwohWithEffects()  {
+function createSyntTwohWithEffects() {
   let vol = new Tone.Volume(-20).toMaster();
 
   let reverb = new Tone.Freeverb(0.02).connect(vol);
@@ -572,7 +607,7 @@ function createSyntTwohWithEffects()  {
 
 
 
-function createSyntStarthWithEffects()  {
+function createSyntStarthWithEffects() {
   let vol = new Tone.Volume(-30).toMaster();
 
   let reverb = new Tone.Freeverb(0.2).connect(vol);
@@ -600,7 +635,7 @@ function createSyntStarthWithEffects()  {
 
 function addSentenceAfterbutton() {
   // add Sentence
-  console.log('addsentence Now');
+  // fade out current ullustration
 
   setTimeout(() => {
     addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
@@ -608,24 +643,25 @@ function addSentenceAfterbutton() {
   }, 400);
 
   //delete this button
-  setTimeout (() => {
-    const elm  = document.getElementById('one-more-sentence');
+  setTimeout(() => {
+    const elm = document.getElementById('one-more-sentence');
+    const fadeOutIllustration = document.getElementById(`drawing${sentanceNumber}`);
     fadeoutandDelete(elm);
+    if (fadeOutIllustration) {
+      slowFadeOut(fadeOutIllustration);
+    }
   }, 100);
 }
 
 
-function convertRange( value, r1, r2 ) {
-  return ( value - r1[ 0 ] ) * ( r2[ 1 ] - r2[ 0 ] ) / ( r1[ 1 ] - r1[ 0 ] ) + r2[ 0 ];
+function convertRange(value, r1, r2) {
+  return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
 }
 
 
-
-
-
-function endStory(){
+function endStory() {
   var div = document.createElement("div");
-  div.id = `paragraph${sentanceNumber+1}`;
+  div.id = `paragraph${sentanceNumber + 1}`;
   div.style.background = "white";
   div.style.color = "white";
   div.style.opacity = 0;
@@ -638,7 +674,7 @@ function endStory(){
   para.appendChild(node);
   document.getElementById("story").appendChild(div).appendChild(para);
 
-  let fadeinElement = document.getElementById(`paragraph${sentanceNumber+1}`);
+  let fadeinElement = document.getElementById(`paragraph${sentanceNumber + 1}`);
 
   //fade the sentence into the page.
   setTimeout(() => {
@@ -725,3 +761,108 @@ function identifyAnimalsIntent(theSentance) {
   }
 
 }
+
+// get input of textbox
+
+function getInputText() {
+  const promptText = document.getElementById('recordedText').value;
+  console.log(promptText);
+  gotSpeech(promptText);
+}
+
+
+let last_known_scroll_position = 0;
+let ticking = false;
+
+function checkVisibillity(scroll_pos) {
+  for (let i = 0; i < contentContainerArr.length; i++) {
+    const isvisableCurrently = elementInViewport2(contentContainerArr[i].object);
+    contentContainerArr[i].isVisible = isvisableCurrently;
+  }
+  currentIllustrationState(contentContainerArr);
+}
+
+window.addEventListener('scroll', function (e) {
+  last_known_scroll_position = window.scrollY;
+
+  if (!ticking) {
+    window.requestAnimationFrame(function () {
+      // checkVisibillity(last_known_scroll_position);
+      ticking = false;
+    });
+
+    ticking = true;
+  }
+});
+
+function elementInViewport2(el) {
+  let top = el.offsetTop;
+  let left = el.offsetLeft;
+  let width = el.offsetWidth;
+  let height = el.offsetHeight;
+
+  while (el.offsetParent) {
+    el = el.offsetParent;
+    top += el.offsetTop;
+    left += el.offsetLeft;
+  }
+
+  return (
+    top < (window.pageYOffset + window.innerHeight) &&
+    left < (window.pageXOffset + window.innerWidth) &&
+    (top + height) > window.pageYOffset &&
+    (left + width) > window.pageXOffset
+  );
+}
+
+function currentIllustrationState(objectArr) {
+  // console.log(objectArr);
+  for (let index = 0; index < objectArr.length; index++) {
+    const element = objectArr[index];
+    // console.log(element.isVisible);
+
+    if (element.isVisible) {
+      for (let index = 0; index < objectArr.length; index++) {
+        const canvasElement = document.getElementById(`drawing${index}`);
+        if (canvasElement) {
+          if (canvasElement.style.display !== 'none') {
+            // canvasElement.style.display = 'none';
+            slowFadeOut(canvasElement);
+            console.log(`turn off ${index}`);
+          }
+        }
+      }
+      let currVisIndex = index + 1;
+      const visableElement = document.getElementById(`drawing${currVisIndex}`);
+      if (visableElement) {
+        if (visableElement.style.display !== 'block') {
+          setTimeout(() => {
+            fadein(visableElement);
+            console.log(`fadein ${currVisIndex}`);
+          }, 400);
+        }
+      }
+    }
+  }
+}
+
+
+// Setup isScrolling variable
+let isScrolling;
+
+// Listen for scroll events
+window.addEventListener('scroll', function (event) {
+
+  // Clear our timeout throughout the scroll
+  window.clearTimeout(isScrolling);
+
+  // Set a timeout to run after scrolling ends
+  isScrolling = setTimeout(function () {
+
+    // Run the callback
+    // console.log( 'Scrolling has stopped.' );
+    checkVisibillity(last_known_scroll_position);
+
+  }, 400);
+
+}, false);

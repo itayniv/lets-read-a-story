@@ -1,7 +1,5 @@
 @media only screen and (min-width: 300px) {
-
-
-  .buttonContainer{
+  .buttonContainer {
     /* position: absolute; */
     /* top: 0%; */
     /* z-index:100; */
@@ -10,12 +8,11 @@
     /* width: 80%; */
     /* height: 100%; */
   }
-
   .start-button {
     position: relative;
     top: 15px;
     background: #ffffff;
-    z-index:100;
+    z-index: 100;
     width: 55%;
     margin-top: 20px;
     line-height: 60px;
@@ -23,13 +20,12 @@
     letter-spacing: .03em;
     font-family: 'Sumana', serif;
     border: 2px solid #868686;
-
   }
   .start-button:hover {
     position: relative;
     top: 15px;
     background: #ffffff;
-    z-index:100;
+    z-index: 100;
     width: 55%;
     margin-top: 20px;
     line-height: 60px;
@@ -41,12 +37,11 @@
     text-decoration: underline;
     outline: none;
   }
-
   .start-button:focus {
     position: relative;
     top: 15px;
     background: #ffffff;
-    z-index:100;
+    z-index: 100;
     width: 55%;
     margin-top: 20px;
     line-height: 60px;
@@ -58,19 +53,16 @@
     text-decoration: underline;
     outline: none;
   }
-
-
   .start-background {
     position: relative;
     top: 0px;
     padding: 10px;
     background: "white";
-    z-index:100;
+    z-index: 100;
     margin-top: 20px;
     background-color: #fff;
     box-shadow: 0 0 20px 20px #fff;
   }
-
   .start-paragraph {
     text-align: center;
     position: relative;
@@ -82,8 +74,6 @@
     letter-spacing: .03em;
     font-family: 'Sumana', serif;
   }
-
-
   .button {
     border: none;
     margin-left: 3px;
@@ -95,20 +85,15 @@
     line-height: 60px;
     padding: 0 3%;
   }
-
   .button:hover {
     background: #fbfaf2;
     text-decoration: underline;
   }
-
-  .mobileContainer{
+  .mobileContainer {
     padding-right: 50px;
     padding-left: 50px;
   }
-
-
-
-  .img-thumbnail{
+  .img-thumbnail {
     border: none;
     display: block;
     margin: auto;
@@ -117,21 +102,15 @@
     padding-bottom: 10px;
     opacity: 0.8;
     background: none;
-
   }
-
   .net {
     font-family: 'Roboto', sans-serif;
     color: blue;
     font-size: 20px;
-
   }
-
-
   .html {
     scroll-behavior: smooth;
   }
-
   .voice {
     padding-top: 20;
     padding-bottom: 40px;
@@ -140,14 +119,10 @@
     font-size: 27px;
     line-height: 42px;
   }
-
   .generate-button {
     padding-top: 40px;
     text-align: center;
   }
-
-
-
   .flex-container {
     display: flex;
     flex-wrap: nowrap;
@@ -155,18 +130,12 @@
     flex-wrap: wrap;
     justify-content: center;
     align-items: baseline;
-    align-content:space-between;
+    align-content: space-between;
     margin-top: 30px;
-
   }
-
-
-
-  .header-text{
+  .header-text {
     font-size: 60px;
   }
-
-
   .input {
     background-color: transparent;
     border: none;
@@ -186,35 +155,25 @@
       outline: none !important;
     }
   }
-
   .textbox {
     text-align: center;
-
   }
-
   /*TYPOGRAPHY*/
   a {
     outline: none;
     color: #FDD835;
   }
-
   a:active {
     color: #FDD835;
   }
-
   a:visited {
     color: #F57F17;
   }
-
-
-
   a:hover {
     color: #FDD835;
     text-decoration: underline;
-
   }
-
-  .textbox-padding{
+  .textbox-padding {
     text-align: center;
     height: 50px;
     padding-left: 20px;
@@ -226,53 +185,41 @@
     padding-right: 30%;
     text-align: center !important;
   }
-
-  .textbox-answer{
+  .textbox-answer {
     text-align: center;
     display: none;
-
   }
-
-  .container{
+  .container {
     z-index: 265;
     position: absolute !important;
     padding-top: 60px !important;
     width: 100% !important;
-
   }
-
   #container {
     width: 100%;
     height: 150px;
     background-color: red;
   }
-
-
   #buttons {
-    color:white;
+    color: white;
     background-color: #FF00FF;
-    position:absolute;
-    z-index:5;
+    position: absolute;
+    z-index: 5;
     text-align: center;
-    top:50px;
-    width : 100%;
-    height : 30px;
+    top: 50px;
+    width: 100%;
+    height: 30px;
   }
-
-
-  .container-fluid{
+  .container-fluid {
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     font-size: 20px;
     width: 100% !important;
   }
-
-
-
-  .icon-font{
+  .icon-font {
     position: absolute !important;
     /* background-color: red; */
-    z-index:5;
+    z-index: 5;
     padding-top: 0px;
     text-align: center;
     font-family: 'Roboto', sans-serif;
@@ -281,8 +228,7 @@
     position: relative;
     top: -15px;
   }
-
-  .sub-text{
+  .sub-text {
     z-index: 265;
     padding-top: 60px;
     text-align: center;
@@ -292,13 +238,11 @@
     font-weight: 300;
     position: relative;
     top: -15px;
-
   }
-
-  .sub-text-players{
+  .sub-text-players {
     /* max-width: 280px; */
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 12px;
     font-weight: 300;
     color: #999999;
@@ -306,9 +250,7 @@
     top: -20px;
     z-index: 222;
   }
-
-
-  .about{
+  .about {
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     font-size: 12px;
@@ -318,9 +260,7 @@
     z-index: 252;
     top: -30px;
   }
-
-
-  .about-text{
+  .about-text {
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     font-size: 30px;
@@ -330,13 +270,11 @@
     position: relative;
     top: 75px;
   }
-
-
-  .about-running-text{
+  .about-running-text {
     padding-right: 10%;
     padding-left: 10%;
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 16px;
     line-height: 1.5;
     font-weight: 300;
@@ -346,13 +284,11 @@
     top: 100px;
     text-decoration: none !important;
   }
-
-
-  .about-header-text{
+  .about-header-text {
     padding-right: 25%;
     padding-left: 25%;
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 28px;
     line-height: 1.5;
     font-weight: 600;
@@ -361,31 +297,19 @@
     position: relative;
     top: 100px;
     text-decoration: none !important;
-
   }
-
-
   .logo {
     text-align: center;
     width: 15px;
   }
-
-
   .body {
     padding: 20px;
     background-color: 'white';
   }
-
-
-  .book-div{
-    "text-align: center;"
-    position: absolute;
+  .book-div {
+    "text-align: center;" position: absolute;
     z-index: 1;
   }
-
-
-
-
   .button {
     margin-left: 3px;
     margin-right: 3px;
@@ -396,25 +320,47 @@
     line-height: 60px;
     padding: 0 4%;
   }
-
-  .title-text{
+  .title-text {
+    /* padding-left: 4%;
+    width: 110%;
     font-size: 20px;
-    font-family: 'Sumana', serif;
-
-    /* font-family: 'Short Stack', cursive; */
-
+    font-weight: 300;
+    font-family: 'Roboto Condensed', sans-serif; */
+    border: none;
+    padding-left: 1%;
+    width: 93%;
+    font-size: 20px;
+    font-weight: 300;
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+  .title-text:focus {
+    outline: none;
   }
 
-  .title-text-name{
+
+  .title-text-eg {
+    padding-left: 4%;
+    width: 110%;
+    font-size: 17px;
+    font-weight: 100;
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #b7b7b7;
+  }
+  .story-column {
+    width: 50%;
+    position: relative;
+    left: 50%;
+    /* top: 50%; */
+    transform: translate(-50%, 0%);
+  }
+  .title-text-name {
     font-size: 20px;
     color: #b5b0b6;
     font-family: 'Sumana', serif;
   }
-
   .lightbox {
     /** Default lightbox to hidden */
     display: none;
-
     /** Position and style */
     position: fixed;
     z-index: 999;
@@ -423,32 +369,22 @@
     text-align: center;
     top: 0;
     left: 0;
-    background: rgba(255,255,255,0.95);
+    background: rgba(255, 255, 255, 0.95);
   }
-
   .lightbox img {
     /** Pad the lightbox image */
     max-width: 90%;
     max-height: 80%;
     margin-top: 2%;
   }
-
   .lightbox:target {
     /** Remove default browser outline */
     outline: none;
-
     /** Unhide lightbox **/
     display: block;
   }
-
-
-
-
-
-
-
   .close {
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     float: right;
     font-size: 16px;
     font-weight: 300;
@@ -465,41 +401,147 @@
   }
 }
 
-
 @media only screen and (min-width: 768px) {
+  /* new CSS */
+  /* CSS files add styling rules to your content */
+  .left {
+    background: white;
+    width: 50%;
+    left: 0;
+    position: absolute;
+  }
+  .right {
+    background: eaeaea;
+    width: 50%;
+    right: 0;
+    top: 0;
+    height: calc(100% - 50px);
+    position: fixed;
+    border-left: 1px solid #a9a9a9;
+  }
+  .page-container {
+    display: flex;
+    height: calc(100vh - 120px);
+  }
+  .content-container {
+    scroll-snap-align: start;
+    height: 85vh;
+    background-color: pink;
+    margin-top: 10px;
+    padding: 20px;
+    margin-bottom: 400px;
+  }
+  .paragraph {
+    background-color: gold;
+  }
+  .footer {
+    background-color: white;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    border-top: 1px solid #a9a9a9;
+  }
+  .interactive-container {
+    background-color: white;
+    height: 100%;
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+  }
+  .header-container {
+    background-color: white;
+    z-index: 20;
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    height: 50px;
+    border-bottom: 1px solid #a9a9a9;
+  }
+  .story-container {
+    padding: 3%;
+    scroll-snap-type: y mandatory;
+  }
+  .header-logo-text {
+    height: 30%;
+    position: relative;
+    top: 50%;
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    font-family: 'Roboto Condensed', sans-serif;
+  }
+  .header-span {
+    font-size: 20px;
+    padding-left: 1.5%;
+  }
 
-  .container{
+  .storyname-span {
+    color: darkgrey;
+    font-weight: 300;
+    font-size: 20px;
+    padding-right: 1.5%;
+    float: right;
+  }
+
+ 
+
+  .cta-container {
+    flex: auto;
+  }
+  .icon-recording {
+    width: 3%;
+    float: left;
+  }
+  .recording-button {
+    background: url(./images/recording-off.svg) no-repeat;
+    cursor: pointer;
+    border: none;
+    width: 3%;
+    float: left;
+  }
+  .recording-button:focus {
+    outline: none;
+  }
+  .verticalLine {
+    border-left: 1px solid #a9a9a9;
+    height: 100%;
+  }
+  .horizontalLine {
+    border-bottom: 1px solid #a9a9a9;
+    height: 72%;
+  }
+  /* New Css End */
+  .container {
     z-index: 265;
     position: absolute !important;
     padding-top: 60px !important;
     width: 100% !important;
-
   }
-
   #container {
     width: 100%;
     height: 150px;
     background-color: red;
   }
-
   #buttons {
-    color:white;
+    color: white;
     background-color: #FF00FF;
-    position:absolute;
-    z-index:5;
+    position: absolute;
+    z-index: 5;
     text-align: center;
-    top:50px;
-    width : 100%;
-    height : 30px;
+    top: 50px;
+    width: 100%;
+    height: 30px;
   }
-
   .sticky-button {
     position: -webkit-sticky;
     position: sticky;
     bottom: 0;
     background: "white";
     font-family: 'Sumana', serif;
-    z-index:100;
+    z-index: 100;
     width: 27%;
     margin-top: 20px;
     line-height: 60px;
@@ -507,8 +549,7 @@
     border: 2px solid #868686;
     color: #888888;
   }
-
-  .current-seed{
+  .current-seed {
     color: #bbbbbb;
     font-family: 'Fira Sans', sans-serif;
     font-weight: 400;
@@ -518,15 +559,13 @@
     padding-right: 5px;
     padding-left: 15px;
   }
-
-  .page-number{
+  .page-number {
     position: fixed;
     left: 94%;
     color: #6d6d6d;
     margin-left: 0px;
   }
-
-  .currnet-paragraph{
+  .currnet-paragraph {
     font-family: 'Fira Sans', sans-serif;
     font-weight: 400;
     color: #bbbbbb;
@@ -534,91 +573,74 @@
     padding-bottom: 20px;
     padding-top: 20px;
   }
-
-.pause-and-play{
-  height: 25px;
-  width: 25px;
-  content: "";
-  margin: auto;
-  opacity: .15;
-}
-
-.pause-and-play:hover{
-  /* background-image: url("./images/pause.svg"); */
-  height: 25px;
-  width: 25px;
-  content: "";
-  margin: auto;
-  opacity: .25;
-}
-
-.rebranch-container{
-  /* width: 100%; */
-  /* height: 100%; */
-  position: absolute;
-  top: 50%;
-  right: -80px;
-  /* left: 50%; */
-}
-
-
-
-.paragraph-container{
-  background: white;
+  .pause-and-play {
+    height: 25px;
+    width: 25px;
+    content: "";
+    margin: auto;
+    opacity: .15;
+  }
+  .pause-and-play:hover {
+    /* background-image: url("./images/pause.svg"); */
+    height: 25px;
+    width: 25px;
+    content: "";
+    margin: auto;
+    opacity: .25;
+  }
+  .rebranch-container {
+    /* width: 100%; */
+    /* height: 100%; */
+    position: absolute;
+    top: 50%;
+    right: -80px;
+    /* left: 50%; */
+  }
+  .paragraph-container {
+    background: white;
     color: white;
     opacity: 0.0;
     display: block;
     position: relative;
-
-}
-
-
-.rebranch-button{
-  height: 25px;
-  width: 25px;
-  content: "";
-  margin: auto;
-  opacity: .05;
-}
-
-.rebranch-button:hover{
-  height: 25px;
-  width: 25px;
-  content: "";
-  margin: auto;
-  opacity: .2;
-}
-
-/* .rebranch-button:hover{
+  }
+  .rebranch-button {
+    height: 25px;
+    width: 25px;
+    content: "";
+    margin: auto;
+    opacity: .05;
+  }
+  .rebranch-button:hover {
+    height: 25px;
+    width: 25px;
+    content: "";
+    margin: auto;
+    opacity: .2;
+  }
+  /* .rebranch-button:hover{
   height: 25px;
   width: 25px;
   content: "";
   margin: auto;
   opacity: .25;
 } */
-
-
-.pause-play-container{
-  padding-top: 30px;
-}
-
-
-  .container-fluid{
+  .pause-play-container {
+    padding-top: 30px;
+  }
+  .container-fluid {
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     font-size: 20px;
     width: 100% !important;
   }
-
-
-  .mobileContainer{
+  .mobileContainer {
     padding-right: 0px;
     padding-left: 0px;
   }
-  .icon-font{
+  .icon-font {
     position: absolute !important;
     /* background-color: red; */
-    z-index:5;
+    z-index: 5;
     padding-top: 0px;
     text-align: center;
     font-family: 'Roboto', sans-serif;
@@ -627,8 +649,7 @@
     position: relative;
     top: -15px;
   }
-
-  .sub-text{
+  .sub-text {
     z-index: 265;
     padding-top: 60px;
     text-align: center;
@@ -638,33 +659,26 @@
     font-weight: 300;
     position: relative;
     top: -15px;
-
   }
-
   /*TYPOGRAPHY*/
   a {
     outline: none;
     color: #FDD835;
   }
-
   a:active {
     color: #FDD835;
   }
-
   a:visited {
     color: #F57F17;
   }
-
   a:hover {
     color: #FDD835;
     text-decoration: underline;
-
   }
-
-  .sub-text-players{
+  .sub-text-players {
     /* max-width: 280px; */
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 12px;
     font-weight: 300;
     color: #999999;
@@ -672,19 +686,16 @@
     top: -20px;
     z-index: 222;
   }
-
-  .reset-timer{
+  .reset-timer {
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 12px;
     font-weight: 300;
     color: #999999;
     position: relative;
     top: -25px;
   }
-
-
-  .about{
+  .about {
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     font-size: 12px;
@@ -694,10 +705,9 @@
     z-index: 252;
     top: -30px;
   }
-
-  .sub-text-instructions{
+  .sub-text-instructions {
     text-align: center;
-    font-family:'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 40px;
     font-weight: 800;
     color: #303030;
@@ -705,9 +715,7 @@
     position: relative;
     top: -110px;
   }
-
-
-  .about-text{
+  .about-text {
     text-align: center;
     font-family: 'Roboto Mono', monospace;
     font-size: 30px;
@@ -717,13 +725,11 @@
     position: relative;
     top: 75px;
   }
-
-
-  .about-running-text{
+  .about-running-text {
     padding-right: 10%;
     padding-left: 10%;
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 16px;
     line-height: 1.5;
     font-weight: 300;
@@ -733,12 +739,11 @@
     top: 100px;
     text-decoration: none !important;
   }
-
-  .about-musical-text{
+  .about-musical-text {
     padding-right: 10%;
     padding-left: 10%;
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 16px;
     line-height: 1.5;
     font-weight: 300;
@@ -748,12 +753,11 @@
     top: 110px;
     text-decoration: none !important;
   }
-
-  .about-header-text{
+  .about-header-text {
     padding-right: 25%;
     padding-left: 25%;
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 28px;
     line-height: 1.5;
     font-weight: 600;
@@ -762,14 +766,12 @@
     position: relative;
     top: 100px;
     text-decoration: none !important;
-
   }
-
-  .about-created-text{
+  .about-created-text {
     padding-right: 0%;
     padding-left: 0%;
     text-align: center;
-    font-family:  'Roboto Mono', monospace;
+    font-family: 'Roboto Mono', monospace;
     font-size: 14px;
     line-height: 1.5;
     font-weight: 600;
@@ -778,20 +780,15 @@
     position: relative;
     top: 120px;
     text-decoration: none !important;
-
   }
-
   .logo {
     text-align: center;
     width: 15px;
   }
-
-
   .body {
     padding: 20px;
     background-color: 'white';
   }
-
   .button {
     margin-left: 3px;
     margin-right: 3px;
@@ -802,28 +799,22 @@
     line-height: 60px;
     padding: 0 4%;
   }
-
   .button:hover {
     background: #fbfaf2;
     text-decoration: underline;
   }
-
-
-  .button-holder{
+  .button-holder {
     z-index: 100;
     font-size: 20px;
-    width:23%;
+    width: 23%;
     background-color: white;
     font-family: 'Sumana', serif;
     border: 1.5px solid #868686;
   }
-
-  .illustration-container{
+  .illustration-container {
     border: none !important;
   }
-
-
-  .img-thumbnail{
+  .img-thumbnail {
     border: none;
     display: block;
     margin: auto;
@@ -832,49 +823,40 @@
     padding-bottom: 10px;
     opacity: 0.8;
     background: none;
-
   }
-  .buttonContainer{
-    position: absolute;
+  .buttonContainer {
     top: 0%;
-    z-index:100;
+    z-index: 100;
     text-align: center;
     height: 100%;
+    width: 75%;
+    position: relative;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -20%);
   }
-
   .progress2 {
     padding: 0px;
     border-radius: 30px;
   }
-
   .progress-bar2 {
     height: 2px;
     border-radius: 2px;
     /* transition-property: width, background-color; */
   }
-
   .progress-moved {
     width: 0%;
     background-color: #d8d7d7;
   }
-
-
   .progress-moved:hover {
     width: 0%;
     background-color: #a7a5a5;
   }
-
-
   .progress-moved:focus {
     width: 0%;
     background-color: #a7a5a5;
   }
-
-
-
-
-  .one-more-sentence{
-
+  .one-more-sentence {
     margin: 0 auto;
     display: block;
     /* width: 100%; */
@@ -888,8 +870,7 @@
     font-family: 'Sumana', serif;
     border: none;
   }
-
-  .one-more-sentence:hover{
+  .one-more-sentence:hover {
     /* width: 100%; */
     margin: 0 auto;
     display: block;
@@ -904,8 +885,7 @@
     border: none;
     text-decoration: underline;
   }
-
-  .one-more-sentence:focus{
+  .one-more-sentence:focus {
     /* width: 100%; */
     margin: 0 auto;
     display: block;
@@ -921,10 +901,7 @@
     text-decoration: underline;
     outline: none;
   }
-
-
-
-  .one-more{
+  .one-more {
     width: 120%;
     text-align: center;
     background: "white";
@@ -936,8 +913,7 @@
     font-family: 'Sumana', serif;
     border: 2px solid #8a8a8a;
   }
-
-  .one-more:hover{
+  .one-more:hover {
     width: 120%;
     text-align: center;
     background: "white";
@@ -950,8 +926,7 @@
     border: 2px solid #8a8a8a;
     text-decoration: underline;
   }
-
-  .one-more:focus{
+  .one-more:focus {
     width: 120%;
     text-align: center;
     background: "white";
@@ -965,12 +940,9 @@
     text-decoration: underline;
     outline: none;
   }
-
-
-  .blog-post{
+  .blog-post {
     margin: auto;
     text-align: center;
-
     /* margin-top: 25px; */
     /* width: 120%; */
     text-align: center;
@@ -982,8 +954,7 @@
     color: #8a8a8a;
     font-family: 'Sumana', serif;
   }
-
-  .blog-post:hover{
+  .blog-post:hover {
     margin: auto;
     text-align: center;
     /* margin-top: 25px; */
@@ -997,8 +968,7 @@
     font-family: 'Sumana', serif;
     text-decoration: underline;
   }
-
-  .blog-post:focus{
+  .blog-post:focus {
     margin: auto;
     /* margin-top: 25px; */
     text-align: center;
@@ -1014,41 +984,33 @@
     text-decoration: underline;
     outline: none;
   }
-
   .start-paragraph {
     position: relative;
     text-align: center;
     background: "white";
     z-index: 100;
     margin-top: 20px;
-    line-height: 31px;
-    font-size: 18px;
+    line-height: 65px;
+    font-size: 45px;
     letter-spacing: .03em;
-    font-family: 'Sumana', serif;
+    font-family: 'Roboto Condensed', sans-serif;
   }
-
-
   .start-background {
     position: relative;
     top: 200px;
     padding: 10px;
     background: "white";
-    z-index:100;
+    z-index: 100;
     margin-top: 20px;
     background-color: #fff;
     box-shadow: 0 0 20px 20px #fff;
-
   }
-
-
-
-
   .start-button {
     position: relative;
     top: 220px;
     left: 20px;
     background: "white";
-    z-index:100;
+    z-index: 100;
     width: 27%;
     margin-top: 20px;
     line-height: 60px;
@@ -1057,13 +1019,12 @@
     font-family: 'Sumana', serif;
     border: 2px solid #868686;
   }
-
   .start-button:hover {
     position: relative;
     top: 220px;
     left: 20px;
     background: "white";
-    z-index:100;
+    z-index: 100;
     width: 27%;
     margin-top: 20px;
     line-height: 60px;
@@ -1072,15 +1033,13 @@
     font-family: 'Sumana', serif;
     color: #606060;
     text-decoration: underline;
-
   }
-
   .start-button:focus {
     position: relative;
     top: 220px;
     left: 20px;
     background: "white";
-    z-index:100;
+    z-index: 100;
     width: 27%;
     margin-top: 20px;
     line-height: 60px;
@@ -1091,16 +1050,10 @@
     text-decoration: underline;
     outline: none;
   }
-
-
   .lightbox img {
     /** Pad the lightbox image */
     max-width: 90%;
     max-height: 80%;
     margin-top: 2%;
   }
-
-
-
-
 }

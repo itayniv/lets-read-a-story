@@ -1,4 +1,3 @@
-let posOne = new THREE.Vector3(100, 0, 200);
 let drawingNumber = 0;
 let sentanceNumber = 0;
 let currColor = 0;
@@ -25,13 +24,13 @@ let startStory = false;
 let penStrokesopening = 0;
 let viewportWidth;
 let viewportHeight;
+let contentContainerArr = [];
 
 // set interval
 let buttonTimer;
 
 let penStrokes = 0;
 
-let lstm;
 let textInput;
 let tempSlider;
 let lengthSlider;
@@ -46,25 +45,23 @@ let fablesJson;
 let sentanceContainer = [];
 let sentimentContainer = [];
 
-////// sketchRnnDrawing stuff
+// sketchRnnDrawing stuff
 
 let sketchmodel;
 let sketchBookmodel;
 let previous_pen = 'down';
 let x, y;
-let startX = 300;
-let startY = 130;
+let startX;
+let startY;
 
 let startBookX;
 let startBookY;
 let sketch;
 let bookSketch;
 
-let canvasWidth = 600;
-let canvasHeight = 350;
+let canvasWidth;
+let canvasHeight;
 let drawingRation = 1.6;
-
-
 
 const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "backpack", "barn", "basket", "bear", "bee",
   "beeflower", "bicycle", "bird", "book", "brain",
@@ -135,13 +132,17 @@ function init() {
   setTimeout(() => {
     loadBookSketch('book');
   }, 1000);
+
+
+  const format = document.getElementById('one-page');
+  format.style.opacity = '0.0';
 }
 
 window.onload = function () {
 
   let fadeinElement2 = document.getElementById("start-container");
-  fadeinElement2.style.visibility = "visible";
-
+  // fadeinElement2.style.visibility = "visible";
+  fadein(fadeinElement2);
   //turn bg to 0.9 opaque
 
   setTimeout(() => {
@@ -232,6 +233,11 @@ function addSentence(result, source) {
     //  increase sentence number
     sentanceNumber++;
 
+    // create content container to hold new sentence and buttons
+    const container = document.createElement('div');
+    container.id = `content-container${sentanceNumber}`;
+    container.classList.add('content-container');
+
     // create div to hold new sentence
     const div = document.createElement('div');
     div.id = `paragraph${sentanceNumber}`;
@@ -291,13 +297,13 @@ function addSentence(result, source) {
       reBranchContainer.classList.add('rebranch-container');
 
       // remove prev rebranch
-      const prevRebranchButton = document.getElementById(`rebranch-button${sentanceNumber-1}`);
-      const thisObjectID = `rebranch-button${sentanceNumber-1}`;
-      if (prevRebranchButton!=null) {
+      const prevRebranchButton = document.getElementById(`rebranch-button${sentanceNumber - 1}`);
+      const thisObjectID = `rebranch-button${sentanceNumber - 1}`;
+      if (prevRebranchButton != null) {
         fadeoutandDeletecurrOpacity(prevRebranchButton, thisObjectID);
       }
-     
-      
+
+
       // create the putton
       const reBranch = document.createElement('div');
       reBranch.classList.add('rebranch-button');
@@ -313,12 +319,20 @@ function addSentence(result, source) {
       paragraphNumber.id = `paragraphNumber${sentanceNumber}`;
       paragraphNumber.innerHTML = `${sentanceNumber} / ${maxSentences + 1}`
 
+      
 
-      document.getElementById('story').appendChild(div).appendChild(paragraphNumber);
-      document.getElementById('story').appendChild(div).appendChild(paragraph);
-
+      document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraphNumber);
+      document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraph);
       document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
 
+      // create an object to push to array
+      let containerObject = {
+        "object": container,
+        "isVisible": ''
+      };
+
+      // push object to array
+      contentContainerArr.push(containerObject);
 
       setTimeout(() => {
         // scroll into the sentence
@@ -405,7 +419,6 @@ function addOneMoreSentence() {
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
   div.style.paddingTop = "30px";
 
-
   // //create loder element
   const progressDiv = document.createElement('div');
   progressDiv.id = 'one-more-sentence-loader';
@@ -441,10 +454,10 @@ function addOneMoreSentence() {
   };
 
 
-  //add a boolean to indicate if its pressed
+  // add a boolean to indicate if its pressed
   let addedSentence = false;
-  //creat the button
-  let btn = document.createElement("BUTTON");
+  // create the button
+  const btn = document.createElement("BUTTON");
   btn.classList.add("one-more-sentence");
 
   btn.onclick = function () {
@@ -452,15 +465,15 @@ function addOneMoreSentence() {
     addedSentence = true;
   };
 
-
-
   let para = document.createElement("span");
   let nodepara = document.createTextNode("What happened next?");
   para.appendChild(nodepara);
 
   btn.appendChild(para);
-  document.getElementById("story").appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
+  document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
   document.getElementById("one-more-sentence").appendChild(pauseAndPlay).appendChild(pauseImage);
+  
+  
 
   let fadeinElement1 = document.getElementById("one-more-sentence");
 
@@ -505,8 +518,8 @@ function insertNewSeed(newSeedObject) {
   let newSeedResults = newSeedObject.sentences;
 
   // first element removed
-  
-  newSeedResults.shift(); 
+
+  newSeedResults.shift();
 
   // what sentence are we on right now?
   let currSentence = sentanceNumber - 1;
@@ -523,9 +536,9 @@ function insertNewSeed(newSeedObject) {
   let thisPageNumber = document.getElementById(`paragraphNumber${sentanceNumber}`);
 
   // check for recent seed holder
-  for (let i = 0; i < (currSentence+1); i++) {
+  for (let i = 0; i < (currSentence + 1); i++) {
 
-    let thisSpanNumber = document.getElementById(`currentSeed${i+1}`);
+    let thisSpanNumber = document.getElementById(`currentSeed${i + 1}`);
     if (thisSpanNumber != null) {
       thisSpanNumber.innerHTML = ' ';
     }
@@ -578,12 +591,12 @@ function resetStory() {
   }, 1000);
 
   setTimeout(() => {
-    const fadeoutComponent1 = document.getElementById('characterOne');
+    // const fadeoutComponent1 = document.getElementById('characterOne');
     const fadeinElement2 = document.getElementById('recordedText');
     const fadeinElement3 = document.getElementById('prompt');
 
     fadein(fadeinElement2);
-    fadein(fadeoutComponent1);
+    // fadein(fadeoutComponent1);
     fadein(fadeinElement3);
     fadein(fadeinElement2);
   }, 1400);
@@ -605,26 +618,30 @@ function buttonPressed(clicked_id) {
 
   // fade out buttons and prompt
   setTimeout(() => {
-    let fadeoutComponent1 = document.getElementById('characterOne');
-    let fadeoutComponent2 = document.getElementById('recordedText');
-
-    fadeout(fadeoutComponent1);
-    fadeout(fadeoutComponent2);
+    // let fadeoutComponent1 = document.getElementById('characterOne');
+    const fadeoutComponent2 = document.getElementById('recordedText');
+    const fadeoutComponent3 = document.getElementById('recordedText-eg'); 
+    // fadeout(fadeoutComponent1);
+    fadeout(fadeoutComponent2);    
+    fadeout(fadeoutComponent3);
   }, 100);
 
   // create the story name
-  let para = document.createElement('p');
-  let node = document.createTextNode(`A story about a ${animalOneSearch}`);
+  let storyName = document.getElementById('story-name');
+  storyName.innerHTML = `A story about a ${animalOneSearch}`;
 
-  para.appendChild(node);
-  para.style.display = "none";
-  para.style.opacity = '0.0';
+  // let para = document.createElement('p');
+  // let node = document.createTextNode();
 
-  para.classList.add('title-text-name');
-  para.id = 'a-story-about';
+  // para.appendChild(node);
+  storyName.style.display = "none";
+  storyName.style.opacity = '0.0';
 
-  let element = document.getElementById('prompt');
-  element.appendChild(para);
+  // para.classList.add('title-text-name');
+  storyName.id = 'a-story-about';
+
+  // let element = document.getElementById('prompt');
+  // element.appendChild(para);
 
   // fade in the story name
   setTimeout(() => {
@@ -663,16 +680,37 @@ function startbuttonPressed(clicked_id) {
 
   }, 500);
 
-  setTimeout(() => {
-    let fadeinComponent2 = document.getElementById('characterOne');
-    fadein(fadeinComponent2);
-    let fadeinComponent1 = document.getElementById('prompt');
-    fadein(fadeinComponent1);
-  }, 1500);
+  const pageApp = document.getElementById('one-page');
+  pageApp.style.display = '';
+
+  canvasWidth = document.getElementById("drawing-container").offsetWidth;
+  canvasHeight = document.getElementById("drawing-container").offsetHeight;
+
+  startX = canvasWidth / 2;
+  startY = canvasHeight / 2;
+
+  // change writing prompt to somthing
+  const textPrompt = document.getElementById('recordedText');
+  textPrompt.placeholder = 'what kind of story would you like to read today?';
+
+  const textPromptEg = document.getElementById('recordedText-eg');
+  textPromptEg.innerHTML = 'For example, try asking for a story about a certain animal?';
+
 
   setTimeout(() => {
-    let elm = document.getElementById(`startbutton`);
-    elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // const fadeinComponent2 = document.getElementById('characterOne');
+    // fadein(fadeinComponent2);
+    const fadeinComponent1 = document.getElementById('prompt');
+    const format = document.getElementById('one-page');
+    fadein(fadeinComponent1);
+    fadein(format);
+
+  }, 1700);
+
+  setTimeout(() => {
+    const elm = document.getElementById(`startbutton`);
+    elm.remove();
   }, 2400);
 }
 
@@ -685,7 +723,6 @@ let sketchRnnDrawing = function (drawingOne) {
     drawingOne.createCanvas(canvasWidth, canvasHeight);
     drawingOne.background(255);
     previous_pen = 'down';
-    // sketchColor = getRandomColor();
 
     drawingOne.loop();
   };
@@ -792,7 +829,7 @@ function loadASketch(drawing) {
   div.style.background = "white";
   div.style.color = "white";
   div.style.paddingBottom = "0px";
-  document.getElementById("story").appendChild(div);
+  document.getElementById("drawing-container").appendChild(div);
 
   let drawingCanvas = new p5(sketchRnnDrawing, document.getElementById(`drawing${sentanceNumber}`));
 

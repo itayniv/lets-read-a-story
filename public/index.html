@@ -31,8 +31,6 @@
 
   <!-- favicon end -->
 
-
-
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -40,6 +38,7 @@
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.12.62/Tone.min.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,400i,500,500i,700i" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Sumana" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Short+Stack" rel="stylesheet">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -53,11 +52,8 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/p5.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.6.0/addons/p5.dom.min.js"></script>
 
-
   <script src="utils.js"></script>
   <script src="speechSynthesis.js"></script>
-  
-
 
   <script src="/socket.io.js"></script>
   <script>
@@ -69,8 +65,7 @@
 
   <div class="container">
     <div id="startbutton" class="buttonContainer">
-      <div class="col-sm-3"></div>
-      <div id="start-container" style="visibility:hidden" class="col-sm-6">
+      <div id="start-container" style="opacity: 0.0">
         <div id="start-background" class="start-background"
           style="background-color: white; opacity: 0.9; filter: blur(.1px);">
           <p class="start-paragraph">
@@ -78,104 +73,162 @@
               target="_blank">Aesop Fables</a>
             and the possibility of exploring the connections between different
             characters and ideas from the original fables in a fun new way using
-            machine learning wizardry.
+            machine learning.
           </p>
           <p class="start-paragraph"> More about the project in this <a
               href="https://towardsdatascience.com/lets-read-a-story-a-study-on-storytelling-for-children-using-machine-learning-tools-1b631bbbffac"
               target="_blank">blog post</a>.</p>
         </div>
       </div>
-      <div class="col-sm-3"></div>
-      <button id="start-button" class="start-button" style="display: none;" onclick="startbuttonPressed(this.id)">Read a
+
+      <button id="start-button" class="start-button" style="display: none; opacity: 0.0" onclick="startbuttonPressed(this.id)">Read a
         story!</button>
     </div>
-
-
     <div id="book" class="book-div">
     </div>
-    <div class="row" style="padding-bottom: 300px;">
-      <div class="col-sm-3">
+
+    <section style="display: none" id="one-page">
+      <header class="header-container">
+        <div class="header-logo-text">
+          <span class="header-span">
+            Let's Read A Story
+          </span>
+          <span class="storyname-span" id="story-name">
+
+          </span>
+        </div>
+      </header>
+
+      <div class="page-container">
+        <section class="left" id="left">
+          <section class="story-container" id="story-holder">
+            <div id="prompt" style="display: none;">
+              <div>
+                <input id="start-listening" class="recording-button" type="submit" value=""
+                  onclick="startSpeech(this.id)">
+                <!-- <p id="recordedText" class="title-text"></p>  -->
+                <form onsubmit="getInputText();return false">
+                  <input type="text" class="title-text" id="recordedText" name="firstname"
+                    placeholder="Your name.."><input type="submit" style="display: none" />
+                </form>
+
+
+                <p id="recordedText-eg" class="title-text-eg"></p>
+
+              </div>
+              <!-- 
+              <div id="characterOne" class="cta-container" style="display: none; opacity: 0.0">
+                  <button id="Lion" class="button" onclick="buttonPressed(this.id)">
+                    <div class="illustration-container">
+                      <img class="img-thumbnail" src="./images/lion.png">
+                    </div>
+                    <p class="title-text">Lion</p>
+                  </button>
+  
+                  <button id="Cat" class="button" onclick="buttonPressed(this.id)">
+                    <div class="illustration-container">
+                      <img class="img-thumbnail" src="./images/cat.png">
+                    </div>
+                    <p class="title-text">Cat</p>
+                  </button>
+  
+                  <button id="Owl" class="button" onclick="buttonPressed(this.id)">
+                    <div class="illustration-container">
+                      <img class="img-thumbnail" src="./images/owl.png">
+                    </div>
+                    <p class="title-text">Owl</p>
+                  </button>
+  
+                  <button id="Bird" class="button" onclick="buttonPressed(this.id)">
+                    <div class="illustration-container">
+                      <img class="img-thumbnail" src="./images/bird.png">
+                    </div>
+                    <p class="title-text">Bird</p>
+                  </button>
+  
+                  <button id="Sheep" class="button" onclick="buttonPressed(this.id)">
+                    <div class="illustration-container">
+                      <img class="img-thumbnail" src="./images/sheep.png">
+                    </div>
+                    <p class="title-text">Sheep</p>
+                  </button>
+                </div> -->
+            </div>
+
+            <div id="story" class="story-column">
+              <div id="story-container" class="">
+
+              </div>
+              <!-- 
+              <div class="content-container">Para 1
+                <div class="paragraph">
+                  <p>
+                    lorem ipsum
+                  </p>
+                </div>
+              </div>
+
+              <div class="content-container">Para 2
+                <div class="paragraph">
+                  <p>
+                    lorem ipsum
+                  </p>
+                </div>
+              </div>
+
+              <div class="content-container">Para 3
+
+                <div class="paragraph">
+                  <p>
+                    lorem ipsum
+                  </p>
+                </div>
+
+              </div> -->
+
+          </section>
+        </section>
+
+        <section class="right" id="right">
+          <div class="interactive-container" id="drawing-container">
+          </div>
+        </section>
+
       </div>
-      <div id="story-container" class="col-sm-6">
 
-        <div id="prompt" style="display: none;">
-          <p id="recordedText" class="title-text">Let's read a story about...</p>
-        </div>
-
-
-        <div id="characterOne" style="display: none; opacity: 0.0" >
-          <button id="Lion" class="button" onclick="buttonPressed(this.id)">
-            <div class="illustration-container">
-              <img class="img-thumbnail" src="./images/lion.png">
-            </div>
-            <p class="title-text">Lion</p>
-          </button>
-
-          <button id="Cat" class="button" onclick="buttonPressed(this.id)">
-            <div class="illustration-container">
-              <img class="img-thumbnail" src="./images/cat.png">
-            </div>
-            <p class="title-text">Cat</p>
-          </button>
-
-          <button id="Owl" class="button" onclick="buttonPressed(this.id)">
-            <div class="illustration-container">
-              <img class="img-thumbnail" src="./images/owl.png">
-            </div>
-            <p class="title-text">Owl</p>
-          </button>
-
-          <button id="Bird" class="button" onclick="buttonPressed(this.id)">
-            <div class="illustration-container">
-              <img class="img-thumbnail" src="./images/bird.png">
-            </div>
-            <p class="title-text">Bird</p>
-          </button>
-
-          <button id="Sheep" class="button" onclick="buttonPressed(this.id)">
-            <div class="illustration-container">
-              <img class="img-thumbnail" src="./images/sheep.png">
-            </div>
-            <p class="title-text">Sheep</p>
-          </button>
-
-        </div>
-        <div id="story">
-          <p id="recordedText"></p>
-        </div>
-
-
-      </div>
-      <div id="pagenumber" class="col-sm-3" style="display: none;">
+      <footer class="footer">
         <div>
-            <span class="page-number">9</span>
+          <p>
+            timeline
+          </p>
         </div>
-      </div>
-    </div>
+      </footer>
+    </section>
+
   </div>
 
   <script src="main.js"></script>
 
 
   <!-- fullstory stuff -->
-
+  <!-- 
   <script>
-window['_fs_debug'] = false;
-window['_fs_host'] = 'fullstory.com';
-window['_fs_org'] = 'JSA0W';
-window['_fs_namespace'] = 'FS';
-(function(m,n,e,t,l,o,g,y){
-    if (e in m) {if(m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].');} return;}
-    g=m[e]=function(a,b,s){g.q?g.q.push([a,b,s]):g._api(a,b,s);};g.q=[];
-    o=n.createElement(t);o.async=1;o.src='https://'+_fs_host+'/s/fs.js';
-    y=n.getElementsByTagName(t)[0];y.parentNode.insertBefore(o,y);
-    g.identify=function(i,v,s){g(l,{uid:i},s);if(v)g(l,v,s)};g.setUserVars=function(v,s){g(l,v,s)};g.event=function(i,v,s){g('event',{n:i,p:v},s)};
-    g.shutdown=function(){g("rec",!1)};g.restart=function(){g("rec",!0)};
-    g.consent=function(a){g("consent",!arguments.length||a)};
-    g.identifyAccount=function(i,v){o='account';v=v||{};v.acctId=i;g(o,v)};
-    g.clearUserCookie=function(){};
-})(window,document,window['_fs_namespace'],'script','user');
-</script>
+    window['_fs_debug'] = false;
+    window['_fs_host'] = 'fullstory.com';
+    window['_fs_org'] = 'JSA0W';
+    window['_fs_namespace'] = 'FS';
+    (function (m, n, e, t, l, o, g, y) {
+      if (e in m) { if (m.console && m.console.log) { m.console.log('FullStory namespace conflict. Please set window["_fs_namespace"].'); } return; }
+      g = m[e] = function (a, b, s) { g.q ? g.q.push([a, b, s]) : g._api(a, b, s); }; g.q = [];
+      o = n.createElement(t); o.async = 1; o.src = 'https://' + _fs_host + '/s/fs.js';
+      y = n.getElementsByTagName(t)[0]; y.parentNode.insertBefore(o, y);
+      g.identify = function (i, v, s) { g(l, { uid: i }, s); if (v) g(l, v, s) }; g.setUserVars = function (v, s) { g(l, v, s) }; g.event = function (i, v, s) { g('event', { n: i, p: v }, s) };
+      g.shutdown = function () { g("rec", !1) }; g.restart = function () { g("rec", !0) };
+      g.consent = function (a) { g("consent", !arguments.length || a) };
+      g.identifyAccount = function (i, v) { o = 'account'; v = v || {}; v.acctId = i; g(o, v) };
+      g.clearUserCookie = function () { };
+    })(window, document, window['_fs_namespace'], 'script', 'user');
+  </script> -->
 
 
 

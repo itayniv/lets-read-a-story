@@ -89,7 +89,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
 const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
-const dogArr = ["goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];
+const dogArr = ["goat", "goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];
 const sheepArr = ["lamb"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
@@ -99,7 +99,6 @@ const lionArr = ["lion's"];
 const catArr = ["tiger", "tiger's", "tigers", "cats"];
 const owlArr = ["owl's"];
 const frogArr = ['frogs', "frog's"]
-
 
 init();
 
@@ -319,7 +318,7 @@ function addSentence(result, source) {
       paragraphNumber.id = `paragraphNumber${sentanceNumber}`;
       paragraphNumber.innerHTML = `${sentanceNumber} / ${maxSentences + 1}`
 
-      
+
 
       document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraphNumber);
       document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraph);
@@ -338,7 +337,7 @@ function addSentence(result, source) {
         // scroll into the sentence
 
         const elm = document.getElementById(`paragraph${sentanceNumber}`);
-        elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
         // fade the sentence into the page.
         const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
@@ -395,7 +394,8 @@ function addOneMoreButton() {
   btn.onclick = function () { resetStory(); };
   const node = document.createTextNode('Read one more');
   btn.appendChild(node);
-  document.getElementById('story').appendChild(div).appendChild(btn);
+
+  document.getElementById(`paragraph${sentanceNumber - 1}`).appendChild(div).appendChild(btn);
 
   const fadeinElement1 = document.getElementById('read-one-more');
 
@@ -403,7 +403,7 @@ function addOneMoreButton() {
 
   setTimeout(() => {
     const elm = document.getElementById('read-one-more');
-    elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 500);
 
 }
@@ -472,8 +472,8 @@ function addOneMoreSentence() {
   btn.appendChild(para);
   document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
   document.getElementById("one-more-sentence").appendChild(pauseAndPlay).appendChild(pauseImage);
-  
-  
+
+
 
   let fadeinElement1 = document.getElementById("one-more-sentence");
 
@@ -620,9 +620,9 @@ function buttonPressed(clicked_id) {
   setTimeout(() => {
     // let fadeoutComponent1 = document.getElementById('characterOne');
     const fadeoutComponent2 = document.getElementById('recordedText');
-    const fadeoutComponent3 = document.getElementById('recordedText-eg'); 
+    const fadeoutComponent3 = document.getElementById('recordedText-eg');
     // fadeout(fadeoutComponent1);
-    fadeout(fadeoutComponent2);    
+    fadeout(fadeoutComponent2);
     fadeout(fadeoutComponent3);
   }, 100);
 
@@ -841,7 +841,7 @@ function loadASketch(drawing) {
 
   setTimeout(() => {
     let elm = document.getElementById(`drawing${sentanceNumber}`);
-    elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, 2000);
 }
 

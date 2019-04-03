@@ -107,14 +107,14 @@
                 <input id="start-listening" class="recording-button" type="submit" value=""
                   onclick="startSpeech(this.id)">
                 <!-- <p id="recordedText" class="title-text"></p>  -->
-                <form onsubmit="getInputText();return false">
-                  <input type="text" class="title-text" id="recordedText" name="firstname"
-                    placeholder="Your name.."><input type="submit" style="display: none" />
-                </form>
-
-
-                <p id="recordedText-eg" class="title-text-eg"></p>
-
+                <div class="prompt-container">
+                    <form onsubmit="getInputText();return false">
+                        <input type="text" class="title-text" id="recordedText" name="firstname"
+                          placeholder="Your name.."><input type="submit" style="display: none" />
+                      </form>
+                      <p id="recordedText-eg" class="title-text-eg"></p>
+                </div>
+          
               </div>
               <!-- 
               <div id="characterOne" class="cta-container" style="display: none; opacity: 0.0">
@@ -197,10 +197,19 @@
       </div>
 
       <footer class="footer">
-        <div>
-          <p>
+        <!-- todo -->
+        <div class="timeline__container">
+          <div class="timeline__item">
+            <div class="timeline__card">
+              <div class="timeline__progressBar"></div>
+            </div>
+          </div>
+          <div class="timeline__item"></div>
+          <div class="timeline__item"></div>
+          <div class="timeline__item"></div>
+          <!-- <p>
             timeline
-          </p>
+          </p> -->
         </div>
       </footer>
     </section>

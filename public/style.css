@@ -336,18 +336,20 @@
   .title-text:focus {
     outline: none;
   }
-
-
   .title-text-eg {
-    padding-left: 4%;
+    padding-left: 6px;
     width: 110%;
     font-size: 17px;
     font-weight: 100;
     font-family: 'Roboto Condensed', sans-serif;
     color: #b7b7b7;
   }
+
+  .prompt-container {
+    padding-left: 50px;
+  }
   .story-column {
-    width: 50%;
+    width: 70%;
     position: relative;
     left: 50%;
     /* top: 50%; */
@@ -426,7 +428,7 @@
   .content-container {
     scroll-snap-align: start;
     height: 85vh;
-    background-color: pink;
+    background-color: white;
     margin-top: 10px;
     padding: 20px;
     margin-bottom: 400px;
@@ -477,7 +479,6 @@
     font-size: 20px;
     padding-left: 1.5%;
   }
-
   .storyname-span {
     color: darkgrey;
     font-weight: 300;
@@ -485,9 +486,6 @@
     padding-right: 1.5%;
     float: right;
   }
-
- 
-
   .cta-container {
     flex: auto;
   }
@@ -499,8 +497,9 @@
     background: url(./images/recording-off.svg) no-repeat;
     cursor: pointer;
     border: none;
-    width: 3%;
-    float: left;
+    position: fixed;
+    width: 45px;
+    height: 45px;
   }
   .recording-button:focus {
     outline: none;
@@ -597,6 +596,7 @@
     /* left: 50%; */
   }
   .paragraph-container {
+    padding-top: 170px;
     background: white;
     color: white;
     opacity: 0.0;
@@ -1056,4 +1056,20 @@
     max-height: 80%;
     margin-top: 2%;
   }
+}
+
+.timeline__container {
+  display: flex;
+  align-items: stretch;
+  /* justify-content: flex-end; */
+}
+
+.timeline__item {
+  /* background-color: green; */
+  width: 12.5%;
+  min-width: 100px;
+  padding-left: 20px;
+  padding-right: 20px;
+  /* border-bottom: 1px red solid; */
+  padding-top: 10px;
 }

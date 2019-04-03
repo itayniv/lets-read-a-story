@@ -672,7 +672,7 @@ function endStory() {
   para.classList.add("voice");
   let node = document.createTextNode("The End.");
   para.appendChild(node);
-  document.getElementById("story").appendChild(div).appendChild(para);
+  document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(para);
 
   let fadeinElement = document.getElementById(`paragraph${sentanceNumber + 1}`);
 
@@ -767,7 +767,9 @@ function identifyAnimalsIntent(theSentance) {
 function getInputText() {
   const promptText = document.getElementById('recordedText').value;
   console.log(promptText);
-  gotSpeech(promptText);
+  // gotSpeech(promptText);
+  speechToPrompt(promptText);
+  //todo
 }
 
 

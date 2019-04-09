@@ -500,6 +500,21 @@ function fadein(element) {
   }, 10);
 }
 
+
+
+function fastFadein(element) {
+  let op = 0.1;  // initial opacity
+  element.style.display = 'block';
+  let timer = setInterval(function () {
+    if (op >= 1) {
+      clearInterval(timer);
+    }
+    element.style.opacity = op;
+    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+    op += op * 0.5;
+  }, 10);
+}
+
 function fadeinButton(element) {
   var op = 0.01;  // initial opacity
   element.style.display = 'inline-block';
@@ -634,6 +649,10 @@ function createSyntStarthWithEffects() {
 
 
 function addSentenceAfterbutton() {
+  // delete pause play temporarry
+  const playPause = document.getElementById('pause-button');
+  fadeoutandDelete(playPause);
+  
   // add Sentence
   // fade out current ullustration
 
@@ -666,7 +685,7 @@ function endStory() {
   div.style.color = "white";
   div.style.opacity = 0;
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
-  div.style.paddingBottom = "150px";
+  div.style.paddingBottom = "0px";
 
   let para = document.createElement("p");
   para.classList.add("voice");
@@ -728,7 +747,6 @@ function identifyAnimalsIntent(theSentance) {
       word: addClasses[i].word
     });
   }
-
 
   // for all the words in that new sentence
   for (let i = 0; i < sentenceToArray.length; i++) {
@@ -868,3 +886,47 @@ window.addEventListener('scroll', function (event) {
   }, 400);
 
 }, false);
+
+
+function recieveLineSendStory(line) {
+
+  console.log('line', line);
+
+  const storyLine = line[0];
+  let vectoredStory = [];
+  let lineIndex;
+
+  // run through all the sentences in the json file.
+  for (let key in fablesJson.stories) {
+
+    for (let i = 0; i < fablesJson.stories[key].story.length; i++) {
+      if (storyLine === fablesJson.stories[key].story[i]) {
+        lineIndex = i;
+        vectoredStory = fablesJson.stories[key].story;
+      }
+    }
+  }
+
+
+  let sendNextLine = vectoredStory[lineIndex + 1];
+  console.log('👌 Send next vectored line -->', sendNextLine);
+
+  if (sendNextLine != undefined) {
+    setTimeout(() => {
+      socket.emit('sendNextSentance', { 'randomSentance': sendNextLine, 'originalStory': vectoredStory });
+    }, 1000);
+
+  } else {
+    console.log('🖐 end -->' , line);
+    socket.emit('getSimilarSentence', { 'randomSentance': line, 'originalStory': vectoredStory });
+
+  }
+
+
+
+
+
+  // send the next line for nearest neighbour
+
+
+}

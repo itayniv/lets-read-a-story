@@ -54,6 +54,8 @@ let x, y;
 let startX;
 let startY;
 
+let vectoredStory = [];
+
 let startBookX;
 let startBookY;
 let sketch;
@@ -86,8 +88,8 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
   "toothpaste", "tractor", "trombone", "truck", "whale",
   "windmill", "yoga", "yogabicycle", "everything"];
 
-const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens"];
-const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons"];
+const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens", "stork"];
+const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
 const dogArr = ["goat", "goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];
 const sheepArr = ["lamb"];
@@ -97,7 +99,7 @@ const turtleArr = ["tortoise", "tortoises"];
 const squirrelArr = ["hare"];
 const lionArr = ["lion's"];
 const catArr = ["tiger", "tiger's", "tigers", "cats"];
-const owlArr = ["owl's"];
+const owlArr = ["owl's", 'bat', 'bats'];
 const frogArr = ['frogs', "frog's"]
 
 init();
@@ -128,6 +130,7 @@ function init() {
 
 
   loadJsonfile();
+
   setTimeout(() => {
     loadBookSketch('book');
   }, 1000);
@@ -171,9 +174,38 @@ function loadJsonfile() {
 }
 
 
-socket.on('sentencesResults', function (result) {
-  similarSentences = result.sentences;
-  sentimentContainer = result.sentiment;
+socket.on('similarSentences', function (result) {
+  // similarSentences = result.sentences;
+  // sentimentContainer = result.sentiment;
+
+});
+
+// incoming Socket for similar story 
+socket.on('similarStory', function (result) {
+  // result gives similar story
+  // console.log(result);
+});
+
+socket.on('nextVectoredLine', function (result) {
+
+  console.log('nextVectoredLine result', result);
+
+  const nextVectorLine = result.sentiment.sentences;
+  const nextVectorSentiment = result.sentiment.sentiment;
+
+  vectoredStory.push(nextVectorLine[0]);
+
+  similarSentences.push(nextVectorLine[0]);
+  sentimentContainer.push(nextVectorSentiment[0])
+
+  if (vectoredStory.length <= 6) {
+    recieveLineSendStory(nextVectorLine);
+  }
+
+  if (vectoredStory.length === 6) {
+    console.log('generated story: ', vectoredStory);
+
+  }
 
 });
 
@@ -200,8 +232,8 @@ function runjsonCheck(json, checkword) {
   // run through all the sentences in the json file.
   for (let key in json.stories) {
     // json.stories[key].story.length
-    //run over 4 sentences
-    for (let i = 0; i < Math.ceil(json.stories[key].story.length / 3); i++) {
+    //run over the first third and pick a sentence
+    for (let i = 0; i < Math.floor(json.stories[key].story.length / 2); i++) {
 
       //convert line to lower case
       let lineInStory = json.stories[key].story[i];
@@ -216,11 +248,25 @@ function runjsonCheck(json, checkword) {
   }
 
   // pick a randon sentance from that array.
-  const randomSentance = Math.floor(Math.random() * Math.floor(sentanceContainer.length));
-  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': sentanceContainer[randomSentance] });
+  const randomSentance = sentanceContainer[Math.floor(Math.random() * Math.floor(sentanceContainer.length))];
+  let thisStoryArray = [];
+  // get the entire story of that sentence
+
+  // run through all the sentences in the json file.
+  for (let key in json.stories) {
+    for (let i = 0; i < json.stories[key].story.length; i++) {
+      if (randomSentance === json.stories[key].story[i]) {
+        thisStoryArray = json.stories[key].story;
+      }
+    }
+  }
+
+  // console.log(thisStoryArray);
+
+  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
 
   // add the sentance to the page
-  addSentence(sentanceContainer[randomSentance], 'notnet');
+  addSentence(randomSentance, 'notnet');
 
 }
 
@@ -326,7 +372,7 @@ function addSentence(result, source) {
 
       // create an object to push to array
       let containerObject = {
-        "object": container,
+        "object": paragraphNumber,
         "isVisible": ''
       };
 
@@ -382,20 +428,16 @@ function addOneMoreButton() {
 
   const div = document.createElement('div');
   div.id = 'read-one-more';
-  div.style.background = 'white';
-  div.style.color = 'white';
-  div.style.opacity = 0;
-  div.style.filter = 'alpha(opacity=' + 0 * 0 + ')';
-  div.style.margin = 'auto';
-  div.style.width = '24%';
+  div.classList.add("wrap-one-more");
+  div.style.paddingTop = `${canvasHeight / 2}px`;
 
   const btn = document.createElement('BUTTON');
-  btn.classList.add('one-more');
+  btn.classList.add('button-animation-one-more');
   btn.onclick = function () { resetStory(); };
   const node = document.createTextNode('Read one more');
   btn.appendChild(node);
 
-  document.getElementById(`paragraph${sentanceNumber - 1}`).appendChild(div).appendChild(btn);
+  document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(btn);
 
   const fadeinElement1 = document.getElementById('read-one-more');
 
@@ -421,17 +463,27 @@ function addOneMoreSentence() {
 
   // //create loder element
   const progressDiv = document.createElement('div');
-  progressDiv.id = 'one-more-sentence-loader';
+  progressDiv.id = `one-more-sentence-loader${sentanceNumber}`;
+
+
   progressDiv.classList.add('progress-moved');
 
   const progress = document.createElement('div');
   progress.id = 'progress';
   progress.classList.add('progress-bar2');
 
+  //remove previouse pause and play
+
+  if (document.getElementById('pauseAndPlay') != undefined) {
+    const pausebutton = document.getElementById('pauseAndPlay');
+    pausebutton.parentNode.removeChild(pausebutton);
+  }
+
   // create the pause/play container
   const pauseAndPlay = document.createElement('div');
   pauseAndPlay.classList.add('pause-play-container')
   pauseAndPlay.id = 'pauseAndPlay';
+  pauseAndPlay.style.opacity = '0.0';
 
   // pauseBool
   let pauseBool = true;
@@ -456,24 +508,39 @@ function addOneMoreSentence() {
 
   // add a boolean to indicate if its pressed
   let addedSentence = false;
-  // create the button
-  const btn = document.createElement("BUTTON");
-  btn.classList.add("one-more-sentence");
 
+  // create the button
+
+  const buttonWrapper = document.createElement('div');
+  buttonWrapper.id = 'one-more-sentence-div';
+  buttonWrapper.classList.add("wrap-one-more");
+
+  const btn = document.createElement('BUTTON');
+  btn.classList.add('what-happened-button');
   btn.onclick = function () {
     addSentenceAfterbutton();
+
+    // interval to 100 here
+    clearInterval(buttonTimer);
+    let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
+    prgsBar.style.width = '100%';
     addedSentence = true;
+
+    const playPause = document.getElementById('pause-button');
+    fadeoutandDelete(playPause);
   };
 
-  let para = document.createElement("span");
-  let nodepara = document.createTextNode("What happened next?");
-  para.appendChild(nodepara);
+  const node = document.createTextNode('What happened next?');
+  btn.appendChild(node);
 
-  btn.appendChild(para);
-  document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(btn).appendChild(progressDiv).appendChild(progress);
-  document.getElementById("one-more-sentence").appendChild(pauseAndPlay).appendChild(pauseImage);
+  document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(btn);
 
+  document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(buttonWrapper).appendChild(btn);
+  document.getElementById(`footer-progress${sentanceNumber}`).appendChild(progressDiv).appendChild(progress);
+  document.getElementById('controls').appendChild(pauseAndPlay).appendChild(pauseImage);
 
+  const fadeinpause = document.getElementById('pauseAndPlay');
+  fastFadein(fadeinpause);
 
   let fadeinElement1 = document.getElementById("one-more-sentence");
 
@@ -487,7 +554,8 @@ function addOneMoreSentence() {
   let width = 0;
 
   // call the prgsBar to animate it later
-  let prgsBar = document.getElementById('one-more-sentence-loader');
+  let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
+
 
   function timeOutTimer() {
 
@@ -563,11 +631,8 @@ function insertNewSeed(newSeedObject) {
 
 function resetStory() {
 
-  const fadeOutElement = document.getElementById('a-story-about');
-  fadeOutElement.style.display = 'none';
-  fadeOutElement.style.opacity = '0.0';
-
-  fadeOutElement.parentNode.removeChild(fadeOutElement);
+  const fadeOutElement = document.getElementById('story-name');
+  fadeout(fadeOutElement);
 
 
   setTimeout(() => {
@@ -583,30 +648,42 @@ function resetStory() {
     drawingNumber = 0;
     sentanceNumber = 0;
 
+    // remove current story
     document.getElementById('story').remove();
 
+
+    // create a story container
     let div = document.createElement('div');
     div.id = 'story';
-    document.getElementById('story-container').appendChild(div);
+    div.classList.add('story-column');
+    document.getElementById('story-holder').append(div);
+
   }, 1000);
 
   setTimeout(() => {
     // const fadeoutComponent1 = document.getElementById('characterOne');
     const fadeinElement2 = document.getElementById('recordedText');
     const fadeinElement3 = document.getElementById('prompt');
+    const fadeinElement4 = document.getElementById('recordedText-eg');
+    document.getElementById('recordedText').value = '';
+
+    for (let index = 0; index < 6; index++) {
+      const thisfadeout = document.getElementById(`one-more-sentence-loader${index+1}`);
+      fadeoutandDelete(thisfadeout);
+      
+    }
 
     fadein(fadeinElement2);
-    // fadein(fadeoutComponent1);
     fadein(fadeinElement3);
-    fadein(fadeinElement2);
+    fadein(fadeinElement4);
   }, 1400);
 
 }
 
 
-function buttonPressed(clicked_id) {
+function buttonPressed(subject) {
 
-  let animalOne = clicked_id;
+  let animalOne = subject;
 
   //convert to lowercase
   let animalOneLower = animalOne.toLowerCase();
@@ -627,25 +704,17 @@ function buttonPressed(clicked_id) {
   }, 100);
 
   // create the story name
-  let storyName = document.getElementById('story-name');
+  const storyName = document.getElementById('story-name');
   storyName.innerHTML = `A story about a ${animalOneSearch}`;
 
-  // let para = document.createElement('p');
-  // let node = document.createTextNode();
-
-  // para.appendChild(node);
   storyName.style.display = "none";
   storyName.style.opacity = '0.0';
 
-  // para.classList.add('title-text-name');
-  storyName.id = 'a-story-about';
-
-  // let element = document.getElementById('prompt');
-  // element.appendChild(para);
+  storyName.id = 'story-name';
 
   // fade in the story name
   setTimeout(() => {
-    fadeInelement = document.getElementById('a-story-about');
+    fadeInelement = document.getElementById('story-name');
     fadein(fadeInelement);
   }, 1000);
 
@@ -705,6 +774,13 @@ function startbuttonPressed(clicked_id) {
     const format = document.getElementById('one-page');
     fadein(fadeinComponent1);
     fadein(format);
+
+    // create story container
+
+    let div = document.createElement('div');
+    div.id = 'story-container';
+    document.getElementById('story').append(div);
+    console.log('here', div);
 
   }, 1700);
 
@@ -817,9 +893,14 @@ let sketchRnnDrawing = function (drawingOne) {
 
 
 function loadASketch(drawing) {
-  sketchmodel = ml5.SketchRNN(drawing, function () {
-    startDrawing();
-  });
+  // wait 1 second
+
+  setTimeout(() => {
+    sketchmodel = ml5.SketchRNN(drawing, function () {
+      startDrawing();
+    });
+  }, 700);
+
 
   //create a div container for drawing
   drawingNumber++;
@@ -829,6 +910,11 @@ function loadASketch(drawing) {
   div.style.background = "white";
   div.style.color = "white";
   div.style.paddingBottom = "0px";
+
+  // only on first sentence opacity is 1.0 in the beginning
+  if (sentanceNumber > 1) {
+    div.style.opacity = '0.0';
+  }
   document.getElementById("drawing-container").appendChild(div);
 
   let drawingCanvas = new p5(sketchRnnDrawing, document.getElementById(`drawing${sentanceNumber}`));

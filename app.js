@@ -79,9 +79,26 @@ sockets.on('connection', function (socket) {
 
   // recieving seed text and generating a whole story / a single sentence  --->
   socket.on('sendSeedSentance', function (data) {
+
     const seedSentance = data.randomSentance;
     const currStory = data.originalStory;
 
+    let sameStorypromise = new Promise((resolve, reject) => {
+      const storySentiment = addSentimentToArray(currStory);
+      if (storySentiment.sentences.length > 0) {
+        resolve(storySentiment);
+      } else {
+        reject('failed');
+      }
+    })
+
+    sameStorypromise.then((storySentiment) => {
+      // console.log(storySentiment);
+      sockets.emit('originalStoryAndSentiment', storySentiment);
+    });
+    
+
+    ///// -------> 
     let promise = new Promise((resolve, reject) => {
       const storyVectors = getStoryVectors(currStory);
       if (storyVectors.length > 0) {
@@ -95,10 +112,13 @@ sockets.on('connection', function (socket) {
       // similar Story
       const similarStory = vectorVariation(currStory, seedSentance, storyVectors);
       const similarAndSentiment = addSentimentToArray(similarStory);
+
       const similarStoryObject = {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
+
+      // console.log(similarStoryObject);
       sockets.emit('similarStory', similarStoryObject);
     });
 
@@ -123,7 +143,7 @@ sockets.on('connection', function (socket) {
         'seed': seedSentance
       }
       sockets.emit('nextVectoredLine', nextLineVec);
-      console.log('usecase 03', nextLineVec);
+      // console.log('usecase 03', nextLineVec);
     });
 
     // similar Sentences
@@ -163,7 +183,7 @@ sockets.on('connection', function (socket) {
       }
 
       sockets.emit('nextVectoredLine', nextLineVec);
-      console.log('usecase 02', nextLineVec);
+      // console.log('usecase 02', nextLineVec);
     });
   });
 
@@ -177,27 +197,27 @@ sockets.on('connection', function (socket) {
     const seedSentance = data.randomSentance;
     // const currStory = data.originalStory;
 
-    console.log('%$%$%$%', seedSentance)
+    // console.log('%$%$%$%', seedSentance)
 
 
     let similarSentences = findVector(seedSentance[0]);
-    console.log('similarSentences', similarSentences);
+    // console.log('similarSentences', similarSentences);
 
     const sentenceAndSentiment = {
       sentences: [similarSentences.sentences[1]],
       sentiment: [similarSentences.sentiment[1]]
     }
 
-    console.log('** object 1', sentenceAndSentiment);
+    // console.log('** object 1', sentenceAndSentiment);
    
     const similarLine = {
       'sentiment': sentenceAndSentiment,
       'seed': similarSentences.sentences[2]
     }
-    console.log('** object 2', similarLine);
+    // console.log('** object 2', similarLine);
 
     sockets.emit('nextVectoredLine', similarLine);
-    console.log('usecase 01', similarLine);
+    // console.log('usecase 01', similarLine);
   });
 
   // get similar sentence on dead end <---

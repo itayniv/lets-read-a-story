@@ -1,15 +1,14 @@
+console.log('📕 Main');
+
 let drawingNumber = 0;
 let sentanceNumber = 0;
 let currColor = 0;
-let camera, scene, renderer;
 let mesh;
 let targetMesh;
 let phase = 4;
 let delta = 5;
 let deltaoneNumber = 0;
 let timecounter = 0;
-let pos = { x: 0, y: 0, z: 0 };
-let newPos = { x: 0, y: 0, z: 0 }
 let targetPos = { x: 0, y: 0, z: 0 };
 let phasesin = 0;
 let blinkOpacity = 0;
@@ -19,17 +18,25 @@ let startingValue = 120;
 let similarSentences = [];
 let similaritiesArray = [];
 let sketchColor;
-const maxSentences = 6;
+let maxSentences;
 let startStory = false;
 let penStrokesopening = 0;
 let viewportWidth;
 let viewportHeight;
 let contentContainerArr = [];
-
+const illustrationStroke = 8;
 // set interval
 let buttonTimer;
+let speakBool = true;
 
 let penStrokes = 0;
+
+let storyMethod = {
+  snakesAndLadders: 'false',
+  similarSentences: 'false',
+  similarStory: 'true',
+  originalStory: 'false'
+}
 
 let textInput;
 let tempSlider;
@@ -63,7 +70,7 @@ let bookSketch;
 
 let canvasWidth;
 let canvasHeight;
-let drawingRation = 1.6;
+let drawingRatio = 1.2;
 
 const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "backpack", "barn", "basket", "bear", "bee",
   "beeflower", "bicycle", "bird", "book", "brain",
@@ -110,7 +117,9 @@ function modelReady() {
 }
 
 function init() {
+
   getSpeech();
+
 
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
@@ -125,7 +134,9 @@ function init() {
     startX = canvasWidth / 2;
     startY = canvasHeight / 2;
 
-    drawingRation = 1.6;
+    drawingRatio = 1.2;
+
+
   }
 
 
@@ -175,38 +186,66 @@ function loadJsonfile() {
 
 
 socket.on('similarSentences', function (result) {
-  // similarSentences = result.sentences;
-  // sentimentContainer = result.sentiment;
-
+  if (storyMethod.similarSentences === 'true') {
+    similarSentences = result.sentences;
+    sentimentContainer = result.sentiment;
+    console.log('📚 story method similarSentences ', storyMethod.similarSentences)
+  }
 });
 
 // incoming Socket for similar story 
 socket.on('similarStory', function (result) {
+  if (storyMethod.similarStory === 'true') {
+
+    for (let index = 0; index < result.sentiment.sentences.length; index++) {
+      similarSentences.push(result.sentiment.sentences[index]);
+      sentimentContainer.push(result.sentiment.sentiment[index]);
+    }
+   
+    console.log('📚 story method similarStory ', storyMethod.similarStory)
+  }
+
   // result gives similar story
-  // console.log(result);
+});
+
+// incoming Socket for original story 
+socket.on('originalStoryAndSentiment', function (result) {
+  // maxSentences = result.sentences.length;
+
+  if (storyMethod.originalStory === 'true') {
+    console.log('result', result);
+    for (let index = 0; index < result.sentences.length; index++) {
+      similarSentences.push(result.sentences[index]);
+      sentimentContainer.push(result.sentiment[index]);
+    }
+   
+    console.log('📚 story method original story ', storyMethod.similarStory)
+  }
+
 });
 
 socket.on('nextVectoredLine', function (result) {
+  if (storyMethod.snakesAndLadders === 'true') {
+    console.log('📚 story method snakesAndLadders ', storyMethod.snakesAndLadders)
 
-  console.log('nextVectoredLine result', result);
+    // console.log('nextVectoredLine result', result);
 
-  const nextVectorLine = result.sentiment.sentences;
-  const nextVectorSentiment = result.sentiment.sentiment;
+    const nextVectorLine = result.sentiment.sentences;
+    const nextVectorSentiment = result.sentiment.sentiment;
 
-  vectoredStory.push(nextVectorLine[0]);
+    vectoredStory.push(nextVectorLine[0]);
 
-  similarSentences.push(nextVectorLine[0]);
-  sentimentContainer.push(nextVectorSentiment[0])
+    similarSentences.push(nextVectorLine[0]);
+    sentimentContainer.push(nextVectorSentiment[0])
 
-  if (vectoredStory.length <= 6) {
-    recieveLineSendStory(nextVectorLine);
+    if (vectoredStory.length <= 6) {
+      recieveLineSendStory(nextVectorLine);
+    }
+
+    if (vectoredStory.length === 6) {
+      console.log('generated story: ', vectoredStory);
+    }
   }
-
-  if (vectoredStory.length === 6) {
-    console.log('generated story: ', vectoredStory);
-
-  }
-
 });
 
 // get the new seed response
@@ -224,7 +263,7 @@ socket.on('NewSeedResult', function (result) {
 function runjsonCheck(json, checkword) {
 
   // add a regex search for a specific given word
-  let regex = new RegExp(checkword);
+  const regex = new RegExp(checkword);
 
   // reset a sentance container that will hold all sentances related to the search
   sentanceContainer = [];
@@ -241,7 +280,8 @@ function runjsonCheck(json, checkword) {
 
       // does line contain search?
       if (lineInStory.match(regex)) {
-        //push all the right sentences to an array.
+
+        // push all the right sentences to an array.
         sentanceContainer.push(json.stories[key].story[i]);
       }
     }
@@ -261,17 +301,20 @@ function runjsonCheck(json, checkword) {
     }
   }
 
-  // console.log(thisStoryArray);
+  maxSentences = thisStoryArray.length - 1;
 
+  // console.log(thisStoryArray);
   socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
 
   // add the sentance to the page
-  addSentence(randomSentance, 'notnet');
+  addSentence(thisStoryArray[0], 'notnet');
 
 }
 
 
 function addSentence(result, source) {
+
+  console.log('result', result);
 
   //  if the current sentence is smaller than the entire length of the story
   if (sentanceNumber <= maxSentences) {
@@ -287,6 +330,11 @@ function addSentence(result, source) {
     const div = document.createElement('div');
     div.id = `paragraph${sentanceNumber}`;
     div.classList.add('paragraph-container');
+
+
+    const resultToLower = result.toLowerCase();
+    const res = result.split(' ');
+    const resLower = resultToLower.split(' ');
 
 
     // check source of the sentence
@@ -356,7 +404,10 @@ function addSentence(result, source) {
       reBranch.onclick = function () { rebranchThis(sentanceNumber); };
       reBranch.style.backgroundImage = "url('./images/branch.svg')";
 
-      reBranchContainer.appendChild(reBranch);
+      if (sentanceNumber <= maxSentences) {
+        reBranchContainer.appendChild(reBranch);
+        console.log('added rebranch');
+      }
 
 
       const paragraphNumber = document.createElement('div');
@@ -402,6 +453,18 @@ function addSentence(result, source) {
         }
       }
     }
+
+
+    // Read the paragraph
+
+    if (speakBool) {
+      setTimeout(() => {
+        if (narration) {
+          speak(resultToLower);
+        }
+      }, 5500);
+    }
+
 
     // run loop again!
     setTimeout(() => {
@@ -461,16 +524,7 @@ function addOneMoreSentence() {
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
   div.style.paddingTop = "30px";
 
-  // //create loder element
-  const progressDiv = document.createElement('div');
-  progressDiv.id = `one-more-sentence-loader${sentanceNumber}`;
 
-
-  progressDiv.classList.add('progress-moved');
-
-  const progress = document.createElement('div');
-  progress.id = 'progress';
-  progress.classList.add('progress-bar2');
 
   //remove previouse pause and play
 
@@ -536,7 +590,10 @@ function addOneMoreSentence() {
   document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(btn);
 
   document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(buttonWrapper).appendChild(btn);
-  document.getElementById(`footer-progress${sentanceNumber}`).appendChild(progressDiv).appendChild(progress);
+
+  // insert footer timeline element
+  footerInsert ();
+
   document.getElementById('controls').appendChild(pauseAndPlay).appendChild(pauseImage);
 
   const fadeinpause = document.getElementById('pauseAndPlay');
@@ -668,9 +725,9 @@ function resetStory() {
     document.getElementById('recordedText').value = '';
 
     for (let index = 0; index < 6; index++) {
-      const thisfadeout = document.getElementById(`one-more-sentence-loader${index+1}`);
+      const thisfadeout = document.getElementById(`one-more-sentence-loader${index + 1}`);
       fadeoutandDelete(thisfadeout);
-      
+
     }
 
     fadein(fadeinElement2);
@@ -683,15 +740,15 @@ function resetStory() {
 
 function buttonPressed(subject) {
 
-  let animalOne = subject;
+  let hero = subject;
 
   //convert to lowercase
-  let animalOneLower = animalOne.toLowerCase();
+  let heroLower = hero.toLowerCase();
 
   //first animal illustration
-  currIllustration = animalOneLower;
+  currIllustration = heroLower;
   // let thisclass = ifInClass()
-  let animalOneSearch = animalOneLower + ' ';
+  let heroSearch = heroLower + ' ';
 
   // fade out buttons and prompt
   setTimeout(() => {
@@ -705,7 +762,7 @@ function buttonPressed(subject) {
 
   // create the story name
   const storyName = document.getElementById('story-name');
-  storyName.innerHTML = `A story about a ${animalOneSearch}`;
+  storyName.innerHTML = `A story about a ${heroSearch}`;
 
   storyName.style.display = "none";
   storyName.style.opacity = '0.0';
@@ -720,7 +777,7 @@ function buttonPressed(subject) {
 
   // run the storycheck
   setTimeout(() => {
-    runjsonCheck(fablesJson, animalOneSearch);
+    runjsonCheck(fablesJson, heroSearch);
   }, 1500);
 
   // add the sketch to the page
@@ -780,7 +837,6 @@ function startbuttonPressed(clicked_id) {
     let div = document.createElement('div');
     div.id = 'story-container';
     document.getElementById('story').append(div);
-    console.log('here', div);
 
   }, 1700);
 
@@ -808,7 +864,6 @@ let sketchRnnDrawing = function (drawingOne) {
 
       penStrokes++;
       let penOffset = penStrokes % 4;
-
 
       if (sentimentContainer[sentanceNumber] >= 0) {
         //sentiment is positive
@@ -868,18 +923,17 @@ let sketchRnnDrawing = function (drawingOne) {
 
       if (previous_pen == 'down') {
         drawingOne.stroke(sketchColor);
-        drawingOne.strokeWeight(6);
-        drawingOne.line(x, y, x + sketch.dx / drawingRation, y + sketch.dy / drawingRation);
+        drawingOne.strokeWeight(illustrationStroke);
+        drawingOne.line(x, y, x + sketch.dx / drawingRatio, y + sketch.dy / drawingRatio);
       }
-      x += sketch.dx / drawingRation;
-      y += sketch.dy / drawingRation;
+      x += sketch.dx / drawingRatio;
+      y += sketch.dy / drawingRatio;
       previous_pen = sketch.pen;
 
       if (sketch.pen !== 'end') {
         sketch = null;
         sketchmodel.generate(gotSketch);
       } else {
-
         drawingOne.noLoop();
         penStrokes = 0;
         previous_pen = sketch.pen;
@@ -893,13 +947,13 @@ let sketchRnnDrawing = function (drawingOne) {
 
 
 function loadASketch(drawing) {
-  // wait 1 second
+  // wait .5 second
 
   setTimeout(() => {
     sketchmodel = ml5.SketchRNN(drawing, function () {
       startDrawing();
     });
-  }, 700);
+  }, 500);
 
 
   //create a div container for drawing
@@ -925,10 +979,10 @@ function loadASketch(drawing) {
     // dimElement(dimThis);
   }
 
-  setTimeout(() => {
-    let elm = document.getElementById(`drawing${sentanceNumber}`);
-    elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 2000);
+  // setTimeout(() => {
+  //   let elm = document.getElementById(`drawing${sentanceNumber}`);
+  //   elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // }, 2000);
 }
 
 

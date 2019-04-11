@@ -1,167 +1,44 @@
-let isListening = false;
+console.log('🗣️ Speech synthesis');
 
-const animalsArray = ['woman', 'jackdaw', 'eagle', 'crow', 'crows', 'swallow', 'raven', 'kite', 'lark',
-  'birds', 'chicken', 'chickens', 'crane', 'cranes', 'goose', 'ducks', 'peacock',
-  'peacocks', 'heron', 'herons', 'gnat', 'grasshopper', 'grasshoppers', 'flies',
-  'wasps', 'hornet', 'goat', 'goats', 'wolf', 'fox', 'dogs', 'boar', 'weasels',
-  'weasel', 'lamb', 'beetle', 'tortoise', 'tortoises', "lion's", 'tiger', "tiger's",
-  'tigers', 'cats', 'frogs', "frog's", 'ant', 'bear', 'bee', 'bird', 'butterfly',
-  'cat', 'crab', 'dog', 'dolphin', 'duck', 'elephant', 'frog', 'hedgehog', 'kangaroo', 'lion', 'lobster',
-  'monkey', 'mosquito', 'octopus', 'owl', 'parrot', 'penguin', 'pig', 'rabbit', 'rhinoceros',
-  'roller_coaster', 'scorpion', 'sea_turtle', 'sheep', 'snail', 'spider', 'squirrel', 'swan', 'whale',
-];
 
-// eslint-disable-next-line no-undef
-const SpeechRecognition = webkitSpeechRecognition;
+const synth = window.speechSynthesis;
+let voices;
+let narration = false;
 
-const getSpeech = () => {
-  const recognition = new SpeechRecognition();
-  recognition.lang = 'en-US';
-  recognition.start();
-  //   recognition.continuous = false;
-  recognition.interimResults = true;
 
-  console.log('started rec');
+// wait on voices to be loaded before fetching list
+window.speechSynthesis.onvoiceschanged = function () {
+  window.speechSynthesis.getVoices();
+  voices = synth.getVoices();
+};
 
-  recognition.onresult = (event) => {
-    const speechResult = event.results[0][0].transcript;
-    // console.log(`result: ${speechResult}`, `confidence: ${event.results[0][0].confidence}`);
-    console.log(speechResult);
-
-    if (isListening) {
-      speechToPrompt(speechResult);
-    }
-  };
-
-  recognition.onend = () => {
-    // console.log('it is over');
-    // for "endless" mode, comment out the next line and uncomment getSpeech()
-    // recognition.stop();
-    getSpeech();
-  };
-
-  recognition.onerror = (event) => {
-    // console.log(`something went wrong: ${event.error}`);
-  };
+const speak = (text) => {
+  if (synth.speaking) {
+    console.error('speechSynthesis.speaking');
+    return;
+  }
+  const utterThis = new SpeechSynthesisUtterance(text);
+  utterThis.voice = voices[32];
+  utterThis.rate = 0.84;
+  synth.speak(utterThis);
 };
 
 
-function speechToPrompt(text) {
-  const promptPlaceholder = document.getElementById('recordedText');
-  promptPlaceholder.value = text;
-  // get try making it work
-
-  let speechArr = text.split(' ');
-  checkForAnimal(speechArr);
-}
 
 
-function gotSpeech(speech) {
-  // console.log('gotSpeech', speech);
-  switch (speech) {
-    default:
-      // do nothing
-    case 'what happend next':
-      // console.log('switch', 'next');
-      addSentenceAfterbutton();
-      break;
-    case 'lion':
-      buttonPressed(speech);
-      // console.log('switch', 'lion');
-      break;
-    case 'sheep':
-      buttonPressed(speech);
-      // console.log('switch', 'sheep');
-      break;
-    case 'cat':
-      buttonPressed(speech);
-      // console.log('switch', 'cat');
-      break;
-    case 'bird':
-      buttonPressed(speech);
-      // console.log('switch', 'bird');
-      break;
-    case 'owl':
-      buttonPressed(speech);
-      // console.log('switch', 'owl');
-      break;
-    case 'fox':
-      buttonPressed(speech);
-      // console.log('switch', 'fox');
-      break;
-    case 'bear':
-      buttonPressed(speech);
-      // console.log('switch', 'bear');
-      break;
-    case 'crow':
-      buttonPressed(speech);
-      // console.log('switch', 'crow');
-      break;
-    case 'chicken':
-      buttonPressed(speech);
-      // console.log('switch', 'chicken');
-      break;
-    case 'hare':
-      buttonPressed(speech);
-      // console.log('switch', 'hare');
-      break;
-    case 'wolf':
-      buttonPressed(speech);
-      // console.log('switch', 'wolf');
-      break;
-    case 'tortoise':
-      buttonPressed(speech);
-      // console.log('switch', 'tortoise');
-      break;
-    case 'horse':
-      buttonPressed(speech);
-      // console.log('switch', 'horse');
-      break;
-    case 'woman':
-      buttonPressed(speech);
-      // console.log('switch', 'woman');
-      break;
-  }
-}
+document.onkeydown = function(evt) {
+  evt = evt || window.event;
+  // console.log(evt.key);
 
-
-function startSpeech(clicked_id) {
-  console.log('pressed', clicked_id);
-  const elm = document.getElementById('start-listening');
-
-  if (!isListening) {
-    elm.style.backgroundImage = "url('/images/recording-on.svg')";
-    isListening = true;
-
-    setTimeout(() => {
-      isListening = false;
-      elm.style.backgroundImage = "url('/images/recording-off.svg')";
-    }, 6000);
-  } else {
-    isListening = false;
-    elm.style.backgroundImage = "url('/images/recording-off.svg')";
-  }
-}
-
-
-function checkForAnimal(arr) {
-  console.log('sentence Arr', arr);
-
-  for (let i = 0; i < arr.length; i++) {
-    if (animalsArray.indexOf(arr[i].toLowerCase()) > -1) {
-      const animalIntent = arr[i].toLowerCase();
-      setTimeout(() => {
-        gotSpeech(animalIntent);
-      }, 1500);
-
-      // let thisWord = sentenceToArray[i].toLowerCase();
-      // let squirrelObject = {
-      //   class: 'squirrel',
-      //   word: thisWord
-      // }
-
-      // newSimilaritiesArray.push(squirrelObject);
-      // // console.log("found a squirrel", squirrelObject);
+  if (evt.key === 's' ) {
+    if (narration === true) {
+      narration = false;
+      console.log(narration)
+    } else {
+      narration = true;
+      console.log(narration)
     }
+    
   }
-}
+  
+};

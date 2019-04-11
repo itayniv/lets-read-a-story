@@ -1,3 +1,5 @@
+console.log('🔨 Utilities');
+
 // ------> Utils
 
 // resize canvas
@@ -451,9 +453,12 @@ function fadeoutandDelete(element) {
       element.style.display = 'none';
       element.remove();
     }
-    element.style.opacity = op;
-    element.style.filter = 'alpha(opacity=' + op * 100 + ")";
-    op -= op * 0.4;
+    if (element != null) {
+      element.style.opacity = op;
+      element.style.filter = 'alpha(opacity=' + op * 100 + ")";
+      op -= op * 0.4;
+    }
+
   }, 20);
 }
 
@@ -651,8 +656,10 @@ function createSyntStarthWithEffects() {
 function addSentenceAfterbutton() {
   // delete pause play temporarry
   const playPause = document.getElementById('pause-button');
-  fadeoutandDelete(playPause);
-  
+  if (playPause != undefined) {
+    fadeoutandDeletecurrOpacity(playPause, 'pause-button');
+  }
+
   // add Sentence
   // fade out current ullustration
 
@@ -665,8 +672,11 @@ function addSentenceAfterbutton() {
   setTimeout(() => {
     const elm = document.getElementById('one-more-sentence');
     const fadeOutIllustration = document.getElementById(`drawing${sentanceNumber}`);
-    fadeoutandDelete(elm);
-    if (fadeOutIllustration) {
+    if (elm != undefined) {
+      fadeoutandDelete(elm);
+    }
+
+    if (fadeOutIllustration != undefined) {
       slowFadeOut(fadeOutIllustration);
     }
   }, 100);
@@ -777,17 +787,15 @@ function identifyAnimalsIntent(theSentance) {
     return currIllustrationObject;
     //add that sketch class to the document
   }
-
 }
 
 // get input of textbox
 
 function getInputText() {
   const promptText = document.getElementById('recordedText').value;
-  console.log(promptText);
-  // gotSpeech(promptText);
   speechToPrompt(promptText);
-  //todo
+
+  console.log('submit');
 }
 
 
@@ -858,7 +866,7 @@ function currentIllustrationState(objectArr) {
         if (visableElement.style.display !== 'block') {
           setTimeout(() => {
             fadein(visableElement);
-            console.log(`fadein ${currVisIndex}`);
+            // console.log(`fadein ${currVisIndex}`);
           }, 400);
         }
       }
@@ -890,7 +898,7 @@ window.addEventListener('scroll', function (event) {
 
 function recieveLineSendStory(line) {
 
-  console.log('line', line);
+  // console.log('line', line);
 
   const storyLine = line[0];
   let vectoredStory = [];
@@ -909,7 +917,7 @@ function recieveLineSendStory(line) {
 
 
   let sendNextLine = vectoredStory[lineIndex + 1];
-  console.log('👌 Send next vectored line -->', sendNextLine);
+  // console.log('👌 Send next vectored line -->', sendNextLine);
 
   if (sendNextLine != undefined) {
     setTimeout(() => {
@@ -917,16 +925,42 @@ function recieveLineSendStory(line) {
     }, 1000);
 
   } else {
-    console.log('🖐 end -->' , line);
+    // console.log('🖐 end -->' , line);
     socket.emit('getSimilarSentence', { 'randomSentance': line, 'originalStory': vectoredStory });
 
   }
-
-
-
-
-
   // send the next line for nearest neighbour
+}
 
 
+
+function footerInsert() {
+
+
+  const timelineItem = document.createElement('div');
+  timelineItem.classList.add('timeline__item');
+  timelineItem.style.width = `${100/maxSentences}%`;
+
+
+  const timelineCard = document.createElement('div');
+  timelineCard.classList.add('timeline__card');
+
+  const timelineProgressBar = document.createElement('div');
+  timelineProgressBar.id = `footer-progress2${sentanceNumber}`;
+
+
+  // //create loder element
+  const progressDiv = document.createElement('div');
+  progressDiv.id = `one-more-sentence-loader${sentanceNumber}`;
+  progressDiv.classList.add('progress-moved');
+
+  // 
+  const progress = document.createElement('div');
+  progress.id = 'progress';
+  progress.classList.add('progress-bar2');
+
+
+  document.getElementById('timeline-container').appendChild(timelineItem)
+  .appendChild(timelineCard).appendChild(timelineProgressBar).appendChild(progressDiv).appendChild(progress);
+  // document.getElementById(`footer-progress${sentanceNumber}`).appendChild(progressDiv).appendChild(progress);
 }

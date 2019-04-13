@@ -394,7 +394,7 @@
   /* new CSS */
   /* CSS files add styling rules to your content */
   .left {
-    background: white;
+    /* background: white; */
     width: 50%;
     left: 0;
     position: absolute;
@@ -415,7 +415,7 @@
   .content-container {
     scroll-snap-align: start;
     height: 40vh;
-    background-color: white;
+    /* background-color: white; */
     margin-top: 10px;
     padding: 20px;
     margin-bottom: 400px;
@@ -432,6 +432,7 @@
     height: 50px;
     border-top: 1px solid #a9a9a9;
   }
+
   .interactive-container {
     background-color: white;
     height: 100%;
@@ -501,7 +502,13 @@
 
   }
 
-
+  .painter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -999;
+    pointer-events: none;
+  }
 
   .recording-button:focus {
     outline: none;
@@ -573,7 +580,7 @@
     font-weight: 500;
     color: #000;
     background-color: #fff;
-    border: 1px solid #b9b9b9;
+    border: 1px solid #e4e4e4;
     border-radius: 45px;
     box-shadow: 0px 8px 15px rgba(129, 129, 129, 0.14);
     transition: all 0.25s ease 0.1s;
@@ -584,7 +591,7 @@
     outline: none;
 }
   .what-happened-button:hover {
-    background-color: #c1c1c1;
+    background-color: #dedede;
     box-shadow: 0px 15px 20px rgba(214, 214, 214, 0.4);
     color: #fff;
   }
@@ -726,8 +733,8 @@
   }
   .paragraph-container {
     padding-top: 60px;
-    background: white;
-    color: white;
+    /* background: white; */
+    /* color: white; */
     opacity: 0.0;
     display: block;
     position: relative;

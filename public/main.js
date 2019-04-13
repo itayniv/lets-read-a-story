@@ -25,7 +25,12 @@ let viewportWidth;
 let viewportHeight;
 let contentContainerArr = [];
 const illustrationStroke = 8;
-// set interval
+
+let prevMouseY;
+let prevMouseX;
+
+let drawingsketch;
+
 let buttonTimer;
 let speakBool = true;
 
@@ -55,7 +60,6 @@ let sentimentContainer = [];
 // sketchRnnDrawing stuff
 
 let sketchmodel;
-let sketchBookmodel;
 let previous_pen = 'down';
 let x, y;
 let startX;
@@ -63,10 +67,9 @@ let startY;
 
 let vectoredStory = [];
 
-let startBookX;
-let startBookY;
+
 let sketch;
-let bookSketch;
+
 
 let canvasWidth;
 let canvasHeight;
@@ -119,6 +122,7 @@ function modelReady() {
 function init() {
 
   getSpeech();
+  sketchColor = getRandomColor();
 
 
   viewportWidth = window.innerWidth;
@@ -135,17 +139,12 @@ function init() {
     startY = canvasHeight / 2;
 
     drawingRatio = 1.2;
-
-
   }
-
-
   loadJsonfile();
 
   setTimeout(() => {
     loadBookSketch('book');
   }, 1000);
-
 
   const format = document.getElementById('one-page');
   format.style.opacity = '0.0';
@@ -201,7 +200,7 @@ socket.on('similarStory', function (result) {
       similarSentences.push(result.sentiment.sentences[index]);
       sentimentContainer.push(result.sentiment.sentiment[index]);
     }
-   
+
     console.log('📚 story method similarStory ', storyMethod.similarStory)
   }
 
@@ -218,7 +217,7 @@ socket.on('originalStoryAndSentiment', function (result) {
       similarSentences.push(result.sentences[index]);
       sentimentContainer.push(result.sentiment[index]);
     }
-   
+
     console.log('📚 story method original story ', storyMethod.similarStory)
   }
 
@@ -310,7 +309,6 @@ function runjsonCheck(json, checkword) {
   addSentence(thisStoryArray[0], 'notnet');
 
 }
-
 
 function addSentence(result, source) {
 
@@ -416,7 +414,6 @@ function addSentence(result, source) {
       paragraphNumber.innerHTML = `${sentanceNumber} / ${maxSentences + 1}`
 
 
-
       document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraphNumber);
       document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraph);
       document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
@@ -439,6 +436,16 @@ function addSentence(result, source) {
         // fade the sentence into the page.
         const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
         fadein(fadeinElement);
+
+        // calculate Ysize of story element
+
+       
+        const newStoryHeight = checkDivHeight('story-holder');
+        console.log('height is ', newStoryHeight);
+        // paint.resizeCanvas(500, newStoryHeight);
+        console.log(drawingsketch);
+
+
       }, 500);
 
       // run sentence enrichment
@@ -464,7 +471,6 @@ function addSentence(result, source) {
         }
       }, 5500);
     }
-
 
     // run loop again!
     setTimeout(() => {
@@ -518,13 +524,11 @@ function addOneMoreSentence() {
 
   const div = document.createElement('div');
   div.id = 'one-more-sentence';
-  div.style.background = 'white';
-  div.style.color = 'white';
+  // div.style.background = 'white';
+  // div.style.color = 'white';
   div.style.opacity = 0;
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
   div.style.paddingTop = "30px";
-
-
 
   //remove previouse pause and play
 
@@ -592,7 +596,7 @@ function addOneMoreSentence() {
   document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(buttonWrapper).appendChild(btn);
 
   // insert footer timeline element
-  footerInsert ();
+  footerInsert();
 
   document.getElementById('controls').appendChild(pauseAndPlay).appendChild(pauseImage);
 
@@ -708,6 +712,11 @@ function resetStory() {
     // remove current story
     document.getElementById('story').remove();
 
+    // remove timeline
+
+    const timelineElements = document.getElementById('timeline-container').childNodes;
+    console.log(timelineElements);
+
 
     // create a story container
     let div = document.createElement('div');
@@ -738,7 +747,41 @@ function resetStory() {
 }
 
 
+
+function addACanvas() {
+
+  drawingsketch = function (paint) {
+    paint.setup = function () {
+      paint.createCanvas(canvasWidth, 4000);
+      // console.log('clear',canvasWidth, canvasHeight);
+      paint.background(255);
+    }
+    paint.mouseDragged = function () {
+      console.log('painting');
+      paint.strokeWeight(4);
+      paint.stroke(sketchColor);
+      paint.line(paint.mouseX, paint.mouseY, paint.pmouseX, paint.pmouseY);
+    }
+  
+  };
+
+  
+
+  let canvasContainer = document.createElement('div');
+  canvasContainer.id = 'canvasContainer1';
+  document.getElementById('paint-Container').appendChild(canvasContainer);
+
+  let openingCanvas = new p5(drawingsketch, window.document.getElementById('canvasContainer1'));
+
+}
+
+
+
 function buttonPressed(subject) {
+
+  // // 1st canvas
+  // let myCanvas = createCanvas(500, 500);
+  // myCanvas.parent('drawing-container');
 
   let hero = subject;
 
@@ -802,8 +845,6 @@ function startbuttonPressed(clicked_id) {
     let fadeoutComponent1 = document.getElementById('start-background');
     fadeout(fadeoutComponent1);
     fadeout(fadeoutComponent);
-
-
   }, 500);
 
   const pageApp = document.getElementById('one-page');
@@ -814,6 +855,8 @@ function startbuttonPressed(clicked_id) {
 
   startX = canvasWidth / 2;
   startY = canvasHeight / 2;
+
+  addACanvas();
 
   // change writing prompt to somthing
   const textPrompt = document.getElementById('recordedText');
@@ -854,10 +897,24 @@ let sketchRnnDrawing = function (drawingOne) {
   drawingOne.setup = function () {
     drawingOne.createCanvas(canvasWidth, canvasHeight);
     drawingOne.background(255);
+    drawingOne.frameRate(60)
     previous_pen = 'down';
 
     drawingOne.loop();
   };
+
+
+  drawingOne.mouseDragged = function () {
+    // console.log('painting');
+    drawingOne.strokeWeight(3);
+    drawingOne.smooth();
+    
+
+    drawingOne.line(drawingOne.mouseX, drawingOne.mouseY, prevMouseX, prevMouseY);
+
+    prevMouseX = drawingOne.mouseX;
+    prevMouseY = drawingOne.mouseY;
+  }
 
   drawingOne.draw = function () {
     if (sketch) {
@@ -920,12 +977,12 @@ let sketchRnnDrawing = function (drawingOne) {
         }
       }
 
-
       if (previous_pen == 'down') {
         drawingOne.stroke(sketchColor);
         drawingOne.strokeWeight(illustrationStroke);
         drawingOne.line(x, y, x + sketch.dx / drawingRatio, y + sketch.dy / drawingRatio);
       }
+
       x += sketch.dx / drawingRatio;
       y += sketch.dy / drawingRatio;
       previous_pen = sketch.pen;
@@ -954,7 +1011,6 @@ function loadASketch(drawing) {
       startDrawing();
     });
   }, 500);
-
 
   //create a div container for drawing
   drawingNumber++;
@@ -986,121 +1042,6 @@ function loadASketch(drawing) {
 }
 
 
-//book animation
-function loadBookSketch(drawing) {
-
-  sketchbookmodel = ml5.SketchRNN(drawing, function () {
-    startDrawingbook();
-  });
-
-  //create a div container for drawing
-  // drawingNumber ++;
-
-  const div = document.createElement("div");
-  div.id = "bookillustration";
-  div.style.background = "white";
-  div.style.color = "white";
-  div.style.paddingBottom = "0px";
-  div.style.position = "absolute";
-  div.style.zIndex = "1";
-  div.style.top = "0px";
-  document.getElementById("book").appendChild(div);
-
-  let drawingBookCanvas = new p5(sketchRnnBook, document.getElementById("bookillustration"));
-}
-
-//  Book animation in beginning
-function startDrawingbook() {
-  x = startBookX / 2;
-  y = startBookY / 2;
-
-  sketchbookmodel.reset();
-  sketchbookmodel.generate(gotBookSketch);
-  previous_pen = 'down';
-  // console.log('startDrawingbook');
-}
-
-
-// book class
-let sketchRnnBook = function (drawingBook) {
-
-  drawingBook.setup = function () {
-    drawingBook.createCanvas(viewportWidth, viewportHeight);
-    drawingBook.background(255);
-    previous_pen = 'down';
-    drawingBook.loop();
-    sketchColor = getRandomColor();
-  };
-
-  drawingBook.draw = function () {
-    if (bookSketch) {
-      if (previous_pen == 'down') {
-        //make music here
-        penStrokesopening++;
-
-        if (penStrokesopening % 20 == 0) {
-          let noteToPlay = convertDiamToNoteMajor(bookSketch.dy);
-          if (noteToPlay == undefined) {
-            noteToPlay = 0;
-          }
-
-          let noteLenngth = noteLength(bookSketch.dx);
-          if (noteLenngth == undefined) {
-            noteLenngth = '6n';
-          }
-          playNoteStart(noteLenngth, noteToPlay);
-        }
-
-        drawingBook.stroke(sketchColor);
-        drawingBook.strokeWeight(3);
-        drawingBook.line(x, y, x + bookSketch.dx / 2, y + bookSketch.dy / 2);
-      }
-      x += bookSketch.dx / 2;
-      y += bookSketch.dy / 2;
-      previous_pen = bookSketch.pen;
-
-      if (bookSketch.pen !== 'end') {
-        bookSketch = null;
-        sketchbookmodel.generate(gotBookSketch);
-      } else {
-        // console.log("end");
-
-        bookSketch = null;
-        // sketchbookmodel = null;
-
-        // pic random drawing class
-        let randomDrawingNumber = Math.floor(Math.random() * drawingClasses.length);
-        let randDrawing = drawingClasses[randomDrawingNumber];
-        sketchColor = getRandomColor();
-
-        sketchBookmodel = ml5.SketchRNN(randDrawing, function () {
-          // console.log("sketchmodelReady", randDrawing);
-          startBookX = Math.floor(Math.random() * (viewportWidth * 2 - 20) + 20);
-          startBookY = Math.floor(Math.random() * (viewportHeight * 2 - 20) + 20);
-          // console.log(startBookX,startBookY);
-
-          setTimeout(() => {
-            startDrawingbook();
-          }, 1700);
-
-        });
-        //stop looping in draw
-        if (startStory) {
-          drawingBook.noLoop();
-          bookSketch = null;
-
-          sketchBookmodel = null;
-
-        }
-
-        //convert essential for stoping the animation
-        // previous_pen = sketch.pen;
-        //draw another ones
-      }
-    }
-  };
-};
-
 
 function startDrawing() {
   x = startX;
@@ -1116,10 +1057,6 @@ function gotSketch(err, s) {
   sketch = s;
 }
 
-
-function gotBookSketch(err, s) {
-  bookSketch = s;
-}
 
 
 
@@ -1202,3 +1139,5 @@ function ifInClass(theSentance) {
     }
   }
 }
+
+

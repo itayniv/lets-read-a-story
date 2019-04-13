@@ -160,6 +160,10 @@ function gotSpeech(speech) {
       buttonPressed(speech);
       // console.log('switch', 'chicken');
       break;
+      case 'goat':
+      buttonPressed(speech);
+      // console.log('switch', 'chicken');
+      break;
     case 'hare':
       buttonPressed(speech);
       // console.log('switch', 'hare');

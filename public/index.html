@@ -59,6 +59,7 @@
   <script src="utils.js"></script>
   <script src="speechSynthesis.js"></script>
   <script src="speechRecognition.js"></script>
+  <script src="booksketch.js"></script>
   <!-- <script src="doodle_recognition.js"></script> -->
 
 
@@ -121,8 +122,6 @@
               <div>
                 <input id="start-listening" class="recording-button" type="submit" value=""
                   onclick="startSpeech(this.id)">
-
-
                   <div class="prompt-container" id="prompt_container">
                   <form onsubmit="getInputText();return false">
                     <input type="text" class="title-text" id="recordedText" name="firstname"
@@ -135,6 +134,10 @@
             </div>
 
             <div id="story" class="story-column">
+          </section>
+
+          <section class="painter" id="paint-Container">
+
           </section>
         </section>
 

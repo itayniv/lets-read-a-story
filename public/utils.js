@@ -4,6 +4,7 @@ console.log('🔨 Utilities');
 
 // resize canvas
 const originalResize = (evt) => {
+
   canvasWidth = document.getElementById('drawing-container').offsetWidth;
   canvasHeight = document.getElementById('drawing-container').offsetHeight;
 };
@@ -964,3 +965,16 @@ function footerInsert() {
   .appendChild(timelineCard).appendChild(timelineProgressBar).appendChild(progressDiv).appendChild(progress);
   // document.getElementById(`footer-progress${sentanceNumber}`).appendChild(progressDiv).appendChild(progress);
 }
+
+
+
+
+// function windowResized() {
+//   resizeCanvas(windowWidth, windowHeight);
+// }
+
+
+function checkDivHeight (divId) {
+ const divHeight = document.getElementById(divId).offsetHeight;
+ return divHeight;
+} 

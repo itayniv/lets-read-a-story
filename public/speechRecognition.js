@@ -29,7 +29,7 @@ const getSpeech = () => {
   recognition.onresult = (event) => {
     let speechResult = event.results[0][0].transcript;
     // console.log(`result: ${speechResult}`, `confidence: ${event.results[0][0].confidence}`);
-    console.log(speechResult);
+    // console.log(speechResult);
 
     // start listening 
     if (speechResult === 'listen') {
@@ -151,6 +151,10 @@ function gotSpeech(speech) {
     case 'bear':
       buttonPressed(speech);
       // console.log('switch', 'bear');
+      break;
+      case 'dog':
+      buttonPressed(speech);
+      // console.log('switch', 'dog');
       break;
     case 'crow':
       buttonPressed(speech);

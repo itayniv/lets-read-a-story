@@ -86,6 +86,18 @@ function enrichSketchClass(theSentance) {
       // console.log("found a spider", spiderObject);
       newSimilaritiesArray.push(spiderObject);
 
+    } else if (rabitArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let rabitObject = {
+        class: '',
+        word: thisWord
+      }
+
+      // console.log("found a spider", spiderObject);
+      newSimilaritiesArray.push(rabitObject);
+
     } else if (sheepArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
@@ -937,10 +949,10 @@ function recieveLineSendStory(line) {
 
 function footerInsert() {
 
-
   const timelineItem = document.createElement('div');
   timelineItem.classList.add('timeline__item');
-  timelineItem.style.width = `${100/maxSentences}%`;
+  timelineItem.id = `timelineItem__${sentanceNumber}`
+  timelineItem.style.width = `${100 / maxSentences}%`;
 
 
   const timelineCard = document.createElement('div');
@@ -962,7 +974,7 @@ function footerInsert() {
 
 
   document.getElementById('timeline-container').appendChild(timelineItem)
-  .appendChild(timelineCard).appendChild(timelineProgressBar).appendChild(progressDiv).appendChild(progress);
+    .appendChild(timelineCard).appendChild(timelineProgressBar).appendChild(progressDiv).appendChild(progress);
   // document.getElementById(`footer-progress${sentanceNumber}`).appendChild(progressDiv).appendChild(progress);
 }
 
@@ -974,7 +986,39 @@ function footerInsert() {
 // }
 
 
-function checkDivHeight (divId) {
- const divHeight = document.getElementById(divId).offsetHeight;
- return divHeight;
-} 
+function checkDivHeight(divId) {
+  const divHeight = document.getElementById(divId).offsetHeight;
+  return divHeight;
+}
+
+function checkDivPosition(divId) {
+  const divHeight = document.getElementById(divId).offsetTop;;
+  return divHeight;
+}
+
+
+
+function mouseMove(e) {
+  var x = e.clientX;
+  var y = e.clientY;
+  var coor = "Coordinates: (" + x + "," + y + ")";
+  console.log(coor);
+}
+
+
+ 
+
+let point = 0;
+
+function drawIng (jsonDrawing){
+setTimeout(() => {
+  
+  if (point < drawing.length){
+    
+      line(jsonDrawing[point].thisX,jsonDrawing[point].thisY, jsonDrawing[point].prevX, jsonDrawing[point].prevY);
+      point ++;
+      console.log(point)
+      drawIng();
+  }
+      }, 120);
+}

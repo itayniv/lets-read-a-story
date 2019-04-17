@@ -1,6 +1,7 @@
 console.log('📕 Main');
 
 let drawingNumber = 0;
+let storyCurrentlyRunning = false;
 let sentanceNumber = 0;
 let currColor = 0;
 let mesh;
@@ -24,7 +25,12 @@ let penStrokesopening = 0;
 let viewportWidth;
 let viewportHeight;
 let contentContainerArr = [];
-const illustrationStroke = 8;
+const illustrationStroke = 6;
+
+let sketchillustrationArr;
+
+let globalCanv;
+let pauseBool = true;
 
 let prevMouseY;
 let prevMouseX;
@@ -50,7 +56,7 @@ let netTemperature;
 
 let userStory = [];
 let storyBuild = [];
-let currIllustration = '';
+let currIllustration = [];
 
 let fablesJson;
 
@@ -59,21 +65,13 @@ let sentimentContainer = [];
 
 // sketchRnnDrawing stuff
 
-let sketchmodel;
-let previous_pen = 'down';
-let x, y;
-let startX;
-let startY;
 
 let vectoredStory = [];
 
 
-let sketch;
-
-
 let canvasWidth;
 let canvasHeight;
-let drawingRatio = 1.2;
+let drawingRatio = 2.0;
 
 const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "backpack", "barn", "basket", "bear", "bee",
   "beeflower", "bicycle", "bird", "book", "brain",
@@ -98,7 +96,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
   "toothpaste", "tractor", "trombone", "truck", "whale",
   "windmill", "yoga", "yogabicycle", "everything"];
 
-const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "kite", "lark", "birds", "chicken", "chickens", "stork"];
+const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
 const dogArr = ["goat", "goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];
@@ -106,11 +104,12 @@ const sheepArr = ["lamb"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
 const turtleArr = ["tortoise", "tortoises"];
-const squirrelArr = ["hare"];
+const squirrelArr = ["mice"];
 const lionArr = ["lion's"];
 const catArr = ["tiger", "tiger's", "tigers", "cats"];
 const owlArr = ["owl's", 'bat', 'bats'];
-const frogArr = ['frogs', "frog's"]
+const frogArr = ['frogs', "frog's"];
+const rabitArr = ["Mice", 'hare'];
 
 init();
 
@@ -118,6 +117,8 @@ function modelReady() {
   // document.getElementById('status').innerHTML = 'Model Loaded';
   console.log("model loaded");
 }
+
+
 
 function init() {
 
@@ -138,16 +139,21 @@ function init() {
     startX = canvasWidth / 2;
     startY = canvasHeight / 2;
 
-    drawingRatio = 1.2;
+    drawingRatio = 2.0;
   }
+
   loadJsonfile();
 
-  setTimeout(() => {
-    loadBookSketch('book');
-  }, 1000);
+  const sketchRnn = ml5.SketchRNN('book', (result) => {
+    // console.log('cb result', result);
+    loadBookSketch('book', sketchRnn);
+  });
 
   const format = document.getElementById('one-page');
   format.style.opacity = '0.0';
+
+  // document.body.style.cursor =   "none";
+  // document.body.style.cursor =   "url('images/pencil.svg'), auto";
 }
 
 window.onload = function () {
@@ -173,7 +179,7 @@ window.onload = function () {
 
 function loadJsonfile() {
   // console.log("loadjson");
-  fetch('/aesopFables.json')
+  return fetch('/aesopFables.json')
     .then(function (response) {
       return response.json();
     })
@@ -300,6 +306,9 @@ function runjsonCheck(json, checkword) {
     }
   }
 
+  // story Start Bool
+  storyCurrentlyRunning = true;
+
   maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
@@ -307,188 +316,225 @@ function runjsonCheck(json, checkword) {
 
   // add the sentance to the page
   addSentence(thisStoryArray[0], 'notnet');
-
 }
 
-function addSentence(result, source) {
+async function addSentence(result, source) {
 
-  console.log('result', result);
+  // if app is not paused
+  if (storyCurrentlyRunning) {
+    console.log('****result****', result);
 
-  //  if the current sentence is smaller than the entire length of the story
-  if (sentanceNumber <= maxSentences) {
-    //  increase sentence number
-    sentanceNumber++;
+    //  if the current sentence is smaller than the entire length of the story
+    if (sentanceNumber <= maxSentences) {
+      //  increase sentence number
+      sentanceNumber++;
 
-    // create content container to hold new sentence and buttons
-    const container = document.createElement('div');
-    container.id = `content-container${sentanceNumber}`;
-    container.classList.add('content-container');
+      // create content container to hold new sentence and buttons
+      const container = document.createElement('div');
+      container.id = `content-container${sentanceNumber}`;
+      container.classList.add('content-container');
 
-    // create div to hold new sentence
-    const div = document.createElement('div');
-    div.id = `paragraph${sentanceNumber}`;
-    div.classList.add('paragraph-container');
-
-
-    const resultToLower = result.toLowerCase();
-    const res = result.split(' ');
-    const resLower = resultToLower.split(' ');
+      // create div to hold new sentence
+      const div = document.createElement('div');
+      div.id = `paragraph${sentanceNumber}`;
+      div.classList.add('paragraph-container');
 
 
-    // check source of the sentence
-    if (source == "net") {
-      let para = document.createElement('p');
-      para.classList.add("net");
-      let node = document.createTextNode(result);
-      para.appendChild(node);
-      document.getElementById('story').appendChild(div).appendChild(para);
+      let resultToLower = result.toLowerCase();
+      let res = result.split(' ');
+      let resLower = resultToLower.split(' ');
+
+
+      // check source of the sentence
+      if (source == "net") {
+        let para = document.createElement('p');
+        para.classList.add("net");
+        let node = document.createTextNode(result);
+        para.appendChild(node);
+        document.getElementById('story').appendChild(div).appendChild(para);
+
+      } else {
+
+        // random color
+        // let thisAnimalColor
+        sketchColor = getRandomColor();
+
+        //  run check to see if there is an illustration that fits here
+        let thisClassObject = ifInClass(result);
+        let thisClass = [];
+
+        //  if the object is not undefined then set thisClass to the object's class
+
+        if ((thisClassObject !== undefined) && (thisClassObject.length >= 0)) {
+          for (let index = 0; index < thisClassObject.length; index++) {
+            const thisclassinstnce = thisClassObject[index].class;
+            thisClass.push(thisclassinstnce);
+          }
+        }
+        // splice the sentence
+
+        let resultToLower = result.toLowerCase();
+        let res = result.match(/\w+|[^\s\w]+/g);
+        let resLower = resultToLower.match(/\w+|[^\s\w]+/g);
+
+        const paragraph = document.createElement('p');
+        paragraph.classList.add('voice');
+
+        for (let i = 0; i < res.length; i++) {
+          const wordSpan = document.createElement('span');
+
+          // parse punctuation
+          if ((res[i + 1] === '.') || (res[i + 1] === ',') || (res[i + 1] === ':') || (res[i + 1] === '!') || (res[i + 1] === "'") || (res[i + 1] === '?')) {
+            wordSpan.innerHTML = res[i] + '';
+            wordSpan.id = resLower[i];
+            wordSpan.classList.add('highlight-disable');
+
+          } else {
+            wordSpan.innerHTML = res[i] + ' ';
+            wordSpan.id = resLower[i];
+            wordSpan.classList.add('highlight-disable');
+          }
+
+          for (let index = 0; index < thisClass.length; index++) {
+
+            if (thisClassObject !== undefined) {
+              if ((wordSpan.id === thisClass[index]) || (wordSpan.id === thisClassObject[index].word)) {
+                wordSpan.style.color = sketchColor;
+                // console.log('highlight word ', thisClassObject[index].word);
+              }
+            }
+          }
+
+          // add all spans to paragraph
+          paragraph.appendChild(wordSpan);
+        }
+
+        // create button container
+        const reBranchContainer = document.createElement('div');
+        reBranchContainer.id = 'rebranch-container';
+        reBranchContainer.classList.add('rebranch-container');
+
+        // remove prev rebranch
+        const prevRebranchButton = document.getElementById(`rebranch-button${sentanceNumber - 1}`);
+        const thisObjectID = `rebranch-button${sentanceNumber - 1}`;
+        if (prevRebranchButton != null) {
+          fadeoutandDeletecurrOpacity(prevRebranchButton, thisObjectID);
+        }
+
+
+        // create the putton
+        const reBranch = document.createElement('div');
+        reBranch.classList.add('rebranch-button');
+        reBranch.id = `rebranch-button${sentanceNumber}`;
+        reBranch.onclick = function () { rebranchThis(sentanceNumber); };
+        reBranch.style.backgroundImage = "url('./images/branch.svg')";
+
+        if (sentanceNumber <= maxSentences) {
+          reBranchContainer.appendChild(reBranch);
+          // console.log('added rebranch');
+        }
+
+
+        const paragraphNumber = document.createElement('div');
+        paragraphNumber.classList.add('currnet-paragraph');
+        paragraphNumber.id = `paragraphNumber${sentanceNumber}`;
+        paragraphNumber.innerHTML = `${sentanceNumber} / ${maxSentences + 1}`
+
+
+        document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraphNumber);
+        document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraph);
+        document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
+
+        // create an object to push to array
+        let containerObject = {
+          "object": paragraphNumber,
+          "isVisible": ''
+        };
+
+        // push object to array
+        contentContainerArr.push(containerObject);
+
+        setTimeout(() => {
+          // scroll into the sentence
+          const elm = document.getElementById(`paragraph${sentanceNumber}`);
+          elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+          // fade the sentence into the page.
+          const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
+          fadein(fadeinElement);
+
+          // calculate Ysize of story element
+
+          const newStoryHeight = checkDivHeight('story-holder');
+          // console.log('height is ', newStoryHeight);
+          // paint.resizeCanvas(500, newStoryHeight);
+
+        }, 500);
+
+        // run sentence enrichment
+
+        if (sentanceNumber > 1) {
+
+          // add illustration to the page
+          if ((thisClass !== undefined) && (thisClass.length >= 1)) {
+            if (thisClass[0]) {
+              // console.log('first drawing', thisClass[0]);
+              await loadASketch(thisClass);
+            }
+            
+            // console.log('loading sketches for', thisClass);
+
+            // const loadSketchPromises = thisClass.map(className => loadASketch(className));
+            // Promise.all(loadSketchPromises)
+            //   .then(sketchResults => {
+            //     console.log('got sketch results', sketchResults);
+            //     // drawSketchResults(sketchResults);
+            //   });
+
+          } else {
+            // TODO console.log('dont add illustration here');
+          }
+        }
+      }
+
+
+      // Read the paragraph
+
+      if (speakBool) {
+        setTimeout(() => {
+          if (narration) {
+            speak(resultToLower);
+          }
+        }, 5500);
+      }
+
+      // additional drawing on left Canvas -->
+      // setTimeout(() => {
+      //   const startPosition = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+      //   console.log('startPosition', startPosition);
+      //   const additionalDrawing = arrow;
+      //   globalCanv.startNewDrawing(true, additionalDrawing, startPosition);
+      // }, 7500);
+
+      // run loop again!
+      setTimeout(() => {
+        if ((sentanceNumber <= maxSentences)) {
+          // add the add one more sentence button
+          addOneMoreSentence();
+        } else {
+          // add another sentence --> go to end
+          addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
+          // console.log("finished with the sentences");
+        }
+      }, 4500);
 
     } else {
 
-      // random color
-      // let thisAnimalColor
-      sketchColor = getRandomColor();
-
-      //  run check to see if there is an illustration that fits here
-      let thisClassObject = ifInClass(result);
-      let thisClass;
-
-      //  if the object is not undefined then set thisClass to the object's class
-      if (thisClassObject != undefined) {
-        thisClass = thisClassObject.class;
-      }
-
-
-      const resultToLower = result.toLowerCase();
-      const res = result.split(' ');
-      const resLower = resultToLower.split(' ');
-
-      const paragraph = document.createElement('p');
-      paragraph.classList.add('voice');
-
-
-      for (let i = 0; i < res.length; i++) {
-        const wordSpan = document.createElement('span')
-        wordSpan.innerHTML = res[i] + ' ';
-        wordSpan.id = resLower[i];
-
-        if (thisClassObject != undefined) {
-          if ((wordSpan.id === thisClass) || (wordSpan.id === thisClassObject.word)) {
-            wordSpan.style.color = sketchColor;
-          }
-        }
-
-        // add all spans to paragraph
-        paragraph.appendChild(wordSpan);
-      }
-
-      // create button container
-      const reBranchContainer = document.createElement('div');
-      reBranchContainer.id = 'rebranch-container';
-      reBranchContainer.classList.add('rebranch-container');
-
-      // remove prev rebranch
-      const prevRebranchButton = document.getElementById(`rebranch-button${sentanceNumber - 1}`);
-      const thisObjectID = `rebranch-button${sentanceNumber - 1}`;
-      if (prevRebranchButton != null) {
-        fadeoutandDeletecurrOpacity(prevRebranchButton, thisObjectID);
-      }
-
-
-      // create the putton
-      const reBranch = document.createElement('div');
-      reBranch.classList.add('rebranch-button');
-      reBranch.id = `rebranch-button${sentanceNumber}`;
-      reBranch.onclick = function () { rebranchThis(sentanceNumber); };
-      reBranch.style.backgroundImage = "url('./images/branch.svg')";
-
-      if (sentanceNumber <= maxSentences) {
-        reBranchContainer.appendChild(reBranch);
-        console.log('added rebranch');
-      }
-
-
-      const paragraphNumber = document.createElement('div');
-      paragraphNumber.classList.add('currnet-paragraph');
-      paragraphNumber.id = `paragraphNumber${sentanceNumber}`;
-      paragraphNumber.innerHTML = `${sentanceNumber} / ${maxSentences + 1}`
-
-
-      document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraphNumber);
-      document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraph);
-      document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
-
-      // create an object to push to array
-      let containerObject = {
-        "object": paragraphNumber,
-        "isVisible": ''
-      };
-
-      // push object to array
-      contentContainerArr.push(containerObject);
-
-      setTimeout(() => {
-        // scroll into the sentence
-
-        const elm = document.getElementById(`paragraph${sentanceNumber}`);
-        elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-
-        // fade the sentence into the page.
-        const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
-        fadein(fadeinElement);
-
-        // calculate Ysize of story element
-
-       
-        const newStoryHeight = checkDivHeight('story-holder');
-        console.log('height is ', newStoryHeight);
-        // paint.resizeCanvas(500, newStoryHeight);
-        console.log(drawingsketch);
-
-
-      }, 500);
-
-      // run sentence enrichment
-
-
-      if (sentanceNumber > 1) {
-        if (thisClass != undefined) {
-          // console.log(`add ${thisClass} illustration here`);
-          loadASketch(thisClass);
-        } else {
-          // TODO console.log('dont add illustration here');
-        }
-      }
+      // if sentanceNumber is larger than the maxSentences then end story
+      endStory();
     }
-
-
-    // Read the paragraph
-
-    if (speakBool) {
-      setTimeout(() => {
-        if (narration) {
-          speak(resultToLower);
-        }
-      }, 5500);
-    }
-
-    // run loop again!
-    setTimeout(() => {
-      if ((sentanceNumber <= maxSentences)) {
-        // add the add one more sentence button
-        addOneMoreSentence();
-      } else {
-        // add another sentence --> go to end
-        addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
-        // console.log("finished with the sentences");
-      }
-    }, 4500);
-
-  } else {
-
-    // if sentanceNumber is larger than the maxSentences then end story
-    endStory();
   }
+
 }
 
 
@@ -514,7 +560,7 @@ function addOneMoreButton() {
 
   setTimeout(() => {
     const elm = document.getElementById('read-one-more');
-    elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 500);
 
 }
@@ -542,9 +588,6 @@ function addOneMoreSentence() {
   pauseAndPlay.classList.add('pause-play-container')
   pauseAndPlay.id = 'pauseAndPlay';
   pauseAndPlay.style.opacity = '0.0';
-
-  // pauseBool
-  let pauseBool = true;
 
   // create the putton
   let pauseImage = document.createElement("div");
@@ -583,6 +626,7 @@ function addOneMoreSentence() {
     let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
     prgsBar.style.width = '100%';
     addedSentence = true;
+    pauseBool = true;
 
     const playPause = document.getElementById('pause-button');
     fadeoutandDelete(playPause);
@@ -692,6 +736,8 @@ function insertNewSeed(newSeedObject) {
 
 function resetStory() {
 
+  storyCurrentlyRunning = false;
+
   const fadeOutElement = document.getElementById('story-name');
   fadeout(fadeOutElement);
 
@@ -699,9 +745,11 @@ function resetStory() {
   setTimeout(() => {
     const fadeOutElement1 = document.getElementById('story');
     const fadeOutElement2 = document.getElementById('prompt');
+    const illustrations = document.getElementById('canvas-Container');
 
     fadeout(fadeOutElement1);
     fadeout(fadeOutElement2);
+    fadeoutandDelete(illustrations);
 
   }, 500);
 
@@ -714,8 +762,27 @@ function resetStory() {
 
     // remove timeline
 
-    const timelineElements = document.getElementById('timeline-container').childNodes;
-    console.log(timelineElements);
+    // const timelineElements = document.getElementById('timeline-container').childNodes;
+
+    var timelineElements = document.getElementById("timeline-container");
+    while (timelineElements.firstChild) {
+      timelineElements.removeChild(timelineElements.firstChild);
+    }
+
+    var sketchRNNIllustrations = document.getElementById("drawing-container");
+    setTimeout(() => {
+      fadeout(sketchRNNIllustrations);
+    }, 100);
+
+    setTimeout(() => {
+      while (sketchRNNIllustrations.firstChild) {
+        sketchRNNIllustrations.removeChild(sketchRNNIllustrations.firstChild);
+      }
+      document.getElementById("drawing-container").style.opacity = '1.0';
+      document.getElementById("drawing-container").style.display = '';
+
+    }, 1000);
+
 
 
     // create a story container
@@ -727,53 +794,104 @@ function resetStory() {
   }, 1000);
 
   setTimeout(() => {
+    // scroll to top
+    document.body.scrollTop = document.documentElement.scrollTop = 0;
+
+  }, 1200);
+
+  setTimeout(() => {
     // const fadeoutComponent1 = document.getElementById('characterOne');
     const fadeinElement2 = document.getElementById('recordedText');
     const fadeinElement3 = document.getElementById('prompt');
     const fadeinElement4 = document.getElementById('recordedText-eg');
     document.getElementById('recordedText').value = '';
 
-    for (let index = 0; index < 6; index++) {
-      const thisfadeout = document.getElementById(`one-more-sentence-loader${index + 1}`);
-      fadeoutandDelete(thisfadeout);
-
-    }
-
     fadein(fadeinElement2);
     fadein(fadeinElement3);
     fadein(fadeinElement4);
   }, 1400);
 
+  // reset Sentiment Arr
+  similarSentences = [];
+
+
+  // reset story Arr
+  sentimentContainer = [];
+
 }
 
 
-
 function addACanvas() {
-
   drawingsketch = function (paint) {
+
+    paint.currDrawing;
+    paint.drawingOffset;
+
     paint.setup = function () {
-      paint.createCanvas(canvasWidth, 4000);
+      paint.createCanvas(canvasWidth, 8000);
+      paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
     }
     paint.mouseDragged = function () {
-      console.log('painting');
-      paint.strokeWeight(4);
+      // pauseBool
+      pauseBool = false;
+
+      paint.strokeWeight(illustrationStroke);
       paint.stroke(sketchColor);
       paint.line(paint.mouseX, paint.mouseY, paint.pmouseX, paint.pmouseY);
     }
-  
+
+    paint.draw = function () {
+      if (paint.currentlyDrawing) {
+        paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffset);
+        paint.point = paint.point + 1;
+        // console.log('*** drawing ***', paint.point);
+      }
+    }
+
+    paint.startNewDrawing = function (drawBool, json, offset) {
+      paint.currentlyDrawing = drawBool;
+      paint.currDrawing = json;
+      paint.drawingOffset = offset;
+    }
+
+    paint.drawSomthing = function (point, jsonDrawing) {
+      if (paint.point < jsonDrawing.length) {
+        paint.strokeWeight(illustrationStroke);
+        paint.stroke(sketchColor);
+        paint.line(jsonDrawing[point].thisX, 
+          jsonDrawing[point].thisY + paint.drawingOffset, 
+          jsonDrawing[point].prevX, 
+          jsonDrawing[point].prevY + paint.drawingOffset);
+        // console.log('something', point, jsonDrawing[point].thisX );
+      } else {
+        paint.currentlyDrawing = false;
+        paint.point = 0;
+      }      
+    }
+
+    paint.mouseReleased = function () {
+      setTimeout(() => {
+
+        if (pauseBool === false) {
+
+        } else {
+          pauseBool = true;
+          console.log('pausebool');
+        }
+       
+      }, 1000);
+    }
   };
 
-  
-
   let canvasContainer = document.createElement('div');
-  canvasContainer.id = 'canvasContainer1';
+  canvasContainer.id = 'canvas-Container';
   document.getElementById('paint-Container').appendChild(canvasContainer);
 
-  let openingCanvas = new p5(drawingsketch, window.document.getElementById('canvasContainer1'));
+  return new p5(drawingsketch, window.document.getElementById('canvas-Container'));
 
-}
+};
 
 
 
@@ -789,7 +907,9 @@ function buttonPressed(subject) {
   let heroLower = hero.toLowerCase();
 
   //first animal illustration
-  currIllustration = heroLower;
+  currIllustration.push(heroLower);
+
+  console.log(currIllustration);
   // let thisclass = ifInClass()
   let heroSearch = heroLower + ' ';
 
@@ -823,9 +943,11 @@ function buttonPressed(subject) {
     runjsonCheck(fablesJson, heroSearch);
   }, 1500);
 
+  let currIllustrationArr = [];
+  currIllustrationArr.push(currIllustration);
   // add the sketch to the page
   setTimeout(() => {
-    loadASketch(currIllustration);
+    loadASketch(currIllustrationArr[0]);
   }, 2000);
 }
 
@@ -856,7 +978,7 @@ function startbuttonPressed(clicked_id) {
   startX = canvasWidth / 2;
   startY = canvasHeight / 2;
 
-  addACanvas();
+  globalCanv = addACanvas();
 
   // change writing prompt to somthing
   const textPrompt = document.getElementById('recordedText');
@@ -885,177 +1007,13 @@ function startbuttonPressed(clicked_id) {
 
   setTimeout(() => {
     const elm = document.getElementById(`startbutton`);
+    const section = document.getElementById(`book`);
+
     elm.remove();
+    section.remove();
   }, 2400);
 }
 
-// --> sketchrnn
-
-// drawing class
-let sketchRnnDrawing = function (drawingOne) {
-
-  drawingOne.setup = function () {
-    drawingOne.createCanvas(canvasWidth, canvasHeight);
-    drawingOne.background(255);
-    drawingOne.frameRate(60)
-    previous_pen = 'down';
-
-    drawingOne.loop();
-  };
-
-
-  drawingOne.mouseDragged = function () {
-    // console.log('painting');
-    drawingOne.strokeWeight(3);
-    drawingOne.smooth();
-    
-
-    drawingOne.line(drawingOne.mouseX, drawingOne.mouseY, prevMouseX, prevMouseY);
-
-    prevMouseX = drawingOne.mouseX;
-    prevMouseY = drawingOne.mouseY;
-  }
-
-  drawingOne.draw = function () {
-    if (sketch) {
-
-      penStrokes++;
-      let penOffset = penStrokes % 4;
-
-      if (sentimentContainer[sentanceNumber] >= 0) {
-        //sentiment is positive
-
-        //for these animals play this synth
-        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
-          // each 25th pen stroke
-          if ((penStrokes % 25 == 0) && (penOffset != 1)) {
-
-            let noteLenngth = noteLength(sketch.dx);
-            if (noteLenngth == undefined) {
-              noteLenngth = '6n';
-            }
-            let notetoplayMajor = convertDiamToNoteMajor(sketch.dy) / 4;
-            playNote2(noteLenngth, notetoplayMajor);
-          }
-        } else {
-          //play this synth each 12th stroke
-          if ((penStrokes % 12 == 0) && (penOffset != 1)) {
-
-            let noteLenngth = noteLength(sketch.dx);
-            if (noteLenngth == undefined) {
-              noteLenngth = '6n';
-            }
-            playNote1(noteLenngth, convertDiamToNoteMajor(sketch.dy) * 2);
-          }
-        }
-      } else {
-        // Sentiment is negeative
-
-        //for these animals play this synth
-        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
-          // each 25th pen stroke
-          if ((penStrokes % 25 == 0) && (penOffset != 1)) {
-
-            let noteLenngth = noteLength(sketch.dx);
-            if (noteLenngth == undefined) {
-              noteLenngth = '6n';
-            }
-
-            let notetoplayMinor = convertDiamToNoteMinor(sketch.dy) / 4;
-            playNote2(noteLenngth, notetoplayMinor);
-          }
-        } else {
-          //play this synth each 12th stroke
-          if ((penStrokes % 11 == 0) && (penOffset != 1)) {
-
-            let noteLenngth = noteLength(sketch.dx);
-            if (noteLenngth == undefined) {
-              noteLenngth = '6n';
-            }
-            playNote1(noteLenngth, convertDiamToNoteMinor(sketch.dy) * 2);
-          }
-        }
-      }
-
-      if (previous_pen == 'down') {
-        drawingOne.stroke(sketchColor);
-        drawingOne.strokeWeight(illustrationStroke);
-        drawingOne.line(x, y, x + sketch.dx / drawingRatio, y + sketch.dy / drawingRatio);
-      }
-
-      x += sketch.dx / drawingRatio;
-      y += sketch.dy / drawingRatio;
-      previous_pen = sketch.pen;
-
-      if (sketch.pen !== 'end') {
-        sketch = null;
-        sketchmodel.generate(gotSketch);
-      } else {
-        drawingOne.noLoop();
-        penStrokes = 0;
-        previous_pen = sketch.pen;
-        sketch = null;
-        sketchmodel = null;
-      }
-    }
-  };
-};
-
-
-
-function loadASketch(drawing) {
-  // wait .5 second
-
-  setTimeout(() => {
-    sketchmodel = ml5.SketchRNN(drawing, function () {
-      startDrawing();
-    });
-  }, 500);
-
-  //create a div container for drawing
-  drawingNumber++;
-
-  const div = document.createElement("div");
-  div.id = `drawing${sentanceNumber}`;
-  div.style.background = "white";
-  div.style.color = "white";
-  div.style.paddingBottom = "0px";
-
-  // only on first sentence opacity is 1.0 in the beginning
-  if (sentanceNumber > 1) {
-    div.style.opacity = '0.0';
-  }
-  document.getElementById("drawing-container").appendChild(div);
-
-  let drawingCanvas = new p5(sketchRnnDrawing, document.getElementById(`drawing${sentanceNumber}`));
-
-  if (sentanceNumber != 1) {
-
-    // let dimThis  = document.getElementById(`paragraph${sentanceNumber-1}`);
-    // dimElement(dimThis);
-  }
-
-  // setTimeout(() => {
-  //   let elm = document.getElementById(`drawing${sentanceNumber}`);
-  //   elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  // }, 2000);
-}
-
-
-
-function startDrawing() {
-  x = startX;
-  y = startY;
-
-  sketchmodel.reset();
-  sketchmodel.generate(gotSketch);
-  previous_pen = 'down';
-}
-
-
-function gotSketch(err, s) {
-  sketch = s;
-}
 
 
 
@@ -1129,12 +1087,17 @@ function ifInClass(theSentance) {
     if (similaritiesArray.length > 0) {
       currIllustration = similaritiesArray[0].class;
 
-      currIllustrationObject = {
-        class: similaritiesArray[0].class,
-        word: similaritiesArray[0].word
+      let currIllustrationArr = [];
+
+      for (let index = 0; index < similaritiesArray.length; index++) {
+        currIllustrationObject = {
+          class: similaritiesArray[index].class,
+          word: similaritiesArray[index].word
+        }
+        currIllustrationArr.push(currIllustrationObject);
       }
 
-      return currIllustrationObject;
+      return currIllustrationArr;
       //add that sketch class to the document
     }
   }

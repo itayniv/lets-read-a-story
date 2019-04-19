@@ -214,7 +214,7 @@ function drawSketchResults() {
   // update the new illustration
 
 
-  const randomWidth = Math.floor(Math.random() * canvasWidth);
+  const randomWidth = Math.floor(Math.random() * canvasWidth / 2);
   const randomHeight = Math.floor(Math.random() * canvasHeight / 2);
 
   startX = randomWidth;

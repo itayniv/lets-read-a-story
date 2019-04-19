@@ -158,22 +158,22 @@ function init() {
 
 window.onload = function () {
 
-  let fadeinElement2 = document.getElementById("start-container");
-  // fadeinElement2.style.visibility = "visible";
-  fadein(fadeinElement2);
-  //turn bg to 0.9 opaque
+  // let fadeinElement2 = document.getElementById("start-container");
+  // // fadeinElement2.style.visibility = "visible";
+  // fadein(fadeinElement2);
+  // //turn bg to 0.9 opaque
 
-  setTimeout(() => {
-    let startBackground = document.getElementById("start-background");
-    startBackground.style.opacity = 0.9;
-  }, 1000);
+  // setTimeout(() => {
+  //   let startBackground = document.getElementById("start-background");
+  //   startBackground.style.opacity = 0.9;
+  // }, 1000);
 
-  //fade the sentence into the page.
-  let fadeinElement = document.getElementById("start-button");
-  fadeinButton(fadeinElement);
+  // //fade the sentence into the page.
+  // let fadeinElement = document.getElementById("start-button");
+  // fadeinButton(fadeinElement);
 
-  let fadeinElement1 = document.getElementById("start-background");
-  fadeinButton(fadeinElement1);
+  // let fadeinElement1 = document.getElementById("start-background");
+  // fadeinButton(fadeinElement1);
 };
 
 
@@ -982,10 +982,10 @@ function startbuttonPressed(clicked_id) {
 
   // change writing prompt to somthing
   const textPrompt = document.getElementById('recordedText');
-  textPrompt.placeholder = 'what kind of story would you like to read today?';
+  textPrompt.placeholder = 'What kind of story would you like to read today?';
 
   const textPromptEg = document.getElementById('recordedText-eg');
-  textPromptEg.innerHTML = 'For example, try asking for a story about a certain animal?';
+  textPromptEg.innerHTML = 'For example, try asking for a story about a sheep...';
 
 
   setTimeout(() => {

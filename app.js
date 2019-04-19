@@ -32,6 +32,20 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+// app.get('/', function(req, res) {
+
+// });
+// // 
+// app.get('/generate', function(req, res) {
+//   //res.redirect('index.html?page=generate');
+//   res.sendFile("public/index.html");
+// });
+
+// app.get("/save", funtion(req, res) {
+//   // take that data and save to a database
+// })
+
+
 
 const port = process.env.PORT || 3000;
 // const sentimentjs = new Sentimentjs();

@@ -5,6 +5,8 @@
 
   <!-- Global site tag (gtag.js) - Google Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-112046007-3"></script>
+
+
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
@@ -12,6 +14,17 @@
 
     gtag('config', 'UA-112046007-3');
   </script>
+
+<!-- <script>
+  if (window.location.href.endsWith("/generate")) {
+    // Do click
+  }
+
+/// Save history AJAX call
+//  ajax("/save?id=SOMETHING")
+
+
+</script> -->
 
   <title>Let's read a story!</title>
 
@@ -36,12 +49,13 @@
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <link rel="stylesheet" href="style.css">
   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tone/0.12.62/Tone.min.js"></script>
+  <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+
   <link href="https://fonts.googleapis.com/css?family=Roboto+Mono:300,400,400i,500,500i,700i" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Fira+Sans:300,400" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,400,700" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Sumana" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Short+Stack" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css?family=Abhaya+Libre:400,500,600,700,800" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Lora:400,400i,700,700i" rel="stylesheet"> 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
@@ -79,11 +93,11 @@
 
   <div class="container">
     <div id="startbutton" class="buttonContainer">
-      <div id="start-container" style="opacity: 0.0">
-        <div id="start-background" class="start-background"
-          style="background-color: white; opacity: 0.9; filter: blur(.1px);">
+      <div id="start-container" style="opacity: 1.0">
+        <div id="start-background" class="start-background">
+          <p class="start-paragraph-header">Let’s Read A Story</p>
           <p class="start-paragraph">
-            <b>Let’s Read A Story</b> is a study on <a href="http://www.gutenberg.org/files/49010/49010-0.txt"
+             A study on <a href="http://www.gutenberg.org/files/49010/49010-0.txt"
               target="_blank">Aesop Fables</a>
             and the possibility of exploring the connections between different
             characters and ideas from the original fables in a fun new way using
@@ -94,7 +108,7 @@
               target="_blank">blog post</a>.
           </p>
           <div class="wrap">
-            <button id="start-button" style="display: none; opacity: 0.0" class="button-animation"
+            <button id="start-button" class="button-animation"
               onclick="startbuttonPressed(this.id)">Read a story!</button>
           </div>
 

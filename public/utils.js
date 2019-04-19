@@ -869,7 +869,7 @@ function currentIllustrationState(objectArr) {
           if (canvasElement.style.display !== 'none') {
             // canvasElement.style.display = 'none';
             slowFadeOut(canvasElement);
-            console.log(`turn off ${index}`);
+            // console.log(`turn off ${index}`);
           }
         }
       }

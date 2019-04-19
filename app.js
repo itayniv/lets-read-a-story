@@ -32,6 +32,8 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
+
+
 // app.get('/', function(req, res) {
 
 // });
@@ -97,6 +99,8 @@ sockets.on('connection', function (socket) {
     const seedSentance = data.randomSentance;
     const currStory = data.originalStory;
 
+    // console.log('currStory', currStory);
+
     let sameStorypromise = new Promise((resolve, reject) => {
       const storySentiment = addSentimentToArray(currStory);
       if (storySentiment.sentences.length > 0) {
@@ -132,7 +136,7 @@ sockets.on('connection', function (socket) {
         'seed': seedSentance
       }
 
-      // console.log(similarStoryObject);
+      // console.log('similarStoryObject', similarStoryObject);
       sockets.emit('similarStory', similarStoryObject);
     });
 
@@ -174,7 +178,7 @@ sockets.on('connection', function (socket) {
     const seedSentance = data.randomSentance;
     const currStory = data.originalStory;
 
-    console.log('next sentence --->', seedSentance);
+    // console.log('next sentence --->', seedSentance);
 
     // promise for next line in stroy
 
@@ -378,11 +382,12 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
     newStory.push(nearestSentance.sentences[1]);
   }
 
+  newStory.unshift(seedSent);
   // TODO get a sentence vector on original sentances from other stories.
 
-  let indexToRemove = 0;
+  // let indexToRemove = 0;
 
-  newStory.splice(indexToRemove, seedindex);
+  // newStory.splice(indexToRemove, seedindex);
 
   return newStory;
   // const vector3 = add(VectorsObject[0].embedding, vectors[0]);

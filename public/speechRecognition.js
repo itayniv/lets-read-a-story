@@ -75,15 +75,17 @@ function gotAction (actionSpeech) {
 
   let speechArr = actionSpeech.split(' ');
 
+
   for (let index = 0; index < speechArr.length; index++) {
     switch (speechArr[index]) {
       default:
       // do nothing
-      case 'reset':
-      console.log('reset story');
-      resetStory();
       break;
       case 'clear':
+      console.log('clear story');
+      resetStory();
+      break;
+      case 'reset':
       console.log('reset story');
       resetStory();
       break;
@@ -107,8 +109,8 @@ function gotAction (actionSpeech) {
 }
 
 
-function gotSpeech(speech) {
-  console.log('gotSpeech', speech);
+function gotSpeech(speech, arr) {
+  // console.log('gotSpeech', speech, arr);
   switch (speech) {
     default:
     // do nothing
@@ -125,75 +127,75 @@ function gotSpeech(speech) {
       addSentenceAfterbutton();
       break;
     case 'lion':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'lion');
       break;
     case 'sheep':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'sheep');
       break;
     case 'cat':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'cat');
       break;
     case 'bird':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'bird');
       break;
     case 'owl':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'owl');
       break;
     case 'fox':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'fox');
       break;
     case 'bear':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'bear');
       break;
       case 'dog':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'dog');
       break;
     case 'crow':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'crow');
       break;
     case 'chicken':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'chicken');
       break;
       case 'goat':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'chicken');
       break;
     case 'hare':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'hare');
       break;
     case 'boy':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'boy');
       break;
     case 'mouse':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'mouse');
       break;
     case 'wolf':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'wolf');
       break;
     case 'tortoise':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'tortoise');
       break;
     case 'horse':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'horse');
       break;
     case 'woman':
-      buttonPressed(speech);
+      buttonPressed(speech, arr);
       // console.log('switch', 'woman');
       break;
   }
@@ -226,14 +228,15 @@ function startSpeech(clicked_id) {
 
 
 function checkForAnimal(arr) {
-  console.log('sentence Arr', arr);
+
+  // console.log('sentence Arr', arr);
 
   for (let i = 0; i < arr.length; i++) {
     if (animalsArray.indexOf(arr[i].toLowerCase()) > -1) {
       const animalIntent = arr[i].toLowerCase();
       setTimeout(() => {
-        gotSpeech(animalIntent);
-      }, 1000);
+        gotSpeech(animalIntent, arr);
+      }, 800);
 
       // let thisWord = sentenceToArray[i].toLowerCase();
       // let squirrelObject = {

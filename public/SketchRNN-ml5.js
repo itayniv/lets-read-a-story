@@ -12,10 +12,12 @@ let sketch;
 
 
 let thisIllustrationContainer;
+let paintStrokes = 0
+
 
 function addRNNCanvas() {
 
-  console.log('add RNN Canv');
+  // console.log('add RNN Canv');
 
   sketchRnnDrawing = function (p5RNNdrawing) {
 
@@ -41,9 +43,9 @@ function addRNNCanvas() {
 
 
     p5RNNdrawing.updateNewAnimal = function () {
-      console.log('animal needs to update here');
+      // console.log('animal needs to update here');
     }
-    
+
     p5RNNdrawing.draw = function () {
 
       if (sketch) {
@@ -110,7 +112,48 @@ function addRNNCanvas() {
           p5RNNdrawing.stroke(sketchColor);
           p5RNNdrawing.strokeWeight(illustrationStroke);
           p5RNNdrawing.line(x, y, x + sketch.dx / drawingRatio, y + sketch.dy / drawingRatio);
-          console.log('here');
+          
+          // count brush strokes
+          paintStrokes++;
+
+          // reset if gone crazy
+          if (paintStrokes > 400) {
+            console.log('end and reset');
+            p5RNNdrawing.noLoop();
+            penStrokes = 0;
+            previous_pen = sketch.pen;
+            sketch = null;
+            sketchmodel = null;
+
+            // start a new drawing from class array
+            if (currentDraingsArr.length > 1) {
+              console.log('add another illustration if you can?')
+              // increase index by one
+              currentDrawIndex++;
+
+              // reset state if: 
+
+              if (currentDrawIndex === currentDraingsArr.length) {
+                currentDrawIndex = 0;
+                currentDraingsArr = [];
+
+                p5RNNdrawing.noLoop();
+                penStrokes = 0;
+                // previous_pen = sketch.pen;
+                sketch = null;
+                sketchmodel = null;
+
+                startX = canvasWidth / 2
+                startY = canvasHeight / 2;
+
+                // console.log('reset currentDrawIndex after complition');
+              }
+
+              // console.log('currentDraingsArr for resend', currentDraingsArr);
+              loadASketch(currentDraingsArr);
+
+            }
+          }
         }
 
         x += sketch.dx / drawingRatio;
@@ -121,7 +164,7 @@ function addRNNCanvas() {
           sketch = null;
           sketchmodel.generate(gotSketch);
         } else {
-          console.log('end and reset');
+          // console.log('end and reset');
           p5RNNdrawing.noLoop();
           penStrokes = 0;
           previous_pen = sketch.pen;
@@ -130,7 +173,7 @@ function addRNNCanvas() {
 
           // start a new drawing from class array
           if (currentDraingsArr.length > 1) {
-            console.log('add another illustration if you can?')
+            // console.log('add another illustration if you can?')
             // increase index by one
             currentDrawIndex++;
 
@@ -149,10 +192,10 @@ function addRNNCanvas() {
               startX = canvasWidth / 2
               startY = canvasHeight / 2;
 
-              console.log('reset currentDrawIndex after complition');
+              // console.log('reset currentDrawIndex after complition');
             }
 
-            console.log('currentDraingsArr for resend', currentDraingsArr);
+            // console.log('currentDraingsArr for resend', currentDraingsArr);
             loadASketch(currentDraingsArr);
 
           }
@@ -174,10 +217,10 @@ async function loadASketch(drawing) {
   currentDraingsArr = drawing;
 
   if (currentDraingsArr.length === 0)
-  return;
+    return;
 
   thisIllustrationContainer = document.getElementById(`drawing${sentanceNumber}`);
-  console.log('drawing number', currentDrawIndex);
+  // console.log('drawing number', currentDrawIndex);
   // console.log('drawing', currentDraingsArr[currentDrawIndex]);
 
   if (currentDraingsArr[currentDrawIndex]) {
@@ -208,23 +251,24 @@ function gotSketch(err, s) {
 
 
 function drawSketchResults() {
+  paintStrokes = 0
 
   if (thisIllustrationContainer) {
-  console.log('container exsists should trigger update new animal');
-  // update the new illustration
+    // console.log('container exsists should trigger update new animal');
+    // update the new illustration
 
 
-  const randomWidth = Math.floor(Math.random() * canvasWidth / 2);
-  const randomHeight = Math.floor(Math.random() * canvasHeight / 2);
+    const randomWidth =  canvasWidth / 2 - canvasWidth / 3.3;
+    const randomHeight = canvasHeight / 2;
 
-  startX = randomWidth;
-  startY = randomHeight;
-  sketchillustrationArr.loop();
-  
+    startX = randomWidth;
+    startY = randomHeight;
+    sketchillustrationArr.loop();
+
 
   } else {
     // create a div container for drawing
-    console.log('create illustration container');
+    // console.log('create illustration container');
 
     drawingNumber++;
 

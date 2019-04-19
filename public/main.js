@@ -71,7 +71,7 @@ let vectoredStory = [];
 
 let canvasWidth;
 let canvasHeight;
-let drawingRatio = 2.0;
+let drawingRatio = 1.3;
 
 const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "backpack", "barn", "basket", "bear", "bee",
   "beeflower", "bicycle", "bird", "book", "brain",
@@ -208,8 +208,14 @@ socket.on('similarStory', function (result) {
     }
 
     console.log('📚 story method similarStory ', storyMethod.similarStory)
+    // console.log(similarSentences);
   }
 
+  maxSentences = similarSentences.length - 1;
+  addSentence(similarSentences[0], 'notnet');
+
+
+  
   // result gives similar story
 });
 
@@ -315,14 +321,14 @@ function runjsonCheck(json, checkword) {
   socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
 
   // add the sentance to the page
-  addSentence(thisStoryArray[0], 'notnet');
+  // addSentence(thisStoryArray[0], 'notnet');
 }
 
 async function addSentence(result, source) {
 
   // if app is not paused
   if (storyCurrentlyRunning) {
-    console.log('****result****', result);
+    // console.log('****result****', result);
 
     //  if the current sentence is smaller than the entire length of the story
     if (sentanceNumber <= maxSentences) {
@@ -473,7 +479,7 @@ async function addSentence(result, source) {
 
         // run sentence enrichment
 
-        if (sentanceNumber > 1) {
+        if (sentanceNumber) {
 
           // add illustration to the page
           if ((thisClass !== undefined) && (thisClass.length >= 1)) {
@@ -509,12 +515,21 @@ async function addSentence(result, source) {
       }
 
       // additional drawing on left Canvas -->
-      // setTimeout(() => {
-      //   const startPosition = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-      //   console.log('startPosition', startPosition);
-      //   const additionalDrawing = arrow;
-      //   globalCanv.startNewDrawing(true, additionalDrawing, startPosition);
-      // }, 7500);
+
+      setTimeout(() => {
+        if(sentanceNumber % 2 == 0 ) {
+          const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+          const startPositionX = canvasWidth - canvasHeight/3;
+          const additionalDrawing = ladder;
+          globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
+        } else {
+          const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+          const startPositionX = 0;
+          const additionalDrawing = snake;
+          globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
+        }
+   
+      }, 7500);
 
       // run loop again!
       setTimeout(() => {
@@ -825,7 +840,8 @@ function addACanvas() {
   drawingsketch = function (paint) {
 
     paint.currDrawing;
-    paint.drawingOffset;
+    paint.drawingOffsetY;
+    paint.drawingOffsetX;
 
     paint.setup = function () {
       paint.createCanvas(canvasWidth, 8000);
@@ -844,26 +860,35 @@ function addACanvas() {
 
     paint.draw = function () {
       if (paint.currentlyDrawing) {
-        paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffset);
+        paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffsetY);
         paint.point = paint.point + 1;
+      
         // console.log('*** drawing ***', paint.point);
       }
     }
 
-    paint.startNewDrawing = function (drawBool, json, offset) {
+    paint.startNewDrawing = function (drawBool, json, offsetY, offsetX) {
       paint.currentlyDrawing = drawBool;
       paint.currDrawing = json;
-      paint.drawingOffset = offset;
+      paint.drawingOffsetY = offsetY;
+      paint.drawingOffsetX = offsetX;
     }
 
     paint.drawSomthing = function (point, jsonDrawing) {
       if (paint.point < jsonDrawing.length) {
         paint.strokeWeight(illustrationStroke);
         paint.stroke(sketchColor);
-        paint.line(jsonDrawing[point].thisX, 
-          jsonDrawing[point].thisY + paint.drawingOffset, 
-          jsonDrawing[point].prevX, 
-          jsonDrawing[point].prevY + paint.drawingOffset);
+
+        let randomPlay = Math.floor((Math.random() * 30) + 15)
+
+        if (paint.point % randomPlay == 0) {
+          generateSounds( paint.drawingOffsetX, jsonDrawing[point].thisY )
+        }
+
+        paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX, 
+          jsonDrawing[point].thisY + paint.drawingOffsetY, 
+          jsonDrawing[point].prevX + paint.drawingOffsetX, 
+          jsonDrawing[point].prevY + paint.drawingOffsetY);
         // console.log('something', point, jsonDrawing[point].thisX );
       } else {
         paint.currentlyDrawing = false;
@@ -895,26 +920,22 @@ function addACanvas() {
 
 
 
-function buttonPressed(subject) {
-
-  // // 1st canvas
-  // let myCanvas = createCanvas(500, 500);
-  // myCanvas.parent('drawing-container');
+function buttonPressed(subject, sentenceArr) {
 
   let hero = subject;
 
   //convert to lowercase
   let heroLower = hero.toLowerCase();
 
-  //first animal illustration
   currIllustration.push(heroLower);
 
-  console.log(currIllustration);
   // let thisclass = ifInClass()
   let heroSearch = heroLower + ' ';
 
   // fade out buttons and prompt
   setTimeout(() => {
+
+    console.log('dissolve text');
     // let fadeoutComponent1 = document.getElementById('characterOne');
     const fadeoutComponent2 = document.getElementById('recordedText');
     const fadeoutComponent3 = document.getElementById('recordedText-eg');
@@ -942,13 +963,6 @@ function buttonPressed(subject) {
   setTimeout(() => {
     runjsonCheck(fablesJson, heroSearch);
   }, 1500);
-
-  let currIllustrationArr = [];
-  currIllustrationArr.push(currIllustration);
-  // add the sketch to the page
-  setTimeout(() => {
-    loadASketch(currIllustrationArr[0]);
-  }, 2000);
 }
 
 

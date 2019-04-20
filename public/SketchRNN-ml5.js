@@ -37,8 +37,21 @@ function addRNNCanvas() {
       p5RNNdrawing.smooth();
 
       p5RNNdrawing.line(p5RNNdrawing.mouseX, p5RNNdrawing.mouseY, prevMouseX, prevMouseY);
+
+
+      p5RNNdrawing.stroke(secondColor);
+      p5RNNdrawing.strokeWeight(1);
+      let randomdist = Math.floor((Math.random() * 1) + 6)
+      p5RNNdrawing.line(p5RNNdrawing.mouseX + randomdist, p5RNNdrawing.mouseY + randomdist, prevMouseX + randomdist, prevMouseY+ randomdist);
+
+
       prevMouseX = p5RNNdrawing.mouseX;
       prevMouseY = p5RNNdrawing.mouseY;
+
+
+
+
+
     };
 
 
@@ -109,10 +122,19 @@ function addRNNCanvas() {
         // <----- end music stuff
 
         if (previous_pen == 'down') {
-          p5RNNdrawing.stroke(sketchColor);
+          p5RNNdrawing.stroke(colorArray[currentDrawIndex]);
           p5RNNdrawing.strokeWeight(illustrationStroke);
           p5RNNdrawing.line(x, y, x + sketch.dx / drawingRatio, y + sketch.dy / drawingRatio);
-          
+
+
+
+          p5RNNdrawing.stroke(secondColorArray[currentDrawIndex]);
+          p5RNNdrawing.strokeWeight(1);
+          let randomdist = Math.floor((Math.random() * 1) + 6)
+          p5RNNdrawing.line(x + randomdist, y + randomdist, x + sketch.dx / drawingRatio + randomdist, y + sketch.dy / drawingRatio + randomdist);
+
+
+
           // count brush strokes
           paintStrokes++;
 

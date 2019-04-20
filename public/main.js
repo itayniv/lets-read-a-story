@@ -27,10 +27,15 @@ let viewportHeight;
 let contentContainerArr = [];
 const illustrationStroke = 6;
 
+let colorArray = [];
+let secondColorArray = [];
+
 let sketchillustrationArr;
 
 let globalCanv;
 let pauseBool = true;
+
+let secondColor;
 
 let prevMouseY;
 let prevMouseX;
@@ -124,6 +129,8 @@ function init() {
 
   getSpeech();
   sketchColor = getRandomColor();
+  secondColor = LightenDarkenColor(sketchColor, 40); 
+
 
 
   viewportWidth = window.innerWidth;
@@ -364,6 +371,8 @@ async function addSentence(result, source) {
         // random color
         // let thisAnimalColor
         sketchColor = getRandomColor();
+        secondColor = LightenDarkenColor(sketchColor, 40); 
+
 
         //  run check to see if there is an illustration that fits here
         let thisClassObject = ifInClass(result);
@@ -405,7 +414,7 @@ async function addSentence(result, source) {
 
             if (thisClassObject !== undefined) {
               if ((wordSpan.id === thisClass[index]) || (wordSpan.id === thisClassObject[index].word)) {
-                wordSpan.style.color = sketchColor;
+                wordSpan.style.color = colorArray[index];
                 // console.log('highlight word ', thisClassObject[index].word);
               }
             }
@@ -483,19 +492,11 @@ async function addSentence(result, source) {
 
           // add illustration to the page
           if ((thisClass !== undefined) && (thisClass.length >= 1)) {
+
             if (thisClass[0]) {
               // console.log('first drawing', thisClass[0]);
               await loadASketch(thisClass);
             }
-            
-            // console.log('loading sketches for', thisClass);
-
-            // const loadSketchPromises = thisClass.map(className => loadASketch(className));
-            // Promise.all(loadSketchPromises)
-            //   .then(sketchResults => {
-            //     console.log('got sketch results', sketchResults);
-            //     // drawSketchResults(sketchResults);
-            //   });
 
           } else {
             // TODO console.log('dont add illustration here');
@@ -541,7 +542,7 @@ async function addSentence(result, source) {
           addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
           // console.log("finished with the sentences");
         }
-      }, 4500);
+      }, 8500);
 
     } else {
 
@@ -680,7 +681,7 @@ function addOneMoreSentence() {
   function timeOutTimer() {
 
     // if timer hasnt reached the end and button was not pressed
-    if ((width >= 1000) && (!addedSentence)) {
+    if ((width >= 2500) && (!addedSentence)) {
 
       clearInterval(buttonTimer);
       addSentenceAfterbutton();
@@ -688,7 +689,7 @@ function addOneMoreSentence() {
     } else {
       if (pauseBool) {
         width++;
-        prgsBar.style.width = width / 10 + '%';
+        prgsBar.style.width = width / 25 + '%';
       }
     }
   }
@@ -730,7 +731,6 @@ function insertNewSeed(newSeedObject) {
     if (thisSpanNumber != null) {
       thisSpanNumber.innerHTML = ' ';
     }
-
   }
 
   const currentSeedSpan = document.createElement('span')
@@ -738,9 +738,7 @@ function insertNewSeed(newSeedObject) {
   currentSeedSpan.id = `currentSeed${sentanceNumber}`;
   currentSeedSpan.classList.add('current-seed');
 
-
   thisPageNumber.appendChild(currentSeedSpan);
-
 
   setTimeout(() => {
     clearInterval(buttonTimer);
@@ -750,12 +748,10 @@ function insertNewSeed(newSeedObject) {
 
 
 function resetStory() {
-
   storyCurrentlyRunning = false;
 
   const fadeOutElement = document.getElementById('story-name');
   fadeout(fadeOutElement);
-
 
   setTimeout(() => {
     const fadeOutElement1 = document.getElementById('story');
@@ -824,6 +820,7 @@ function resetStory() {
     fadein(fadeinElement2);
     fadein(fadeinElement3);
     fadein(fadeinElement4);
+    globalCanv = addACanvas();
   }, 1400);
 
   // reset Sentiment Arr
@@ -879,16 +876,25 @@ function addACanvas() {
         paint.strokeWeight(illustrationStroke);
         paint.stroke(sketchColor);
 
-        let randomPlay = Math.floor((Math.random() * 30) + 15)
+        let randomPlay = Math.floor((Math.random() * 40) + 40)
 
         if (paint.point % randomPlay == 0) {
           generateSounds( paint.drawingOffsetX, jsonDrawing[point].thisY )
         }
 
-        paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX, 
-          jsonDrawing[point].thisY + paint.drawingOffsetY, 
-          jsonDrawing[point].prevX + paint.drawingOffsetX, 
+        paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX,
+          jsonDrawing[point].thisY + paint.drawingOffsetY,
+          jsonDrawing[point].prevX + paint.drawingOffsetX,
           jsonDrawing[point].prevY + paint.drawingOffsetY);
+
+        let randomdist = Math.floor((Math.random() * 2) + 6)
+        paint.strokeWeight(1);
+        paint.stroke(secondColor);
+
+        paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX + randomdist,
+          jsonDrawing[point].thisY + paint.drawingOffsetY + randomdist,
+          jsonDrawing[point].prevX + paint.drawingOffsetX + randomdist ,
+          jsonDrawing[point].prevY + paint.drawingOffsetY + randomdist);
         // console.log('something', point, jsonDrawing[point].thisX );
       } else {
         paint.currentlyDrawing = false;
@@ -927,7 +933,6 @@ function buttonPressed(subject, sentenceArr) {
   //convert to lowercase
   let heroLower = hero.toLowerCase();
 
-  currIllustration.push(heroLower);
 
   // let thisclass = ifInClass()
   let heroSearch = heroLower + ' ';
@@ -1099,11 +1104,23 @@ function ifInClass(theSentance) {
 
     //if found words that match
     if (similaritiesArray.length > 0) {
+
       currIllustration = similaritiesArray[0].class;
 
       let currIllustrationArr = [];
+      colorArray = [];
+      secondColorArray = [];
 
       for (let index = 0; index < similaritiesArray.length; index++) {
+
+
+        // add colorArray
+        let thisColor = getRandomColor();
+        colorArray.push(thisColor);
+
+        let secondColor = LightenDarkenColor(thisColor, 60)
+        secondColorArray.push(secondColor);
+
         currIllustrationObject = {
           class: similaritiesArray[index].class,
           word: similaritiesArray[index].word

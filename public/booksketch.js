@@ -7,6 +7,8 @@ let startBookX;
 let startBookY;
 let bookSketch;
 
+let numberOfBooks = 0;
+
 //book animation
 function loadBookSketch(drawing, sketchRnn) {
   // console.log('rnn', sketchRnn);
@@ -30,6 +32,9 @@ function loadBookSketch(drawing, sketchRnn) {
 
 //  Book animation in beginning
 function startDrawingbook() {
+
+  numberOfBooks ++;
+
   x = startBookX / 2;
   y = startBookY / 2;
 
@@ -38,7 +43,6 @@ function startDrawingbook() {
     sketchBookmodel.generate(gotBookSketch);
   }
   previous_pen = 'down';
-  // console.log('startDrawingbook');
 }
 
 
@@ -51,11 +55,21 @@ let sketchRnnBook = function (drawingBook) {
     previous_pen = 'down';
     drawingBook.loop();
     sketchColor = getRandomColor();
+    secondColor = LightenDarkenColor(sketchColor, 30); 
+
   };
 
   drawingBook.mouseDragged = function () {
     drawingBook.strokeWeight(3);
     drawingBook.line(drawingBook.mouseX, drawingBook.mouseY, drawingBook.pmouseX, drawingBook.pmouseY);
+
+    drawingBook.strokeWeight(1);
+    let randomdist = Math.floor((Math.random() * 2) + 1)
+    drawingBook.stroke(secondColor);
+
+    drawingBook.line(drawingBook.mouseX+ randomdist, drawingBook.mouseY+ randomdist, drawingBook.pmouseX+randomdist, drawingBook.pmouseY+ randomdist);
+
+
   }
 
   drawingBook.draw = function () {
@@ -77,9 +91,18 @@ let sketchRnnBook = function (drawingBook) {
           playNoteStart(noteLenngth, noteToPlay);
         }
 
+        
         drawingBook.stroke(sketchColor);
         drawingBook.strokeWeight(3);
         drawingBook.line(x, y, x + bookSketch.dx / 2, y + bookSketch.dy / 2);
+
+
+        drawingBook.stroke(secondColor);
+        drawingBook.strokeWeight(1);
+        let randomdist = Math.floor((Math.random() * 1) + 6)
+        drawingBook.line(x + randomdist, y+ randomdist, x + bookSketch.dx / 2 + randomdist, y + bookSketch.dy / 2+ randomdist);
+
+
       }
       x += bookSketch.dx / 2;
       y += bookSketch.dy / 2;
@@ -96,6 +119,7 @@ let sketchRnnBook = function (drawingBook) {
         // pic random drawing class
         let randomDrawingNumber = Math.floor(Math.random() * drawingClasses.length);
         let randDrawing = drawingClasses[randomDrawingNumber];
+        
         sketchColor = getRandomColor();
 
         ml5.SketchRNN(randDrawing, function () {
@@ -104,9 +128,14 @@ let sketchRnnBook = function (drawingBook) {
           startBookY = Math.floor(Math.random() * (viewportHeight * 2 - 20) + 20);
           // console.log(startBookX,startBookY);
 
-          setTimeout(() => {
-            startDrawingbook();
-          }, 1700);
+
+          if (numberOfBooks <= 19){
+            setTimeout(() => {
+              startDrawingbook();
+              secondColor = LightenDarkenColor(sketchColor, 30); 
+            }, 1700);
+          }
+        
 
         });
         //stop looping in draw

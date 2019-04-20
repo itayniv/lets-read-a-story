@@ -5,12 +5,7 @@
 @media only screen and (min-width: 200px) {
   /* new CSS */
   /* CSS files add styling rules to your content */
-  .custom-cursor {
-    /* background:gray; */
-    /* width:200px; */
-    /* height:200px; */
-    cursor: url(./images/pencil_01.png), auto;
-  }
+ 
 
   .highlight-disable {
     user-select: none;
@@ -151,6 +146,16 @@
   .horizontalLine {
     border-bottom: 1px solid #a9a9a9;
     height: 72%;
+  }
+
+  .custom-cursor {
+    cursor: url(./images/pencil.svg)  -22 13, auto;
+   
+
+  }
+
+
+  .custom {
   }
   .wrap {
     height: 100%;
@@ -800,6 +805,21 @@
     letter-spacing: .03em;
     font-family: 'Roboto', sans-serif;
     /* font-family: 'Abhaya Libre', serif !important; */
+  }
+
+  .disclaimer {
+    padding-top: 70px;
+    color: darkgrey;
+    position: relative;
+    text-align: center;
+    background: "white";
+    font-weight: 300;
+    z-index: 100;
+    margin-top: 20px;
+    line-height: 50px;
+    font-size: 15px;
+    letter-spacing: .03em;
+    font-family: 'Roboto', sans-serif;
   }
 
   .start-paragraph-header {

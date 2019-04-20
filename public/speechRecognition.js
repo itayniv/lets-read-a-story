@@ -3,7 +3,7 @@ console.log('🗣️ Voice Recognition');
 
 let isListening = false;
 
-const animalsArray = ['woman', 'boy', 'horse', 'jackdaw', 'eagle', 'crow', 'crows', 'swallow', 'raven', 'kite', 'lark',
+const animalsArray = ['woman', 'fish', 'boy', 'horse', 'jackdaw', 'eagle', 'crow', 'crows', 'swallow', 'raven', 'kite', 'lark',
   'birds', 'chicken', 'chickens', 'crane', 'cranes', 'goose', 'ducks', 'peacock',
   'peacocks', 'heron', 'herons', 'gnat', 'grasshopper', 'grasshoppers', 'flies',
   'wasps', 'hornet', 'goat', 'goats', 'wolf', 'fox', 'dogs', 'boar', 'weasels',
@@ -71,7 +71,7 @@ function speechToPrompt(text) {
 }
 
 
-function gotAction (actionSpeech) {
+function gotAction(actionSpeech) {
 
   let speechArr = actionSpeech.split(' ');
 
@@ -79,31 +79,31 @@ function gotAction (actionSpeech) {
   for (let index = 0; index < speechArr.length; index++) {
     switch (speechArr[index]) {
       default:
-      // do nothing
-      break;
+        // do nothing
+        break;
       case 'clear':
-      console.log('clear story');
-      resetStory();
-      break;
+        console.log('clear story');
+        resetStory();
+        break;
       case 'reset':
-      console.log('reset story');
-      resetStory();
-      break;
+        console.log('reset story');
+        resetStory();
+        break;
       case 'pause':
-      console.log('pause');
-      break;
+        console.log('pause');
+        break;
       case 'play':
-      console.log('resume');
-      break;
+        console.log('resume');
+        break;
       case 'back':
-      console.log('back');
-      break;
+        console.log('back');
+        break;
       case 'next':
-      console.log('next');
-      break;
+        console.log('next');
+        break;
       case 'draw':
-      console.log('draw');
-      break;
+        console.log('draw');
+        break;
     }
   }
 }
@@ -142,6 +142,10 @@ function gotSpeech(speech, arr) {
       buttonPressed(speech, arr);
       // console.log('switch', 'bird');
       break;
+    case 'fish':
+      buttonPressed(speech, arr);
+      // console.log('switch', 'bird');
+      break;
     case 'owl':
       buttonPressed(speech, arr);
       // console.log('switch', 'owl');
@@ -154,7 +158,7 @@ function gotSpeech(speech, arr) {
       buttonPressed(speech, arr);
       // console.log('switch', 'bear');
       break;
-      case 'dog':
+    case 'dog':
       buttonPressed(speech, arr);
       // console.log('switch', 'dog');
       break;
@@ -166,7 +170,7 @@ function gotSpeech(speech, arr) {
       buttonPressed(speech, arr);
       // console.log('switch', 'chicken');
       break;
-      case 'goat':
+    case 'goat':
       buttonPressed(speech, arr);
       // console.log('switch', 'chicken');
       break;

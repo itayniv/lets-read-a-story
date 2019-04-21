@@ -101,7 +101,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
   "toothpaste", "tractor", "trombone", "truck", "whale",
   "windmill", "yoga", "yogabicycle", "everything"];
 
-const birdsArr = ["jackdaw", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
+const birdsArr = ["jackdaw", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
 const dogArr = ["goat", "goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];

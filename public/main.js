@@ -371,7 +371,7 @@ async function addSentence(result, source) {
         // random color
         // let thisAnimalColor
         sketchColor = getRandomColor();
-        secondColor = LightenDarkenColor(sketchColor, 40); 
+        secondColor = LightenDarkenColor(sketchColor, 90); 
 
 
         //  run check to see if there is an illustration that fits here
@@ -544,6 +544,11 @@ async function addSentence(result, source) {
         }
       }, 8500);
 
+    // resize Canvss here.
+
+      let newHeight = checkDivHeight('left');
+      globalCanv.resizeCanvas(canvasWidth, newHeight);
+
     } else {
 
       // if sentanceNumber is larger than the maxSentences then end story
@@ -576,7 +581,7 @@ function addOneMoreButton() {
 
   setTimeout(() => {
     const elm = document.getElementById('read-one-more');
-    elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    elm.scrollIntoView({ behavior: 'smooth', block: 'end' });
   }, 500);
 
 }
@@ -586,8 +591,6 @@ function addOneMoreSentence() {
 
   const div = document.createElement('div');
   div.id = 'one-more-sentence';
-  // div.style.background = 'white';
-  // div.style.color = 'white';
   div.style.opacity = 0;
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
   div.style.paddingTop = "30px";
@@ -618,16 +621,13 @@ function addOneMoreSentence() {
     } else {
       pauseBool = true;
       document.getElementById("pause-button").style.backgroundImage = "url('./images/pause.svg')";
-
     }
   };
-
 
   // add a boolean to indicate if its pressed
   let addedSentence = false;
 
   // create the button
-
   const buttonWrapper = document.createElement('div');
   buttonWrapper.id = 'one-more-sentence-div';
   buttonWrapper.classList.add("wrap-one-more");
@@ -841,7 +841,7 @@ function addACanvas() {
     paint.drawingOffsetX;
 
     paint.setup = function () {
-      paint.createCanvas(canvasWidth, 8000);
+      paint.createCanvas(canvasWidth, 2000);
       paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
@@ -873,28 +873,34 @@ function addACanvas() {
 
     paint.drawSomthing = function (point, jsonDrawing) {
       if (paint.point < jsonDrawing.length) {
-        paint.strokeWeight(illustrationStroke);
-        paint.stroke(sketchColor);
-
+       
         let randomPlay = Math.floor((Math.random() * 40) + 40)
 
         if (paint.point % randomPlay == 0) {
           generateSounds( paint.drawingOffsetX, jsonDrawing[point].thisY )
         }
 
-        paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX,
-          jsonDrawing[point].thisY + paint.drawingOffsetY,
-          jsonDrawing[point].prevX + paint.drawingOffsetX,
-          jsonDrawing[point].prevY + paint.drawingOffsetY);
-
-        let randomdist = Math.floor((Math.random() * 2) + 6)
-        paint.strokeWeight(1);
+        let randomdist = Math.floor((Math.random() * 2) + 10)
+        paint.strokeWeight(50);
         paint.stroke(secondColor);
+
+        setTimeout(() => {
+         
+          paint.strokeWeight(illustrationStroke);
+          paint.stroke(sketchColor);
+          paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX,
+            jsonDrawing[point].thisY + paint.drawingOffsetY,
+            jsonDrawing[point].prevX + paint.drawingOffsetX,
+            jsonDrawing[point].prevY + paint.drawingOffsetY);
+  
+          }, 5000);
 
         paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX + randomdist,
           jsonDrawing[point].thisY + paint.drawingOffsetY + randomdist,
           jsonDrawing[point].prevX + paint.drawingOffsetX + randomdist ,
           jsonDrawing[point].prevY + paint.drawingOffsetY + randomdist);
+
+
         // console.log('something', point, jsonDrawing[point].thisX );
       } else {
         paint.currentlyDrawing = false;
@@ -1113,12 +1119,11 @@ function ifInClass(theSentance) {
 
       for (let index = 0; index < similaritiesArray.length; index++) {
 
-
         // add colorArray
         let thisColor = getRandomColor();
         colorArray.push(thisColor);
 
-        let secondColor = LightenDarkenColor(thisColor, 60)
+        let secondColor = hexToComplimentary(thisColor);
         secondColorArray.push(secondColor);
 
         currIllustrationObject = {

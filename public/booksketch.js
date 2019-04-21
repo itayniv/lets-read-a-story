@@ -132,7 +132,7 @@ let sketchRnnBook = function (drawingBook) {
           if (numberOfBooks <= 19){
             setTimeout(() => {
               startDrawingbook();
-              secondColor = LightenDarkenColor(sketchColor, 30); 
+              secondColor = hexToComplimentary(sketchColor); 
             }, 1700);
           }
         

@@ -16,7 +16,7 @@ const Sentence2Vec = require('./sentence2vec.js')
 // console.log(Sentimentjs);
 console.log(Sentence2Vec);
 
-const embedings = require('./public/word_embeadings.json')
+const embedings = require('./public/similarities-lite.json')
 // const embedings = require('./public/grimm_embedding.json')
 
 // console.log(test);

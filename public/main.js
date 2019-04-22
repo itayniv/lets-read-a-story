@@ -104,7 +104,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
 const birdsArr = ["jackdaw", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
-const dogArr = ["goat", "goats", "wolf", "fox", "dogs", "boar", "weasels", "weasel"];
+const dogArr = ["goat", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
 const sheepArr = ["lamb"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
@@ -186,7 +186,7 @@ window.onload = function () {
 
 function loadJsonfile() {
   // console.log("loadjson");
-  return fetch('/aesopFables.json')
+  return fetch('/aesopFables-lite.json')
     .then(function (response) {
       return response.json();
     })
@@ -530,7 +530,7 @@ async function addSentence(result, source) {
           globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
         }
    
-      }, 7500);
+      }, 12000);
 
       // run loop again!
       setTimeout(() => {
@@ -542,12 +542,12 @@ async function addSentence(result, source) {
           addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
           // console.log("finished with the sentences");
         }
-      }, 8500);
+      }, 10000);
 
     // resize Canvss here.
 
       let newHeight = checkDivHeight('left');
-      globalCanv.resizeCanvas(canvasWidth, newHeight);
+      // globalCanv.resizeCanvas(canvasWidth, newHeight);
 
     } else {
 
@@ -841,7 +841,7 @@ function addACanvas() {
     paint.drawingOffsetX;
 
     paint.setup = function () {
-      paint.createCanvas(canvasWidth, 2000);
+      paint.createCanvas(canvasWidth, 6000);
       paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
@@ -880,8 +880,8 @@ function addACanvas() {
           generateSounds( paint.drawingOffsetX, jsonDrawing[point].thisY )
         }
 
-        let randomdist = Math.floor((Math.random() * 2) + 10)
-        paint.strokeWeight(50);
+        let randomdist = Math.floor((Math.random() * 2) + 5)
+        paint.strokeWeight(3);
         paint.stroke(secondColor);
 
         setTimeout(() => {
@@ -893,7 +893,7 @@ function addACanvas() {
             jsonDrawing[point].prevX + paint.drawingOffsetX,
             jsonDrawing[point].prevY + paint.drawingOffsetY);
   
-          }, 5000);
+          }, 200);
 
         paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX + randomdist,
           jsonDrawing[point].thisY + paint.drawingOffsetY + randomdist,
@@ -1124,7 +1124,8 @@ function ifInClass(theSentance) {
         colorArray.push(thisColor);
 
         let secondColor = hexToComplimentary(thisColor);
-        secondColorArray.push(secondColor);
+        let secondColorlighter = LightenDarkenColor(secondColor, 90);
+        secondColorArray.push(secondColorlighter);
 
         currIllustrationObject = {
           class: similaritiesArray[index].class,

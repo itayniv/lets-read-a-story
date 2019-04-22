@@ -15,16 +15,16 @@
  * =============================================================================
  */
 
-import * as use from '@tensorflow-models/universal-sentence-encoder';
+// import * as use from '@tensorflow-models/universal-sentence-encoder';
 // import { interpolateReds } from 'd3-scale-chromatic';
-import { embedding } from '@tensorflow/tfjs-layers/dist/exports_layers';
+// import { embedding } from '@tensorflow/tfjs-layers/dist/exports_layers';
 
 
-const init = async () => {
-  // const model = await use.load();
-};
+// const init = async () => {
+//   // const model = await use.load();
+// };
 
-init();
+// init();
 
 // Load the model.
 use.load().then(model => {

@@ -1,5 +1,4 @@
 /* eslint-disable */
-
 const express = require('express');
 const http = require('http');
 const path = require('path');
@@ -527,12 +526,5 @@ function addSentimentToArray(recievedArr) {
 
   return sentenceAndSentiment;
 }
-
-
-
-
-
-
-
 
 

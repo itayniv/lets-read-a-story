@@ -30,7 +30,7 @@ document.onkeydown = function(evt) {
   evt = evt || window.event;
   // console.log(evt.key);
 
-  if (evt.key === 's' ) {
+  if (evt.key === '9' ) {
     if (narration === true) {
       narration = false;
       console.log(narration)

@@ -158,9 +158,6 @@ function init() {
 
   const format = document.getElementById('one-page');
   format.style.opacity = '0.0';
-
-  // document.body.style.cursor =   "none";
-  // document.body.style.cursor =   "url('images/pencil.svg'), auto";
 }
 
 window.onload = function () {
@@ -581,7 +578,7 @@ function addOneMoreButton() {
 
   setTimeout(() => {
     const elm = document.getElementById('read-one-more');
-    elm.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
   }, 500);
 
 }
@@ -841,7 +838,7 @@ function addACanvas() {
     paint.drawingOffsetX;
 
     paint.setup = function () {
-      paint.createCanvas(canvasWidth, 3000);
+      paint.createCanvas(canvasWidth, 6000);
       paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
@@ -874,7 +871,7 @@ function addACanvas() {
     paint.drawSomthing = function (point, jsonDrawing) {
       if (paint.point < jsonDrawing.length) {
        
-        let randomPlay = Math.floor((Math.random() * 40) + 40)
+        let randomPlay = Math.floor((Math.random() * 20) + 60)
 
         if (paint.point % randomPlay == 0) {
           generateSounds( paint.drawingOffsetX, jsonDrawing[point].thisY )
@@ -1010,7 +1007,7 @@ function startbuttonPressed(clicked_id) {
   textPrompt.placeholder = 'What kind of story would you like to read today?';
 
   const textPromptEg = document.getElementById('recordedText-eg');
-  textPromptEg.innerHTML = 'For example, try asking for a story about a sheep...';
+  textPromptEg.innerHTML = "For example: a story about a brave lion...";
 
 
   setTimeout(() => {

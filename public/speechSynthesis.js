@@ -42,3 +42,31 @@ document.onkeydown = function(evt) {
   }
   
 };
+
+
+
+
+
+
+function startSpeechSynth(clicked_id) {
+  console.log('pressed', clicked_id);
+  const elm = document.getElementById('start-speaking');
+
+  if (!narration) {
+    elm.style.backgroundImage = "url('/images/voice-on.svg')";
+    elm.classList.remove('voice-button');
+    elm.classList.add('voice-button-active');
+    narration = true;
+    // setTimeout(() => {
+    //   isListening = false;
+    //   elm.style.backgroundImage = "url('/images/voice-off.svg')";
+    //   elm.classList.remove('voice-button-active');
+    //   elm.classList.add('voice-button');
+    // }, 6000);
+  } else {
+    narration = false;
+    elm.style.backgroundImage = "url('/images/voice-off.svg')";
+    elm.classList.remove('voice-button-active');
+    elm.classList.add('voice-button');
+  }
+}

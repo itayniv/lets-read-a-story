@@ -26,6 +26,7 @@
     width: 50%;
     left: 0;
     position: absolute;
+
   }
   .right {
     background: eaeaea;
@@ -111,6 +112,30 @@
     width: 3%;
     float: left;
   }
+  .voice-button {
+    background: url(./images/voice-off.svg) no-repeat;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+    /* margin-top: 60px; */
+    width: 45px;
+    height: 45px;
+    top: calc(100% - 115px);
+    /* -webkit-filter: drop-shadow(0px 0px 7px rgba(253, 144, 144, 0.5)); */
+  }
+
+  .voice-button-active {
+    background: url(./images/voice-on.svg) no-repeat;
+    cursor: pointer;
+    border: none;
+    position: fixed;
+    /* margin-top: 60px; */
+    width: 45px;
+    height: 45px;
+    top: calc(100% - 115px);
+    /* -webkit-filter: drop-shadow(0px 0px 7px rgba(253, 144, 144, 0.5)); */
+  }
+  
   .recording-button {
     background: url(./images/recording-off.svg) no-repeat;
     cursor: pointer;
@@ -231,7 +256,7 @@
   .wrap-one-more {
     height: 100%;
     padding-top: 40px;
-    padding-bottom: 900px;
+    padding-bottom: 400px;
     display: flex;
     align-items: center;
     justify-content: center;

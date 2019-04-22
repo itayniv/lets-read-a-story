@@ -116,7 +116,7 @@
               onclick="startbuttonPressed(this.id)">Read a story!</button>
           </div>
 
-        <p class="disclaimer" alt="Best experienced on chrome on desktop">Best experienced on chrome <img height='16px' style="opacity: 0.7" src="./images/chrome.png"> on desktop </p>
+        <p class="disclaimer" alt="Best experienced on chrome on desktop">Best experienced on chrome <img height='16px' style="opacity: 0.7" src="./images/chrome.png"> desktop </p>
 
 
         </div>
@@ -148,10 +148,12 @@
               <div>
                 <input id="start-listening" class="recording-button" type="submit" value=""
                   onclick="startSpeech(this.id)">
+                  <input id="start-speaking" class="voice-button" type="submit" value=""
+                  onclick="startSpeechSynth(this.id)">
                   <div class="prompt-container" id="prompt_container">
                   <form onsubmit="getInputText();return false">
                     <input type="text" class="title-text" id="recordedText" name="firstname"
-                      placeholder="Your name.."><input type="submit" style="display: none" />
+                      placeholder="Your name.." autofocus><input type="submit" style="display: none" />
                   </form>
                   <p id="recordedText-eg" class="title-text-eg"></p>
                 </div>

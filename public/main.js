@@ -215,7 +215,7 @@ socket.on('similarStory', function (result) {
     }
 
     console.log('📚 story method similarStory ', storyMethod.similarStory)
-    console.log(similarSentences);
+    // console.log(similarSentences);
   }
 
   maxSentences = similarSentences.length - 1;
@@ -527,7 +527,10 @@ async function addSentence(result, source) {
           const newStoryHeight = checkDivHeight('story-holder');
           // console.log('height is ', newStoryHeight);
           // paint.resizeCanvas(500, newStoryHeight);
-          globalCanv = addACanvas();
+
+          if (sentanceNumber > 1) {
+            globalCanv = addACanvas();
+          }
 
         }, 500);
 
@@ -577,7 +580,7 @@ async function addSentence(result, source) {
           globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
         }
    
-      }, 2000);
+      }, 10000);
 
       // run loop again!
       setTimeout(() => {
@@ -589,7 +592,7 @@ async function addSentence(result, source) {
           addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
           // console.log("finished with the sentences");
         }
-      }, 10000);
+      }, 7000);
 
     // resize Canvss here.
 
@@ -1022,7 +1025,7 @@ function initiateStory(subject, sentenceArr) {
 
   // create the story name
   const storyName = document.getElementById('story-name');
-  storyName.innerHTML = `A story about a ${currStoryName}`;
+  storyName.innerHTML = `A story about a ${charactersInStory[0]} and ${charactersInStory.length} friends`  ;
 
   storyName.style.display = "none";
   storyName.style.opacity = '0.0';

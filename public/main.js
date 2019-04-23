@@ -564,18 +564,20 @@ async function addSentence(result, source) {
 
       setTimeout(() => {
         if(sentanceNumber % 2 == 0 ) {
-          const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+          // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+          const startPositionY = 200;
           const startPositionX = canvasWidth - canvasHeight/3;
           const additionalDrawing = ladder;
           globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
         } else {
-          const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+          // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
           const startPositionX = 0;
+          const startPositionY = 200;
           const additionalDrawing = snake;
           globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
         }
    
-      }, 12000);
+      }, 2000);
 
       // run loop again!
       setTimeout(() => {
@@ -961,7 +963,7 @@ function addACanvas() {
 
         } else {
           pauseBool = true;
-          console.log('pausebool');
+          // console.log('pausebool');
         }
        
       }, 1000);
@@ -984,7 +986,7 @@ function initiateStory(subject, sentenceArr) {
   //convert to lowercase
   let heroLower = hero.toLowerCase();
 
-  console.log('subject', subject);
+  // console.log('subject', subject);
 
   let charactersInStory = [];
 

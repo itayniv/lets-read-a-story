@@ -832,7 +832,13 @@ function addLoadingAnimation () {
   div.classList.add("loading-animation");
   let loadingImage = new Image(180, 130);
   loadingImage.src = './images/turn_page.gif';
+
+  const paragraph = document.createElement('p');
+  paragraph.classList.add('loading-text');
+  paragraph.innerHTML = 'turning some pages...'
+
   document.getElementById('left').appendChild(div).appendChild(loadingImage);
+  document.getElementById('loadingAnimation').appendChild(paragraph);
 
   let element = document.getElementById('loadingAnimation');
   fadein(element);

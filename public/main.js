@@ -892,7 +892,7 @@ function addACanvas() {
     paint.drawingOffsetX;
 
     paint.setup = function () {
-      paint.createCanvas(canvasWidth, canvasHeight);
+      paint.createCanvas(viewportWidth, canvasHeight);
       paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);

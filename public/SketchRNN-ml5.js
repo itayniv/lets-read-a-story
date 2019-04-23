@@ -23,7 +23,7 @@ function addRNNCanvas() {
 
     p5RNNdrawing.setup = function () {
       p5RNNdrawing.createCanvas(canvasWidth, canvasHeight);
-      p5RNNdrawing.background(255);
+      p5RNNdrawing.background(255, 204, 0, 0);;
       p5RNNdrawing.frameRate(60);
 
       previous_pen = 'down';
@@ -31,28 +31,28 @@ function addRNNCanvas() {
       p5RNNdrawing.loop();
     };
 
-    p5RNNdrawing.mouseDragged = function () {
-      // console.log('painting');
-      p5RNNdrawing.strokeWeight(illustrationStroke);
-      p5RNNdrawing.smooth();
+    // p5RNNdrawing.mouseDragged = function () {
+    //   // console.log('painting');
+    //   p5RNNdrawing.strokeWeight(illustrationStroke);
+    //   p5RNNdrawing.smooth();
 
-      p5RNNdrawing.line(p5RNNdrawing.mouseX, p5RNNdrawing.mouseY, prevMouseX, prevMouseY);
-
-
-      p5RNNdrawing.stroke(secondColor);
-      p5RNNdrawing.strokeWeight(1);
-      let randomdist = Math.floor((Math.random() * 1) + 3)
-      p5RNNdrawing.line(p5RNNdrawing.mouseX + randomdist, p5RNNdrawing.mouseY + randomdist, prevMouseX + randomdist, prevMouseY+ randomdist);
+    //   p5RNNdrawing.line(p5RNNdrawing.mouseX, p5RNNdrawing.mouseY, prevMouseX, prevMouseY);
 
 
-      prevMouseX = p5RNNdrawing.mouseX;
-      prevMouseY = p5RNNdrawing.mouseY;
+    //   p5RNNdrawing.stroke(secondColor);
+    //   p5RNNdrawing.strokeWeight(1);
+    //   let randomdist = Math.floor((Math.random() * 1) + 3)
+    //   p5RNNdrawing.line(p5RNNdrawing.mouseX + randomdist, p5RNNdrawing.mouseY + randomdist, prevMouseX + randomdist, prevMouseY+ randomdist);
 
 
+    //   prevMouseX = p5RNNdrawing.mouseX;
+    //   prevMouseY = p5RNNdrawing.mouseY;
 
 
 
-    };
+
+
+    // };
 
 
     p5RNNdrawing.updateNewAnimal = function () {
@@ -296,7 +296,6 @@ function drawSketchResults() {
 
     const div = document.createElement('div');
     div.id = `drawing${sentanceNumber}`;
-    div.style.background = 'white';
     div.style.color = 'white';
     div.style.paddingBottom = '0px';
     // only on first sentence opacity is 1.0 in the beginning

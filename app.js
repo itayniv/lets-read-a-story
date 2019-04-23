@@ -5,12 +5,15 @@ const path = require('path');
 const io = require('socket.io');
 const bodyParser = require('body-parser');
 const Sentiment = require('sentiment');
+const fetch = require('node-fetch');
+const universalSentenceEncoder = require('@tensorflow-models/universal-sentence-encoder');
+const tf = require('@tensorflow/tfjs-node')
+
+global.fetch = require('node-fetch');
+
 
 // require the Sentence2Vec class
 const Sentence2Vec = require('./sentence2vec.js')
-
-// require the sentiment.js class
-// const Sentimentjs = require('./sentiment.js')
 
 // console.log(Sentimentjs);
 console.log(Sentence2Vec);
@@ -18,8 +21,10 @@ console.log(Sentence2Vec);
 const embedings = require('./public/similarities-lite.json')
 // const embedings = require('./public/grimm_embedding.json')
 
-// console.log(test);
+// console.log(use, tf);
 const userID = 0;
+
+let model;
 
 // console.log("average", Sentence2Vec.average(embedings[20].message_embedding, embedings[30].message_embedding));
 // console.log("distance", Sentence2Vec.distance(embedings[0].message_embedding, embedings[1].message_embedding));
@@ -53,32 +58,16 @@ const port = process.env.PORT || 3000;
 
 
 function init() {
+  universalSentenceEncoder.load().then(myModel => {
+    model = myModel;
 
-  // console.log(sentJS);
+    console.log(model);
+  });
+
+  // model = await universalSentenceEncoder.load();
 }
 
 init();
-
-
-
-// const similar = findVector("Then the cook sent three servants after them, who were to run and overtake the children.");
-// console.log(similar);
-
-// const subtrrc = subtract(v1, v2);
-// console.log(subtrrc);
-
-// console.log(embedings);
-
-// console.log(embedings[50].message);
-
-const vector1 = embedings[2].message_embedding;
-const vector2 = embedings[3].message_embedding;
-
-const subtrrc = subtract(vector1, vector2);
-const addvectors = add(vector1, vector2);
-// console.log('add', addvectors);
-
-const thisDistance = findNearestVector(subtrrc, n = 5)
 
 
 server = app.listen(port, function () {
@@ -113,7 +102,7 @@ sockets.on('connection', function (socket) {
       // console.log(storySentiment);
       sockets.emit('originalStoryAndSentiment', storySentiment);
     });
-    
+
 
     ///// -------> 
     let promise = new Promise((resolve, reject) => {
@@ -135,6 +124,7 @@ sockets.on('connection', function (socket) {
         'seed': seedSentance
       }
 
+      // console.log(similarStoryObject);
       // console.log('similarStoryObject', similarStoryObject);
       sockets.emit('similarStory', similarStoryObject);
     });
@@ -169,9 +159,9 @@ sockets.on('connection', function (socket) {
   });
 
   // end of the seed sentence <--- 
-
+  
   // get nextsentence vector --->
-
+  
   socket.on('sendNextSentance', function (data) {
 
     const seedSentance = data.randomSentance;
@@ -226,7 +216,7 @@ sockets.on('connection', function (socket) {
     }
 
     // console.log('** object 1', sentenceAndSentiment);
-   
+
     const similarLine = {
       'sentiment': sentenceAndSentiment,
       'seed': similarSentences.sentences[2]
@@ -254,10 +244,68 @@ sockets.on('connection', function (socket) {
     // console.log(storyVectors);
     // sockets.emit('NewStoryVector', similarSentences);
   });
+
+
+  //
+  socket.on('sentenceToEmbed', async function (data) {
+  // console.log(data.setenceToEmbed);
+  // embeadLine(data.setenceToEmbed);
+
+  // universalSentenceEncoder.load().then(model => {
+    // Embed an array of sentences.  
+    // console.log(' ----> model', model);
+
+    const somthing = await getNewEmbedding(data.setenceToEmbed);
+    console.log('somthing: ', somthing);
+    sockets.emit('sentenceToEmbedResults', somthing);
+    
+    // model.embed(data.setenceToEmbed).then(embeddings => {
+    //   // embeddings.print(true /* verbose */);
+    //   let embeddingsData = embeddings.arraySync();
+    //   // console.log(arr);
+    //   // console.log(embeddingsData);
+    //   const nearestArr = findNearestandAdd(embeddingsData)
+    //   // console.log(nearestArr);
+    //   sockets.emit('sentenceToEmbedResults', nearestArr);
+
+    //   // send result back to front end
+
+    //   // downloadObjectAsJson(embeddingsData, 'exportName')
+    //   // return embeddingsData;
+    // });
+  // });
+
+
+  });
+
 });
 
 // end socket work
 
+
+async function getNewEmbedding(text) {
+  const embeddings = await model.embed(text);
+  console.log('embeddings: ', embeddings)
+  let embeddingsData = embeddings.arraySync();
+  console.log('embeddingsData: ', embeddingsData)
+  const nearestArr = findNearestandAdd(embeddingsData);
+  console.log('nearestArr: ', nearestArr)
+  return nearestArr;
+//  return model.embed(text).then(embeddings => {
+//     // embeddings.print(true /* verbose */);
+//     let embeddingsData = embeddings.arraySync();
+//     // console.log(arr);
+//     // console.log(embeddingsData);
+//     const nearestArr = findNearestandAdd(embeddingsData)
+//     // console.log(nearestArr);
+//     // sockets.emit('sentenceToEmbedResults', nearestArr);
+
+//     // send result back to front end
+//     return nearestArr;
+//     // downloadObjectAsJson(embeddingsData, 'exportName')
+//     // return embeddingsData;
+//   });
+}
 
 function findVector(sentance, n = 20) {
   let vec;
@@ -430,7 +478,7 @@ function nextLineVector(pickedStory, seedSent, VectorsObject) {
     newSentance.push(nearestSentance.sentences[1]);
   } else {
     // find nearest vector and return
-    console.log(' dead end ');
+    // console.log(' dead end ');
     const thisNearest = findNearestVector(VectorsObject[seedindex].embedding, n = 2);
     newSentance.push(thisNearest.sentences[1]);
 
@@ -528,3 +576,35 @@ function addSentimentToArray(recievedArr) {
 }
 
 
+// async function embeadLine(textArr) {
+
+//   universalSentenceEncoder.load().then(model => {
+//     // Embed an array of sentences.  
+//     model.embed(textArr).then(embeddings => {
+//       // embeddings.print(true /* verbose */);
+//       let embeddingsData = embeddings.arraySync();
+//       // console.log(arr);
+//       // console.log(embeddingsData);
+//       findNearestandAdd(embeddingsData)
+//       // downloadObjectAsJson(embeddingsData, 'exportName')
+//       return embeddingsData;
+//     });
+//   });
+// };
+
+function findNearestandAdd(embeding) {
+  const closest = findNearestVector(embeding[0], n = 4)
+  return closest;
+  // console.log(closest);
+}
+// embeadLine (['today is monday']);
+
+
+// async function embed(text) {
+//   const result = universalSentenceEncoder.load().then(model => model.embed(text));
+//   console.log(result)
+//   return result;
+// };
+
+
+// embed(['this is a sentance']);

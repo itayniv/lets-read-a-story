@@ -805,11 +805,23 @@ function identifyAnimalsIntent(theSentance) {
 
 function getInputText() {
   const promptText = document.getElementById('recordedText').value;
+  console.log('promptText',promptText);
+  currPrompt = promptText;
   speechToPrompt(promptText);
+  // send seed to universal sentence encoder
+  sendtoSentenceEncoder(promptText);
+  
 
   console.log('submit');
 }
 
+function sendtoSentenceEncoder(text) {
+  let textToEmbed = [];
+  textToEmbed.push(text)
+  console.log(textToEmbed);
+  socket.emit('sentenceToEmbed', { 'setenceToEmbed': textToEmbed, });
+
+}
 
 let last_known_scroll_position = 0;
 let ticking = false;

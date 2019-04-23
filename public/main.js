@@ -7,6 +7,8 @@ let currColor = 0;
 let mesh;
 let targetMesh;
 let phase = 4;
+
+let currPrompt = '';
 let delta = 5;
 let deltaoneNumber = 0;
 let timecounter = 0;
@@ -36,6 +38,8 @@ let globalCanv;
 let pauseBool = true;
 
 let secondColor;
+
+let sentencesFromEncodingSeed = [] 
 
 let prevMouseY;
 let prevMouseX;
@@ -105,7 +109,7 @@ const birdsArr = ["jackdaw", "cock", "cocks", "eagle", "crow", "crows", "swallow
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
 const dogArr = ["goat", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
-const sheepArr = ["lamb"];
+const sheepArr = ["lamb", "flock"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
 const turtleArr = ["tortoise", "tortoises"];
@@ -130,7 +134,6 @@ function init() {
   getSpeech();
   sketchColor = getRandomColor();
   secondColor = LightenDarkenColor(sketchColor, 40); 
-
 
 
   viewportWidth = window.innerWidth;
@@ -212,14 +215,15 @@ socket.on('similarStory', function (result) {
     }
 
     console.log('📚 story method similarStory ', storyMethod.similarStory)
-    // console.log(similarSentences);
+    console.log(similarSentences);
   }
 
   maxSentences = similarSentences.length - 1;
   addSentence(similarSentences[0], 'notnet');
 
-
   
+  // buttonPressed(currPrompt,);
+  initiateStory(currPrompt, similarSentences);
   // result gives similar story
 });
 
@@ -269,10 +273,51 @@ socket.on('NewSeedResult', function (result) {
 });
 
 
+// get results back from embedings
+socket.on('sentenceToEmbedResults', function (result) {
+  sentencesFromEncodingSeed = result;
+  console.log(sentencesFromEncodingSeed);
+  runjsonCheckEmbedding(fablesJson, sentencesFromEncodingSeed)
+  
+});
+
+
+
+
 // socket.on('sentencesSentiment', function(result){
 //   // console.log(result);
 //   sentimentContainer = result;
 // });
+
+function runjsonCheckEmbedding(json, sentenceArr) {
+
+  // get sentece from universal sentence encoder
+  const randomSentance = sentenceArr.sentences[1];
+  let thisStoryArray = [];
+  // get the entire story of that sentence
+
+  // run through all the sentences in the json file.
+  for (let key in json.stories) {
+    for (let i = 0; i < json.stories[key].story.length; i++) {
+      if (randomSentance === json.stories[key].story[i]) {
+        thisStoryArray = json.stories[key].story;
+      }
+    }
+  }
+
+  // story Start Bool
+  storyCurrentlyRunning = true;
+
+  maxSentences = thisStoryArray.length - 1;
+
+  // console.log(thisStoryArray);
+  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
+
+  // add the sentance to the page
+  // addSentence(thisStoryArray[0], 'notnet');
+}
+
+
 
 
 function runjsonCheck(json, checkword) {
@@ -302,6 +347,8 @@ function runjsonCheck(json, checkword) {
     }
   }
 
+  // get sentece from universal sentence encoder
+  
   // pick a randon sentance from that array.
   const randomSentance = sentanceContainer[Math.floor(Math.random() * Math.floor(sentanceContainer.length))];
   let thisStoryArray = [];
@@ -479,7 +526,7 @@ async function addSentence(result, source) {
 
           const newStoryHeight = checkDivHeight('story-holder');
           // console.log('height is ', newStoryHeight);
-          // paint.resizeCanvas(500, newStoryHeight);
+          paint.resizeCanvas(500, newStoryHeight);
 
         }, 500);
 
@@ -544,7 +591,7 @@ async function addSentence(result, source) {
     // resize Canvss here.
 
       let newHeight = checkDivHeight('left');
-      // globalCanv.resizeCanvas(canvasWidth, newHeight);
+      globalCanv.resizeCanvas(canvasWidth, newHeight);
 
     } else {
 
@@ -838,7 +885,7 @@ function addACanvas() {
     paint.drawingOffsetX;
 
     paint.setup = function () {
-      paint.createCanvas(canvasWidth, 6000);
+      paint.createCanvas(canvasWidth, canvasHeight);
       paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
@@ -928,6 +975,67 @@ function addACanvas() {
 };
 
 
+function initiateStory(subject, sentenceArr) {
+
+  let hero = subject;
+
+  //convert to lowercase
+  let heroLower = hero.toLowerCase();
+
+  console.log('subject', subject);
+
+  let charactersInStory = [];
+
+  for (let index = 0; index < sentenceArr.length; index++) {
+    const element = sentenceArr[index];
+    let thisClass = ifInClass(element);
+    // console.log('thisclass', thisClass);
+    if (thisClass) {
+      for (let index = 0; index < thisClass.length; index++) {
+        const element = thisClass[index];
+        console.log(element.word);
+        if (charactersInStory.includes(element.word) === false) {
+          charactersInStory.push(element.word);
+        }
+      }
+    }
+  }
+
+  const currStoryName = charactersInStory.join(', and a ');
+  // let heroSearch = heroLower + ' ';
+
+  // fade out buttons and prompt
+  setTimeout(() => {
+
+    console.log('dissolve text');
+    // let fadeoutComponent1 = document.getElementById('characterOne');
+    const fadeoutComponent2 = document.getElementById('recordedText');
+    const fadeoutComponent3 = document.getElementById('recordedText-eg');
+    // fadeout(fadeoutComponent1);
+    fadeout(fadeoutComponent2);
+    fadeout(fadeoutComponent3);
+  }, 100);
+
+  // create the story name
+  const storyName = document.getElementById('story-name');
+  storyName.innerHTML = `A story about a ${currStoryName}`;
+
+  storyName.style.display = "none";
+  storyName.style.opacity = '0.0';
+
+  storyName.id = 'story-name';
+
+  // fade in the story name
+  setTimeout(() => {
+    fadeInelement = document.getElementById('story-name');
+    fadein(fadeInelement);
+  }, 1000);
+
+  // run the storycheck
+  setTimeout(() => {
+    // runjsonCheck(fablesJson, heroSearch);
+  }, 1500);
+}
 
 function buttonPressed(subject, sentenceArr) {
 
@@ -935,6 +1043,8 @@ function buttonPressed(subject, sentenceArr) {
 
   //convert to lowercase
   let heroLower = hero.toLowerCase();
+
+  console.log('subject', subject);
 
 
   // let thisclass = ifInClass()
@@ -969,7 +1079,7 @@ function buttonPressed(subject, sentenceArr) {
 
   // run the storycheck
   setTimeout(() => {
-    runjsonCheck(fablesJson, heroSearch);
+    // runjsonCheck(fablesJson, heroSearch);
   }, 1500);
 }
 

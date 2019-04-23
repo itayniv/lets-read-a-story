@@ -2,6 +2,8 @@
   "name": "express-html",
   "version": "0.0.1",
   "dependencies": {
+    "@tensorflow-models/universal-sentence-encoder": "^1.0.1",
+    "@tensorflow/tfjs": "^1.0.0",
     "@tensorflow/tfjs-node": "^1.0.1",
     "@tweenjs/tween.js": "^17.2.0",
     "body-parser": "^1.18.2",

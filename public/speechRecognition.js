@@ -66,8 +66,14 @@ function speechToPrompt(text) {
   promptPlaceholder.value = text;
   // get try making it work
 
+  console.log(text);
+  //initiate stuff here.
+  // getInputText();
+
   let speechArr = text.split(' ');
-  checkForAnimal(speechArr);
+  // initiateStory(text, 'sentenceArr') 
+  sendtoSentenceEncoder(text);
+  // checkForAnimal(speechArr);
 }
 
 

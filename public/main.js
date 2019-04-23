@@ -526,7 +526,8 @@ async function addSentence(result, source) {
 
           const newStoryHeight = checkDivHeight('story-holder');
           // console.log('height is ', newStoryHeight);
-          paint.resizeCanvas(500, newStoryHeight);
+          // paint.resizeCanvas(500, newStoryHeight);
+          globalCanv = addACanvas();
 
         }, 500);
 
@@ -591,7 +592,8 @@ async function addSentence(result, source) {
     // resize Canvss here.
 
       let newHeight = checkDivHeight('left');
-      globalCanv.resizeCanvas(canvasWidth, newHeight);
+      // resize canves here
+      // globalCanv.resizeCanvas(canvasWidth, newHeight);
 
     } else {
 

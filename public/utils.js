@@ -805,14 +805,14 @@ function identifyAnimalsIntent(theSentance) {
 
 function getInputText() {
   const promptText = document.getElementById('recordedText').value;
-  console.log('promptText',promptText);
+  // console.log('promptText',promptText);
   currPrompt = promptText;
-  speechToPrompt(promptText);
+  // speechToPrompt(promptText);
   // send seed to universal sentence encoder
-  sendtoSentenceEncoder(promptText);
+  setTimeout(() => {
+    sendtoSentenceEncoder(promptText);
+  }, 800);
   
-
-  console.log('submit');
 }
 
 function sendtoSentenceEncoder(text) {

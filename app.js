@@ -58,12 +58,10 @@ const port = process.env.PORT || 3000;
 
 
 function init() {
-  universalSentenceEncoder.load().then(myModel => {
-    model = myModel;
-
-    console.log(model);
+  universalSentenceEncoder.load().then(universalEncoderModel => {
+    model = universalEncoderModel;
+    // console.log(model);
   });
-
   // model = await universalSentenceEncoder.load();
 }
 
@@ -248,16 +246,10 @@ sockets.on('connection', function (socket) {
 
   //
   socket.on('sentenceToEmbed', async function (data) {
-  // console.log(data.setenceToEmbed);
-  // embeadLine(data.setenceToEmbed);
-
-  // universalSentenceEncoder.load().then(model => {
-    // Embed an array of sentences.  
-    // console.log(' ----> model', model);
-
-    const somthing = await getNewEmbedding(data.setenceToEmbed);
-    console.log('somthing: ', somthing);
-    sockets.emit('sentenceToEmbedResults', somthing);
+  
+    const newSimilarity = await getNewEmbedding(data.setenceToEmbed);
+    console.log('somthing: ', newSimilarity);
+    sockets.emit('sentenceToEmbedResults', newSimilarity);
     
     // model.embed(data.setenceToEmbed).then(embeddings => {
     //   // embeddings.print(true /* verbose */);
@@ -285,26 +277,12 @@ sockets.on('connection', function (socket) {
 
 async function getNewEmbedding(text) {
   const embeddings = await model.embed(text);
-  console.log('embeddings: ', embeddings)
+  // console.log('embeddings: ', embeddings)
   let embeddingsData = embeddings.arraySync();
-  console.log('embeddingsData: ', embeddingsData)
+  // console.log('embeddingsData: ', embeddingsData)
   const nearestArr = findNearestandAdd(embeddingsData);
-  console.log('nearestArr: ', nearestArr)
+  // console.log('nearestArr: ', nearestArr)
   return nearestArr;
-//  return model.embed(text).then(embeddings => {
-//     // embeddings.print(true /* verbose */);
-//     let embeddingsData = embeddings.arraySync();
-//     // console.log(arr);
-//     // console.log(embeddingsData);
-//     const nearestArr = findNearestandAdd(embeddingsData)
-//     // console.log(nearestArr);
-//     // sockets.emit('sentenceToEmbedResults', nearestArr);
-
-//     // send result back to front end
-//     return nearestArr;
-//     // downloadObjectAsJson(embeddingsData, 'exportName')
-//     // return embeddingsData;
-//   });
 }
 
 function findVector(sentance, n = 20) {

@@ -65,22 +65,16 @@ function speechToPrompt(text) {
   const promptPlaceholder = document.getElementById('recordedText');
   promptPlaceholder.value = text;
   // get try making it work
-
-  console.log(text);
-  //initiate stuff here.
-  // getInputText();
-
-  let speechArr = text.split(' ');
-  // initiateStory(text, 'sentenceArr') 
-  sendtoSentenceEncoder(text);
-  // checkForAnimal(speechArr);
+  setTimeout(() => {
+    sendtoSentenceEncoder(text);
+  }, 800);
+  
 }
 
 
 function gotAction(actionSpeech) {
 
   let speechArr = actionSpeech.split(' ');
-
 
   for (let index = 0; index < speechArr.length; index++) {
     switch (speechArr[index]) {

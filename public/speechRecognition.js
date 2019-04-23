@@ -65,9 +65,10 @@ function speechToPrompt(text) {
   const promptPlaceholder = document.getElementById('recordedText');
   promptPlaceholder.value = text;
   // get try making it work
+  addLoadingAnimation ()
   setTimeout(() => {
     sendtoSentenceEncoder(text);
-  }, 800);
+  }, 3200);
   
 }
 

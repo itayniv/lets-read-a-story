@@ -809,9 +809,10 @@ function getInputText() {
   currPrompt = promptText;
   // speechToPrompt(promptText);
   // send seed to universal sentence encoder
+  addLoadingAnimation ();
   setTimeout(() => {
     sendtoSentenceEncoder(promptText);
-  }, 800);
+  }, 3200);
   
 }
 
@@ -821,6 +822,25 @@ function sendtoSentenceEncoder(text) {
   console.log(textToEmbed);
   socket.emit('sentenceToEmbed', { 'setenceToEmbed': textToEmbed, });
 
+}
+
+function addLoadingAnimation () {
+
+  const div = document.createElement('div');
+  div.id = 'loadingAnimation';
+  div.style.opacity = '0.0'
+  div.classList.add("loading-animation");
+  let loadingImage = new Image(180, 130);
+  loadingImage.src = './images/turn_page.gif';
+  document.getElementById('left').appendChild(div).appendChild(loadingImage);
+
+  let element = document.getElementById('loadingAnimation');
+  fadein(element);
+
+  setTimeout(() => {
+    let element = document.getElementById('loadingAnimation');
+    fadeoutandDelete(element);
+  }, 3700);
 }
 
 let last_known_scroll_position = 0;

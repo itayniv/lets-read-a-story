@@ -43,7 +43,7 @@ let pauseBool = true;
 
 let secondColor;
 
-let sentencesFromEncodingSeed = [] 
+let sentencesFromEncodingSeed = []
 
 let prevMouseY;
 let prevMouseX;
@@ -78,9 +78,9 @@ let sentimentContainer = [];
 
 // sketchRnnDrawing stuff
 
-let vecIllustrations = ['crystal.json','dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json', 
-'maya01.json', 'maya02.json', 'maya03.json', 'maya04.json', 'maya05.json', 'maya06.json', 'maya07.json', 'maya08.json', 'maya09.json', 'maya10.json', 
-'maya11.json', 'maya12.json', 'maya13.json', 'maya15.json', 'mother.json' , 'music.json', 'music1.json', 'raven.json', 'tortoise.json', 'wind.json' ];
+let vecIllustrations = ['asfe01.json', 'asfe02.json', 'bird01.json', 'asfe04.json', 'asfe_rat.json', 'crystal.json', 'dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json',
+  'maya01.json', 'maya02.json', 'maya03.json', 'maya04.json', 'maya05.json', 'maya06.json', 'maya07.json', 'maya08.json', 'maya09.json', 'maya10.json',
+  'maya11.json', 'maya12.json', 'maya13.json', 'maya15.json', 'mother.json', 'music.json', 'music1.json', 'raven.json', 'tortoise.json', 'wind.json'];
 
 let vectoredStory = [];
 
@@ -112,7 +112,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
   "toothpaste", "tractor", "trombone", "truck", "whale",
   "windmill", "yoga", "yogabicycle", "everything"];
 
-const birdsArr = ["jackdaw", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
+const birdsArr = ["jackdaw", "wing", "wings", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
 const dogArr = ["goat", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
@@ -120,12 +120,12 @@ const sheepArr = ["lamb", "flock"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
 const turtleArr = ["tortoise", "tortoises"];
-const squirrelArr = ["mice"];
+const squirrelArr = ["mice", "hare", "mouse", "chipmunk", "chipmunks"];
 const lionArr = ["lion's"];
 const catArr = ["tiger", "tiger's", "tigers", "cats"];
 const owlArr = ["owl's", 'bat', 'bats'];
-const frogArr = ['frogs', "frog's"];
-const rabitArr = ["Mice", 'hare'];
+const frogArr = ['frogs', "frog's", "toad"];
+const rabitArr = ["mice", 'hare'];
 
 init();
 
@@ -140,7 +140,7 @@ function init() {
 
   getSpeech();
   sketchColor = getRandomColor();
-  secondColor = LightenDarkenColor(sketchColor, 40); 
+  secondColor = LightenDarkenColor(sketchColor, 40);
 
 
   viewportWidth = window.innerWidth;
@@ -326,7 +326,7 @@ socket.on('sentenceToEmbedResults', function (result) {
   sentencesFromEncodingSeed = result;
   // console.log(sentencesFromEncodingSeed);
   runjsonCheckEmbedding(fablesJson, sentencesFromEncodingSeed)
-  
+
 });
 
 // get results back from prompt embedings
@@ -336,7 +336,7 @@ socket.on('promptEmbedResults', function (result) {
   runjsonCheckNewPrompt(fablesJson, resultArr);
 
   console.log('sending again')
-  
+
 });
 
 
@@ -363,7 +363,7 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   }
 
   // story Start Bool
-  
+
 
   maxSentences = thisStoryArray.length - 1;
 
@@ -408,7 +408,7 @@ function runjsonCheck(json, checkword) {
   }
 
   // get sentece from universal sentence encoder
-  
+
   // pick a randon sentance from that array.
   const randomSentance = sentanceContainer[Math.floor(Math.random() * Math.floor(sentanceContainer.length))];
   let thisStoryArray = [];
@@ -474,7 +474,7 @@ async function addSentence(result, source) {
         // random color
         // let thisAnimalColor
         sketchColor = getRandomColor();
-        secondColor = LightenDarkenColor(sketchColor, 90); 
+        secondColor = LightenDarkenColor(sketchColor, 90);
 
 
         //  run check to see if there is an illustration that fits here
@@ -548,7 +548,7 @@ async function addSentence(result, source) {
         setTimeout(() => {
           // scroll into the sentence
           const elm = document.getElementById(`paragraph${sentanceNumber}`);
-          elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
           // fade the sentence into the page.
           const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
@@ -561,7 +561,7 @@ async function addSentence(result, source) {
           // paint.resizeCanvas(500, newStoryHeight);
 
           if (sentanceNumber > 1) {
-            globalCanv = addACanvas();
+            globalCanv = addACanvas(viewportHeight-50);
           }
 
         }, 500);
@@ -598,16 +598,17 @@ async function addSentence(result, source) {
       // additional drawing on left Canvas -->
 
       setTimeout(() => {
-        if(sentanceNumber % 2 == 0 ) {
+        if (sentanceNumber % 2 == 0) {
           // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionY = 500;
-          const startPositionX = canvasWidth - canvasHeight/3;
+          const startPositionY = 50;
+          const startPositionX = canvasWidth - canvasHeight / 3;
           // const additionalDrawing = sun;
 
           let additionalDrawing;
           let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
           let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
-          
+          console.log(url);
+
           fetch(url)
             .then(function (response) {
               return response.json();
@@ -621,14 +622,15 @@ async function addSentence(result, source) {
 
         } else {
           // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionX = 500;
+          const startPositionX = 100;
           const startPositionY = 0;
-          // const additionalDrawing = feet;
-          // globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
 
           let additionalDrawing;
           let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
           let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+
+          console.log(url);
+
           fetch(url)
             .then(function (response) {
               return response.json();
@@ -640,7 +642,7 @@ async function addSentence(result, source) {
             });
 
         }
-   
+
       }, 10000);
 
       // run loop again!
@@ -655,7 +657,7 @@ async function addSentence(result, source) {
         }
       }, 7000);
 
-    // resize Canvss here.
+      // resize Canvss here.
 
       let newHeight = checkDivHeight('left');
       // resize canves here
@@ -785,24 +787,24 @@ function addOneMoreSentence() {
 
   let promptInput = document.createElement("input");
   promptInput.id = `newPromptInput`;
-  promptInput.placeholder = 'What happened next? (enter key to submit)'
+  promptInput.placeholder = 'What happened next? (enter key to submit)';
   promptInput.classList.add('newPromptSpan');
 
   // on focus clear box
-  promptInput.onfocus = function(){
+  promptInput.onfocus = function () {
     console.log('focus');
     document.getElementById('newPromptInput').placeholder = '';
     pauseBool = false;
   }
-  
+
   // on focus out repopulate with text
-  promptInput.onfocusout = function(){
+  promptInput.onfocusout = function () {
     console.log('focusOut');
     pauseBool = true;
-    document.getElementById('newPromptInput').placeholder = 'What happened next?';
+    document.getElementById('newPromptInput').placeholder = 'What happened next? (enter key to submit)';
   }
 
-  
+
 
   inputPrompt.appendChild(promptInput);
   inputDiv.appendChild(inputPrompt);
@@ -981,7 +983,7 @@ function resetStory() {
     fadein(fadeinElement2);
     fadein(fadeinElement3);
     fadein(fadeinElement4);
-    globalCanv = addACanvas();
+    globalCanv = addACanvas(viewportHeight - 100);
   }, 1400);
 
   // reset Sentiment Arr
@@ -994,7 +996,7 @@ function resetStory() {
 }
 
 
-function addACanvas() {
+function addACanvas(height) {
   drawingsketch = function (paint) {
 
     paint.currDrawing;
@@ -1002,7 +1004,7 @@ function addACanvas() {
     paint.drawingOffsetX;
 
     paint.setup = function () {
-      paint.createCanvas(viewportWidth, canvasHeight);
+      paint.createCanvas(viewportWidth, height);
       paint.point = 0;
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
@@ -1020,7 +1022,7 @@ function addACanvas() {
       if (paint.currentlyDrawing) {
         paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffsetY);
         paint.point = paint.point + 1;
-      
+
         // console.log('*** drawing ***', paint.point);
       }
     }
@@ -1034,11 +1036,11 @@ function addACanvas() {
 
     paint.drawSomthing = function (point, jsonDrawing) {
       if (paint.point < jsonDrawing.length) {
-       
+
         let randomPlay = Math.floor((Math.random() * 20) + 60)
 
         if (paint.point % randomPlay == 0) {
-          generateSounds( paint.drawingOffsetX, jsonDrawing[point].thisY )
+          generateSounds(paint.drawingOffsetX, jsonDrawing[point].thisY)
         }
 
         let randomdist = Math.floor((Math.random() * 2) + 5)
@@ -1046,19 +1048,19 @@ function addACanvas() {
         paint.stroke(secondColor);
 
         setTimeout(() => {
-         
+
           paint.strokeWeight(illustrationStroke);
           paint.stroke(sketchColor);
           paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX,
             jsonDrawing[point].thisY + paint.drawingOffsetY,
             jsonDrawing[point].prevX + paint.drawingOffsetX,
             jsonDrawing[point].prevY + paint.drawingOffsetY);
-  
-          }, 200);
+
+        }, 200);
 
         paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX + randomdist,
           jsonDrawing[point].thisY + paint.drawingOffsetY + randomdist,
-          jsonDrawing[point].prevX + paint.drawingOffsetX + randomdist ,
+          jsonDrawing[point].prevX + paint.drawingOffsetX + randomdist,
           jsonDrawing[point].prevY + paint.drawingOffsetY + randomdist);
 
 
@@ -1066,7 +1068,7 @@ function addACanvas() {
       } else {
         paint.currentlyDrawing = false;
         paint.point = 0;
-      }      
+      }
     }
 
     paint.mouseReleased = function () {
@@ -1078,7 +1080,7 @@ function addACanvas() {
           pauseBool = true;
           console.log('pausebool', pauseBool);
         }
-       
+
       }, 1000);
     }
   };
@@ -1135,7 +1137,7 @@ function initiateStory(subject, sentenceArr) {
 
   // create the story name
   const storyName = document.getElementById('story-name');
-  storyName.innerHTML = `A story about a ${charactersInStory[0]} and ${charactersInStory.length} friends`  ;
+  storyName.innerHTML = `A story about a ${charactersInStory[0]} and ${charactersInStory.length} friends`;
 
   storyName.style.display = "none";
   storyName.style.opacity = '0.0';
@@ -1227,7 +1229,7 @@ function startbuttonPressed(clicked_id) {
   startX = canvasWidth / 2;
   startY = canvasHeight / 2;
 
-  globalCanv = addACanvas();
+  globalCanv = addACanvas(viewportHeight - 100);
 
   // change writing prompt to somthing
   const textPrompt = document.getElementById('recordedText');
@@ -1304,8 +1306,6 @@ function ifInClass(theSentance) {
 
     let addClasses = enrichSketchClass(newsentance);
 
-    // console.log('addClasses', addClasses);
-
     for (let i = 0; i < addClasses.length; i++) {
       // console.log(`add ${addClasses[i].class} to array`);
       sentenceToArray.push({
@@ -1315,7 +1315,7 @@ function ifInClass(theSentance) {
     }
 
 
-    //fo all the words in that new sentence
+    //for all the words in that new sentence
     for (let i = 0; i < sentenceToArray.length; i++) {
 
       //if a word in the class apears inside the sentence
@@ -1328,7 +1328,7 @@ function ifInClass(theSentance) {
         });
       } else {
         // didnt find any words do nothing
-
+        // console.log("run other enrichment");
       }
     }
 
@@ -1357,9 +1357,8 @@ function ifInClass(theSentance) {
         }
         currIllustrationArr.push(currIllustrationObject);
       }
-
-      return currIllustrationArr;
       //add that sketch class to the document
+      return currIllustrationArr;
     }
   }
 }

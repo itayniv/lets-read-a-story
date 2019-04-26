@@ -29,6 +29,8 @@ let viewportHeight;
 let contentContainerArr = [];
 const illustrationStroke = 6;
 
+let storyBegan = false;
+
 let colorArray = [];
 let secondColorArray = [];
 
@@ -76,6 +78,9 @@ let sentimentContainer = [];
 
 // sketchRnnDrawing stuff
 
+let vecIllustrations = ['crystal.json','dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json', 
+'maya01.json', 'maya02.json', 'maya03.json', 'maya04.json', 'maya05.json', 'maya06.json', 'maya07.json', 'maya08.json', 'maya09.json', 'maya10.json', 
+'maya11.json', 'maya12.json', 'maya13.json', 'maya15.json', 'mother.json' , 'music.json', 'music1.json', 'raven.json', 'tortoise.json', 'wind.json' ];
 
 let vectoredStory = [];
 
@@ -226,10 +231,14 @@ socket.on('similarStory', function (result) {
   let element = document.getElementById('loadingAnimation');
   fadeoutandDelete(element);
 
+  storyCurrentlyRunning = true;
+  storyBegan = true;
+
   // begin the story
   setTimeout(() => {
     initiateStory(currPrompt, similarSentences);
     addSentence(similarSentences[0], 'notnet');
+
   }, 400);
 
 
@@ -278,7 +287,6 @@ socket.on('nextVectoredLine', function (result) {
 
 socket.on('restOfStory', function (result) {
 
-  console.log(similarSentences);
   const newArr = result.sentiment.sentences;
   similarSentences.length = sentanceNumber;
 
@@ -290,15 +298,14 @@ socket.on('restOfStory', function (result) {
   similarSentences = ConcatArray;
 
   // remove the loading animation now!
-
   setTimeout(() => {
     let element = document.getElementById('loadingAnimation');
     fadeoutandDelete(element);
+    storyCurrentlyRunning = true;
   }, 2400);
 
   setTimeout(() => {
     addNewContentAfterPressed();
-
   }, 2800);
 
   // make sure everything is completed before  ---> addinfg a new sentence.
@@ -356,7 +363,7 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   }
 
   // story Start Bool
-  storyCurrentlyRunning = true;
+  
 
   maxSentences = thisStoryArray.length - 1;
 
@@ -417,7 +424,6 @@ function runjsonCheck(json, checkword) {
   }
 
   // story Start Bool
-  storyCurrentlyRunning = true;
 
   maxSentences = thisStoryArray.length - 1;
 
@@ -521,32 +527,6 @@ async function addSentence(result, source) {
           paragraph.appendChild(wordSpan);
         }
 
-        // create button container
-        const reBranchContainer = document.createElement('div');
-        reBranchContainer.id = 'rebranch-container';
-        reBranchContainer.classList.add('rebranch-container');
-
-        // remove prev rebranch
-        const prevRebranchButton = document.getElementById(`rebranch-button${sentanceNumber - 1}`);
-        const thisObjectID = `rebranch-button${sentanceNumber - 1}`;
-        if (prevRebranchButton != null) {
-          fadeoutandDeletecurrOpacity(prevRebranchButton, thisObjectID);
-        }
-
-
-        // create the putton
-        const reBranch = document.createElement('div');
-        reBranch.classList.add('rebranch-button');
-        reBranch.id = `rebranch-button${sentanceNumber}`;
-        reBranch.onclick = function () { rebranchThis(sentanceNumber); };
-        reBranch.style.backgroundImage = "url('./images/branch.svg')";
-
-        if (sentanceNumber <= maxSentences) {
-          reBranchContainer.appendChild(reBranch);
-          // console.log('added rebranch');
-        }
-
-
         const paragraphNumber = document.createElement('div');
         paragraphNumber.classList.add('currnet-paragraph');
         paragraphNumber.id = `paragraphNumber${sentanceNumber}`;
@@ -555,7 +535,6 @@ async function addSentence(result, source) {
 
         document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraphNumber);
         document.getElementById('story').appendChild(container).appendChild(div).appendChild(paragraph);
-        document.getElementById(`paragraph${sentanceNumber}`).appendChild(reBranchContainer);
 
         // create an object to push to array
         let containerObject = {
@@ -621,16 +600,45 @@ async function addSentence(result, source) {
       setTimeout(() => {
         if(sentanceNumber % 2 == 0 ) {
           // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionY = 200;
+          const startPositionY = 500;
           const startPositionX = canvasWidth - canvasHeight/3;
-          const additionalDrawing = ladder;
-          globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
+          // const additionalDrawing = sun;
+
+          let additionalDrawing;
+          let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+          let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+          
+          fetch(url)
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (myJson) {
+              additionalDrawing = myJson;
+              // console.log(JSON.stringify(myJson));
+              globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+            });
+
+
         } else {
           // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionX = 0;
-          const startPositionY = 200;
-          const additionalDrawing = snake;
-          globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
+          const startPositionX = 500;
+          const startPositionY = 0;
+          // const additionalDrawing = feet;
+          // globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+
+          let additionalDrawing;
+          let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+          let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+          fetch(url)
+            .then(function (response) {
+              return response.json();
+            })
+            .then(function (myJson) {
+              additionalDrawing = myJson;
+              // console.log();
+              globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+            });
+
         }
    
       }, 10000);
@@ -768,7 +776,7 @@ function addOneMoreSentence() {
 
   inputPrompt.onsubmit = function () {
     let value = document.getElementById('newPromptInput').value
-    console.log(value);
+    // console.log(value);
 
     sendNewPrompt(value);
     return false;
@@ -777,7 +785,7 @@ function addOneMoreSentence() {
 
   let promptInput = document.createElement("input");
   promptInput.id = `newPromptInput`;
-  promptInput.placeholder = 'What happened next?'
+  promptInput.placeholder = 'What happened next? (enter key to submit)'
   promptInput.classList.add('newPromptSpan');
 
   // on focus clear box
@@ -853,12 +861,6 @@ function addOneMoreSentence() {
 
 
 
-function rebranchThis(sentence) {
-  // console.log('sentence', sentence-1);
-  socket.emit('rebranchSentence', { 'animal': 'checkword', 'rebranchSentance': similarSentences[sentence - 1] });
-
-}
-
 function insertNewSeed(newSeedObject) {
   // get the new sentences
   let newSeedResults = newSeedObject.sentences;
@@ -905,7 +907,9 @@ function insertNewSeed(newSeedObject) {
 
 
 function resetStory() {
+
   storyCurrentlyRunning = false;
+  storyBegan = false;
 
   const fadeOutElement = document.getElementById('story-name');
   fadeout(fadeOutElement);
@@ -1106,7 +1110,7 @@ function initiateStory(subject, sentenceArr) {
     if (thisClass) {
       for (let index = 0; index < thisClass.length; index++) {
         const element = thisClass[index];
-        console.log(element.word);
+        // console.log(element.word);
         if (charactersInStory.includes(element.word) === false) {
           charactersInStory.push(element.word);
         }
@@ -1118,16 +1122,16 @@ function initiateStory(subject, sentenceArr) {
   // let heroSearch = heroLower + ' ';
 
   // fade out buttons and prompt
-  setTimeout(() => {
+  // setTimeout(() => {
 
-    console.log('dissolve text');
-    // let fadeoutComponent1 = document.getElementById('characterOne');
-    const fadeoutComponent2 = document.getElementById('recordedText');
-    const fadeoutComponent3 = document.getElementById('recordedText-eg');
-    // fadeout(fadeoutComponent1);
-    fadeout(fadeoutComponent2);
-    fadeout(fadeoutComponent3);
-  }, 100);
+  //   console.log('dissolve text');
+  //   // let fadeoutComponent1 = document.getElementById('characterOne');
+  //   const fadeoutComponent2 = document.getElementById('recordedText');
+  //   const fadeoutComponent3 = document.getElementById('recordedText-eg');
+  //   // fadeout(fadeoutComponent1);
+  //   fadeout(fadeoutComponent2);
+  //   fadeout(fadeoutComponent3);
+  // }, 100);
 
   // create the story name
   const storyName = document.getElementById('story-name');

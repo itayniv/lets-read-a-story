@@ -820,7 +820,7 @@ function getInputText() {
 
     const paragraph = document.createElement('p');
     paragraph.classList.add('loading-text');
-    paragraph.innerHTML = 'turning some pages...'
+    paragraph.innerHTML = 'Turning some pages...'
 
     document.getElementById('left').appendChild(div).appendChild(loadingImage);
     document.getElementById('loadingAnimation').appendChild(paragraph);
@@ -833,6 +833,16 @@ function getInputText() {
       fadeoutandDelete(element);
       resolve(promptText);
     }, 4000);
+
+      setTimeout(() => {
+    console.log('dissolve text');
+    // let fadeoutComponent1 = document.getElementById('characterOne');
+    const fadeoutComponent2 = document.getElementById('recordedText');
+    const fadeoutComponent3 = document.getElementById('recordedText-eg');
+    // fadeout(fadeoutComponent1);
+    fadeout(fadeoutComponent2);
+    fadeout(fadeoutComponent3);
+  }, 300);
 
   });
 
@@ -851,6 +861,8 @@ function sendtoSentenceEncoder(text) {
 }
 
 function addLoadingAnimation (elementId) {
+
+  storyCurrentlyRunning = false;
 
   const div = document.createElement('div');
   div.id = 'loadingAnimation';
@@ -1073,7 +1085,7 @@ setTimeout(() => {
   
   if (point < drawing.length){
     
-      line(jsonDrawing[point].thisX,jsonDrawing[point].thisY, jsonDrawing[point].prevX, jsonDrawing[point].prevY);
+      line(jsonDrawing[point].tX,jsonDrawing[point].tY, jsonDrawing[point].pX, jsonDrawing[point].pY);
       point ++;
       console.log(point)
       drawIng();

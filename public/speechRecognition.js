@@ -39,7 +39,13 @@ const getSpeech = () => {
     // }
 
     if (isListening) {
-      speechToPrompt(speechResult);
+
+      if (!storyBegan){
+        speechToPrompt(speechResult);
+      } else {
+        speechToNextPrompt(speechResult);
+      }
+      
 
       // generate actions
       gotAction(speechResult);
@@ -64,9 +70,44 @@ function speechToPrompt(text) {
 
   const promptPlaceholder = document.getElementById('recordedText');
   promptPlaceholder.value = text;
+
+
+  // gremove prompt
+  setTimeout(() => {
+    // let fadeoutComponent1 = document.getElementById('characterOne');
+    const fadeoutComponent2 = document.getElementById('recordedText');
+    const fadeoutComponent3 = document.getElementById('recordedText-eg');
+    // fadeout(fadeoutComponent1);
+    fadeout(fadeoutComponent2);
+    fadeout(fadeoutComponent3);
+  }, 1000);
+
+  // add loading animation
+  setTimeout(() => {
+    addLoadingAnimation('left');
+  }, 1300);
+
+  // send information to sentence encoder 
+  setTimeout(() => {
+    sendtoSentenceEncoder(text);
+  }, 2000);
+
+}
+
+
+
+function speechToNextPrompt(text) {
+  // change prompt text
+  const promptPlaceholder = document.getElementById('newPromptInput');
+  promptPlaceholder.value = text;
   // get try making it work
-  addLoadingAnimation ('left');
-  sendtoSentenceEncoder(text);  
+  // addLoadingAnimation('left');
+
+  // start new prompt
+  setTimeout(() => {
+    sendNewPrompt(text);
+  }, 2000);
+
 }
 
 

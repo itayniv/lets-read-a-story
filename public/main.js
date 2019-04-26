@@ -35,6 +35,8 @@ let secondColorArray = [];
 let sketchillustrationArr;
 
 let globalCanv;
+
+// global bool for when its paused
 let pauseBool = true;
 
 let secondColor;
@@ -216,15 +218,21 @@ socket.on('similarStory', function (result) {
 
     console.log('📚 story method similarStory ', storyMethod.similarStory)
     // console.log(similarSentences);
+    // console.log(result);
   }
-
   maxSentences = similarSentences.length - 1;
-  addSentence(similarSentences[0], 'notnet');
 
-  
-  // buttonPressed(currPrompt,);
-  initiateStory(currPrompt, similarSentences);
-  // result gives similar story
+  // remove loading animation
+  let element = document.getElementById('loadingAnimation');
+  fadeoutandDelete(element);
+
+  // begin the story
+  setTimeout(() => {
+    initiateStory(currPrompt, similarSentences);
+    addSentence(similarSentences[0], 'notnet');
+  }, 1000);
+
+
 });
 
 // incoming Socket for original story 
@@ -267,6 +275,25 @@ socket.on('nextVectoredLine', function (result) {
   }
 });
 
+
+socket.on('restOfStory', function (result) {
+
+  console.log(similarSentences);
+  const newArr = result.sentiment.sentences;
+  similarSentences.length = sentanceNumber;
+
+  const ConcatArray = similarSentences.concat(newArr)
+
+  similarSentences = [];
+
+  // replace array with new Array.
+  similarSentences = ConcatArray;
+
+});
+
+
+
+
 // get the new seed response
 socket.on('NewSeedResult', function (result) {
   insertNewSeed(result);
@@ -276,11 +303,20 @@ socket.on('NewSeedResult', function (result) {
 // get results back from embedings
 socket.on('sentenceToEmbedResults', function (result) {
   sentencesFromEncodingSeed = result;
-  console.log(sentencesFromEncodingSeed);
+  // console.log(sentencesFromEncodingSeed);
   runjsonCheckEmbedding(fablesJson, sentencesFromEncodingSeed)
   
 });
 
+// get results back from prompt embedings
+socket.on('promptEmbedResults', function (result) {
+
+  let resultArr = result
+  runjsonCheckNewPrompt(fablesJson, resultArr);
+
+  console.log('sending again')
+  
+});
 
 
 
@@ -316,6 +352,9 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');
 }
+
+
+
 
 
 
@@ -638,8 +677,8 @@ function addOneMoreButton() {
 }
 
 function addOneMoreSentence() {
-  // After each sentence 'turn the page'
 
+  // After each sentence 'turn the page'
   const div = document.createElement('div');
   div.id = 'one-more-sentence';
   div.style.opacity = 0;
@@ -687,7 +726,6 @@ function addOneMoreSentence() {
   btn.classList.add('what-happened-button');
   btn.onclick = function () {
     addSentenceAfterbutton();
-
     // interval to 100 here
     clearInterval(buttonTimer);
     let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
@@ -699,14 +737,64 @@ function addOneMoreSentence() {
     fadeoutandDelete(playPause);
   };
 
-  const node = document.createTextNode('What happened next?');
+  // create input for next thing:
+  const inputDiv = document.createElement('div');
+  inputDiv.id = `one-more-prompt${sentanceNumber}`;
+  inputDiv.classList.add('wrap-one-more-prompt');
+
+  let inputPrompt = document.createElement('form');
+  inputPrompt.autocomplete = "off"
+  inputPrompt.classList.add('prompt-input');
+
+
+
+  inputPrompt.onsubmit = function () {
+    let value = document.getElementById('newPromptInput').value
+    console.log(value);
+
+    sendNewPrompt(value);
+    return false;
+  }
+
+
+  let promptInput = document.createElement("input");
+  promptInput.id = `newPromptInput`;
+  promptInput.placeholder = 'What happened next?'
+  promptInput.classList.add('newPromptSpan');
+
+  // on focus clear box
+  promptInput.onfocus = function(){
+    console.log('focus');
+    document.getElementById('newPromptInput').placeholder = '';
+    pauseBool = false;
+  }
+  
+  // on focus out repopulate with text
+  promptInput.onfocusout = function(){
+    console.log('focusOut');
+    pauseBool = true;
+    document.getElementById('newPromptInput').placeholder = 'What happened next?';
+  }
+
+  
+
+  inputPrompt.appendChild(promptInput);
+  inputDiv.appendChild(inputPrompt);
+
+  const node = document.createTextNode('continue reading');
   btn.appendChild(node);
 
-  document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(btn);
+  // document.getElementById(`paragraph${sentanceNumber}`).appendChild(div)
 
-  document.getElementById(`content-container${sentanceNumber}`).appendChild(div).appendChild(buttonWrapper).appendChild(btn);
+  document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(inputDiv);
+  document.getElementById('one-more-sentence').appendChild(buttonWrapper).appendChild(btn);
+
+  // document.getElementById(`paragraph${sentanceNumber}`)
+  // document.getElementById(`content-container${sentanceNumber}`).appendChild(div)
 
   // insert footer timeline element
+
+
   footerInsert();
 
   document.getElementById('controls').appendChild(pauseAndPlay).appendChild(pauseImage);
@@ -728,7 +816,6 @@ function addOneMoreSentence() {
   // call the prgsBar to animate it later
   let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
 
-
   function timeOutTimer() {
 
     // if timer hasnt reached the end and button was not pressed
@@ -745,6 +832,7 @@ function addOneMoreSentence() {
     }
   }
 }
+
 
 
 function rebranchThis(sentence) {
@@ -966,7 +1054,7 @@ function addACanvas() {
 
         } else {
           pauseBool = true;
-          // console.log('pausebool');
+          console.log('pausebool', pauseBool);
         }
        
       }, 1000);

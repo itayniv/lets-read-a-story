@@ -21,23 +21,22 @@ const getSpeech = () => {
   const recognition = new SpeechRecognition();
   recognition.lang = 'en-US';
   recognition.start();
-  //   recognition.continuous = false;
-  recognition.interimResults = true;
-
-  // console.log('started rec');
+    recognition.continuous = false;
+  // recognition.interimResults = true;
+  console.log('started rec');
 
   recognition.onresult = (event) => {
     let speechResult = event.results[0][0].transcript;
     // console.log(`result: ${speechResult}`, `confidence: ${event.results[0][0].confidence}`);
     console.log(speechResult);
 
-    // start listening 
-    if (speechResult === 'listen') {
-      setTimeout(() => {
-        startSpeech();
-        speechResult = ' ';
-      }, 400);
-    }
+    // // start listening 
+    // if (speechResult === 'listen') {
+    //   setTimeout(() => {
+    //     startSpeech();
+    //     speechResult = ' ';
+    //   }, 400);
+    // }
 
     if (isListening) {
       speechToPrompt(speechResult);
@@ -48,14 +47,15 @@ const getSpeech = () => {
   };
 
   recognition.onend = () => {
-    // console.log('it is over');
+    console.log('it is over');
     // for "endless" mode, comment out the next line and uncomment getSpeech()
-    // recognition.stop();
-    getSpeech();
+    recordingOff ();
+    recognition.stop();
+    // getSpeech();
   };
 
   recognition.onerror = (event) => {
-    // console.log(`something went wrong: ${event.error}`);
+    console.log(`something went wrong: ${event.error}`);
   };
 };
 
@@ -65,9 +65,11 @@ function speechToPrompt(text) {
   const promptPlaceholder = document.getElementById('recordedText');
   promptPlaceholder.value = text;
   // get try making it work
-  addLoadingAnimation ()
+  addLoadingAnimation ('left');
   setTimeout(() => {
     sendtoSentenceEncoder(text);
+
+    // trigger this after 3 seconds
   }, 3200);
   
 }
@@ -212,23 +214,33 @@ function startSpeech(clicked_id) {
   const elm = document.getElementById('start-listening');
 
   if (!isListening) {
+    getSpeech();
     elm.style.backgroundImage = "url('/images/recording-on.svg')";
     elm.classList.remove('recording-button');
     elm.classList.add('recording-button-active');
     isListening = true;
 
-    setTimeout(() => {
-      isListening = false;
-      elm.style.backgroundImage = "url('/images/recording-off.svg')";
-      elm.classList.remove('recording-button-active');
-      elm.classList.add('recording-button');
-    }, 6000);
+    // setTimeout(() => {
+    //   isListening = false;
+    //   elm.style.backgroundImage = "url('/images/recording-off.svg')";
+    //   elm.classList.remove('recording-button-active');
+    //   elm.classList.add('recording-button');
+    // }, 6000);
   } else {
     isListening = false;
     elm.style.backgroundImage = "url('/images/recording-off.svg')";
     elm.classList.remove('recording-button-active');
     elm.classList.add('recording-button');
   }
+}
+
+
+function recordingOff () {
+    const elm = document.getElementById('start-listening');
+    isListening = false;
+    elm.style.backgroundImage = "url('/images/recording-off.svg')";
+    elm.classList.remove('recording-button-active');
+    elm.classList.add('recording-button');
 }
 
 
@@ -254,3 +266,6 @@ function checkForAnimal(arr) {
     }
   }
 }
+
+
+

@@ -8,6 +8,8 @@ const Sentiment = require('sentiment');
 const fetch = require('node-fetch');
 const universalSentenceEncoder = require('@tensorflow-models/universal-sentence-encoder');
 const tf = require('@tensorflow/tfjs-node')
+const nlp = require('compromise')
+
 
 global.fetch = require('node-fetch');
 
@@ -85,21 +87,21 @@ sockets.on('connection', function (socket) {
     const seedSentance = data.randomSentance;
     const currStory = data.originalStory;
 
-    // console.log('currStory', currStory);
+    // // console.log('currStory', currStory);
 
-    let sameStorypromise = new Promise((resolve, reject) => {
-      const storySentiment = addSentimentToArray(currStory);
-      if (storySentiment.sentences.length > 0) {
-        resolve(storySentiment);
-      } else {
-        reject('failed');
-      }
-    })
+    // let sameStorypromise = new Promise((resolve, reject) => {
+    //   const storySentiment = addSentimentToArray(currStory);
+    //   if (storySentiment.sentences.length > 0) {
+    //     resolve(storySentiment);
+    //   } else {
+    //     reject('failed');
+    //   }
+    // })
 
-    sameStorypromise.then((storySentiment) => {
-      // console.log(storySentiment);
-      sockets.emit('originalStoryAndSentiment', storySentiment);
-    });
+    // sameStorypromise.then((storySentiment) => {
+    //   // console.log(storySentiment);
+    //   sockets.emit('originalStoryAndSentiment', storySentiment);
+    // });
 
 
     ///// -------> 
@@ -130,36 +132,68 @@ sockets.on('connection', function (socket) {
 
     // promise for next line in stroy
 
-    let getVectors = new Promise((resolve, reject) => {
-      const sentVectors = getStoryVectors(currStory);
-      if (sentVectors.length > 0) {
-        resolve(sentVectors);
+    // let getVectors = new Promise((resolve, reject) => {
+    //   const sentVectors = getStoryVectors(currStory);
+    //   if (sentVectors.length > 0) {
+    //     resolve(sentVectors);
+    //   } else {
+    //     reject('failed');
+    //   }
+    // })
+
+    // getVectors.then((sentVectors) => {
+    //   // vector next sentence
+    //   const nextLine = nextLineVector(currStory, seedSentance, sentVectors);
+    //   const similarAndSentiment = addSentimentToArray(nextLine);
+    //   const nextLineVec = {
+    //     'sentiment': similarAndSentiment,
+    //     'seed': seedSentance
+    //   }
+    //   sockets.emit('nextVectoredLine', nextLineVec);
+    //   // console.log('usecase 03', nextLineVec);
+    // });
+
+    // similar Sentences
+    let similarSentences = findVector(seedSentance);
+    // console.log(similarSentences);
+
+
+    sockets.emit('similarSentences', similarSentences);
+  });
+
+  // when New Prompt and Story is here
+
+  socket.on('sendNewStoryFromPrompt', function (data) {
+
+    const seedSentance = data.randomSentance;
+    const currStory = data.originalStory;
+
+    let promise = new Promise((resolve, reject) => {
+      const storyVectors = getStoryVectors(currStory);
+      if (storyVectors.length > 0) {
+        resolve(storyVectors);
       } else {
         reject('failed');
       }
     })
 
-    getVectors.then((sentVectors) => {
-      // vector next sentence
-      const nextLine = nextLineVector(currStory, seedSentance, sentVectors);
-      const similarAndSentiment = addSentimentToArray(nextLine);
-      const nextLineVec = {
+    promise.then((storyVectors) => {
+      // similar Story
+      const similarStory = vectorVariation(currStory, seedSentance, storyVectors);
+      const similarAndSentiment = addSentimentToArray(similarStory);
+
+      const similarStoryObject = {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
-      sockets.emit('nextVectoredLine', nextLineVec);
-      // console.log('usecase 03', nextLineVec);
+      console.log('rest of story: ', similarStoryObject)
+      sockets.emit('restOfStory', similarStoryObject);
     });
-
-    // similar Sentences
-    let similarSentences = findVector(seedSentance);
-    sockets.emit('similarSentences', similarSentences);
   });
 
-  // end of the seed sentence <--- 
-  
-  // get nextsentence vector --->
-  
+
+  //// --- > finish
+
   socket.on('sendNextSentance', function (data) {
 
     const seedSentance = data.randomSentance;
@@ -237,6 +271,15 @@ sockets.on('connection', function (socket) {
   });
 
 
+  socket.on('sendNewPrompt', async function (data) {
+    console.log(data.newPrompt)
+    const newSimilarity = await getNewEmbedding(data.newPrompt);
+    console.log(newSimilarity);
+    sockets.emit('promptEmbedResults', newSimilarity);
+
+  });
+
+
   socket.on('recieveStory', function (data) {
     const storyArr = data;
     // console.log(storyVectors);
@@ -246,11 +289,11 @@ sockets.on('connection', function (socket) {
 
   //
   socket.on('sentenceToEmbed', async function (data) {
-  
+
     const newSimilarity = await getNewEmbedding(data.setenceToEmbed);
-    console.log('somthing: ', newSimilarity);
+    // console.log('somthing: ', newSimilarity);
     sockets.emit('sentenceToEmbedResults', newSimilarity);
-    
+
     // model.embed(data.setenceToEmbed).then(embeddings => {
     //   // embeddings.print(true /* verbose */);
     //   let embeddingsData = embeddings.arraySync();
@@ -265,7 +308,7 @@ sockets.on('connection', function (socket) {
     //   // downloadObjectAsJson(embeddingsData, 'exportName')
     //   // return embeddingsData;
     // });
-  // });
+    // });
 
 
   });
@@ -413,6 +456,12 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
   // let indexToRemove = 0;
 
   // newStory.splice(indexToRemove, seedindex);
+  // console.log(newStory);
+
+  // for (let index = 0; index < newStory.length; index++) {
+  //   const element = newStory[index];
+  //   console.log(element);
+  // }
 
   return newStory;
   // const vector3 = add(VectorsObject[0].embedding, vectors[0]);
@@ -545,12 +594,51 @@ function addSentimentToArray(recievedArr) {
 
   }
 
+  const storyTopics = getTopics(recievedArr);
+
   const sentenceAndSentiment = {
     sentences: recievedArr,
-    sentiment: sentimentResults
+    sentiment: sentimentResults,
+    compromise: storyTopics
   }
 
   return sentenceAndSentiment;
+}
+
+function getTopics(array) {
+
+  let storyTopics = [];
+
+  const thisStory = array.join(' ');
+  // console.log(thisStory);
+  const thisNLPPeople = nlp(thisStory).people().slice(0, 50).out('frequency');
+  // console.log('thisNLPPeople: ', thisNLPPeople);
+
+
+  for (let index = 0; index < thisNLPPeople.length; index++) {
+    const element = thisNLPPeople[index].normal;
+    // console.log(element);
+    if (storyTopics.includes(element) === false) {
+      storyTopics.push(element);
+    }
+  }
+
+
+  let doc = nlp(thisStory)
+  let topics = doc.topics().data();
+  // console.log('topics: ', topics);
+
+
+  for (let index = 0; index < topics.length; index++) {
+    const element = topics[index].text;
+    // console.log(element);
+    if (storyTopics.includes(element) === false) {
+      storyTopics.push(element);
+    }
+  }
+
+  console.log('storyTopics', storyTopics);
+  return storyTopics;
 }
 
 
@@ -586,3 +674,7 @@ function findNearestandAdd(embeding) {
 
 
 // embed(['this is a sentance']);
+
+
+
+

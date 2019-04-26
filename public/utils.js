@@ -809,11 +809,37 @@ function getInputText() {
   currPrompt = promptText;
   // speechToPrompt(promptText);
   // send seed to universal sentence encoder
-  addLoadingAnimation ();
-  setTimeout(() => {
+
+  let startStory = new Promise(function (resolve, reject) {
+    const div = document.createElement('div');
+    div.id = 'loadingAnimation';
+    div.style.opacity = '0.0'
+    div.classList.add("loading-animation");
+    let loadingImage = new Image(180, 130);
+    loadingImage.src = './images/turn_page.gif';
+
+    const paragraph = document.createElement('p');
+    paragraph.classList.add('loading-text');
+    paragraph.innerHTML = 'turning some pages...'
+
+    document.getElementById('left').appendChild(div).appendChild(loadingImage);
+    document.getElementById('loadingAnimation').appendChild(paragraph);
+
+    let element = document.getElementById('loadingAnimation');
+    fadein(element);
+
+    setTimeout(() => {
+      let element = document.getElementById('loadingAnimation');
+      fadeoutandDelete(element);
+      resolve(promptText);
+    }, 4000);
+
+  });
+
+  startStory.then(function (value) {
+    // console.log('resolve', value);
     sendtoSentenceEncoder(promptText);
-  }, 3200);
-  
+  });
 }
 
 function sendtoSentenceEncoder(text) {
@@ -824,7 +850,7 @@ function sendtoSentenceEncoder(text) {
 
 }
 
-function addLoadingAnimation () {
+function addLoadingAnimation (elementId) {
 
   const div = document.createElement('div');
   div.id = 'loadingAnimation';
@@ -837,16 +863,17 @@ function addLoadingAnimation () {
   paragraph.classList.add('loading-text');
   paragraph.innerHTML = 'turning some pages...'
 
-  document.getElementById('left').appendChild(div).appendChild(loadingImage);
+  document.getElementById(elementId).appendChild(div).appendChild(loadingImage);
   document.getElementById('loadingAnimation').appendChild(paragraph);
 
   let element = document.getElementById('loadingAnimation');
   fadein(element);
 
-  setTimeout(() => {
-    let element = document.getElementById('loadingAnimation');
-    fadeoutandDelete(element);
-  }, 3700);
+  // setTimeout(() => {
+  //   let element = document.getElementById('loadingAnimation');
+  //   fadeoutandDelete(element);
+  //   // add a sentence here
+  // }, 4000);
 }
 
 let last_known_scroll_position = 0;
@@ -1178,3 +1205,56 @@ function hexToComplimentary(hex){
   rgb = b | (g << 8) | (r << 16); 
   return "#" + (0x1000000 | rgb).toString(16).substring(1);
 }  
+
+
+
+function sendNewPrompt(Prompt) {
+
+  // pause the story
+
+  // clear continue reading
+
+  const buttonToRemove = document.getElementById('one-more-sentence-div');
+  fadeout(buttonToRemove);
+
+  // add loading animation
+
+  addLoadingAnimation ('left');
+
+  // wait for data to come in
+  let CurrSentance = sentanceNumber;
+  let storyArr = similarSentences;
+
+  socket.emit('sendNewPrompt', { 'currSentence': CurrSentance, 'currStory': storyArr, 'newPrompt': Prompt });
+
+}
+
+
+
+function runjsonCheckNewPrompt(json, sentenceArr) {
+
+  // get sentece from universal sentence encoder
+  const randomSentance = sentenceArr.sentences[1];
+  let thisStoryArray = [];
+  // get the entire story of that sentence
+
+  // run through all the sentences in the json file.
+  for (let key in json.stories) {
+    for (let i = 0; i < json.stories[key].story.length; i++) {
+      if (randomSentance === json.stories[key].story[i]) {
+        thisStoryArray = json.stories[key].story;
+      }
+    }
+  }
+
+  // // story Start Bool
+  // storyCurrentlyRunning = true;
+
+  // maxSentences = thisStoryArray.length - 1;
+
+  // console.log(thisStoryArray);
+  socket.emit('sendNewStoryFromPrompt', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
+
+  // add the sentance to the page
+  // addSentence(thisStoryArray[0], 'notnet');
+}

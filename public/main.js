@@ -230,7 +230,7 @@ socket.on('similarStory', function (result) {
   setTimeout(() => {
     initiateStory(currPrompt, similarSentences);
     addSentence(similarSentences[0], 'notnet');
-  }, 1000);
+  }, 400);
 
 
 });
@@ -288,6 +288,20 @@ socket.on('restOfStory', function (result) {
 
   // replace array with new Array.
   similarSentences = ConcatArray;
+
+  // remove the loading animation now!
+
+  setTimeout(() => {
+    let element = document.getElementById('loadingAnimation');
+    fadeoutandDelete(element);
+  }, 2400);
+
+  setTimeout(() => {
+    addNewContentAfterPressed();
+
+  }, 2800);
+
+  // make sure everything is completed before  ---> addinfg a new sentence.
 
 });
 
@@ -676,6 +690,9 @@ function addOneMoreButton() {
 
 }
 
+
+
+
 function addOneMoreSentence() {
 
   // After each sentence 'turn the page'
@@ -725,6 +742,7 @@ function addOneMoreSentence() {
   const btn = document.createElement('BUTTON');
   btn.classList.add('what-happened-button');
   btn.onclick = function () {
+
     addSentenceAfterbutton();
     // interval to 100 here
     clearInterval(buttonTimer);

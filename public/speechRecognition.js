@@ -66,12 +66,7 @@ function speechToPrompt(text) {
   promptPlaceholder.value = text;
   // get try making it work
   addLoadingAnimation ('left');
-  setTimeout(() => {
-    sendtoSentenceEncoder(text);
-
-    // trigger this after 3 seconds
-  }, 3200);
-  
+  sendtoSentenceEncoder(text);  
 }
 
 

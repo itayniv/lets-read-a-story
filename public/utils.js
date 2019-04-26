@@ -866,14 +866,8 @@ function addLoadingAnimation (elementId) {
   document.getElementById(elementId).appendChild(div).appendChild(loadingImage);
   document.getElementById('loadingAnimation').appendChild(paragraph);
 
-  let element = document.getElementById('loadingAnimation');
-  fadein(element);
-
-  // setTimeout(() => {
-  //   let element = document.getElementById('loadingAnimation');
-  //   fadeoutandDelete(element);
-  //   // add a sentence here
-  // }, 4000);
+  const fadeInElement = document.getElementById('loadingAnimation');
+  fadein(fadeInElement);
 }
 
 let last_known_scroll_position = 0;
@@ -1219,7 +1213,18 @@ function sendNewPrompt(Prompt) {
 
   // add loading animation
 
-  addLoadingAnimation ('left');
+  //TODO
+  setTimeout(() => {
+    const element = `one-more-prompt${sentanceNumber}`;
+    addLoadingAnimation(element);
+  }, 300);
+
+  setTimeout(() => {
+    const elm = document.getElementById('loadingAnimation');
+    elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }, 400);
+
+
 
   // wait for data to come in
   let CurrSentance = sentanceNumber;
@@ -1257,4 +1262,22 @@ function runjsonCheckNewPrompt(json, sentenceArr) {
 
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');
+}
+
+
+
+
+function addNewContentAfterPressed() {
+
+  addSentenceAfterbutton();
+  // interval to 100 here
+  clearInterval(buttonTimer);
+  let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
+  prgsBar.style.width = '100%';
+  addedSentence = true;
+  pauseBool = true;
+
+  const playPause = document.getElementById('pause-button');
+  fadeoutandDelete(playPause);
+
 }

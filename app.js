@@ -186,7 +186,7 @@ sockets.on('connection', function (socket) {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
-      console.log('rest of story: ', similarStoryObject)
+      // console.log('rest of story: ', similarStoryObject)
       sockets.emit('restOfStory', similarStoryObject);
     });
   });
@@ -272,9 +272,9 @@ sockets.on('connection', function (socket) {
 
 
   socket.on('sendNewPrompt', async function (data) {
-    console.log(data.newPrompt)
+    // console.log(data.newPrompt)
     const newSimilarity = await getNewEmbedding(data.newPrompt);
-    console.log(newSimilarity);
+    // console.log(newSimilarity);
     sockets.emit('promptEmbedResults', newSimilarity);
 
   });
@@ -637,7 +637,7 @@ function getTopics(array) {
     }
   }
 
-  console.log('storyTopics', storyTopics);
+  // console.log('storyTopics', storyTopics);
   return storyTopics;
 }
 

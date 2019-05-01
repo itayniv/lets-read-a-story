@@ -65,10 +65,53 @@ function init() {
     // console.log(model);
   });
   // model = await universalSentenceEncoder.load();
+
+
+  let sentance = "The Swallow and the Crow had an argument one day about their plumage.";
+  let ThisstoryArr = [
+    "The Swallow and the Crow had an argument one day about their plumage.",
+    "Said the Swallow: Just look at my bright and downy feathers.",
+    "Your black stiff quills are not worth having.",
+    "Why don't you dress better? Show a little pride!",
+    "Your feathers may do very well in spring, replied the Crow, but I don't remember ever having seen you around in winter, and that's when I enjoy myself most."
+  ]
+  setTimeout(() => {
+    testingStories (sentance, ThisstoryArr);
+
+  }, 1000);
+
 }
 
 init();
 
+
+function testingStories(sent, storyArr) {
+  const seedSentance = sent;
+  const currStory = storyArr;
+
+  let promise = new Promise((resolve, reject) => {
+    const storyVectors = getStoryVectors(currStory);
+    if (storyVectors.length > 0) {
+      resolve(storyVectors);
+    } else {
+      reject('failed');
+    }
+  })
+
+  promise.then((storyVectors) => {
+    // similar Story
+    const similarStory = vectorVariation(currStory, seedSentance, storyVectors);
+    const similarAndSentiment = addSentimentToArray(similarStory);
+
+    const similarStoryObject = {
+      'sentiment': similarAndSentiment,
+      'seed': seedSentance
+    }
+    console.log('rest of story: ', similarStoryObject)
+    // sockets.emit('restOfStory', similarStoryObject);
+  });
+
+}
 
 server = app.listen(port, function () {
   console.log('Example app listening on port 3000!')

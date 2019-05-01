@@ -129,7 +129,7 @@ let sketchRnnBook = function (drawingBook) {
           // console.log(startBookX,startBookY);
 
 
-          if (numberOfBooks <= 19){
+          if (numberOfBooks <= 23){
             setTimeout(() => {
               startDrawingbook();
               secondColor = hexToComplimentary(sketchColor); 

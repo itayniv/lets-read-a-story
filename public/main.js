@@ -78,7 +78,7 @@ let sentimentContainer = [];
 
 // sketchRnnDrawing stuff
 
-let vecIllustrations = ['asfe01.json', 'asfe02.json', 'bird01.json', 'asfe04.json', 'asfe_rat.json', 'crystal.json', 'dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json',
+let vecIllustrations = ['home_01.json', 'asfe02.json', 'bird01.json', 'asfe04.json', 'asfe_rat.json', 'crystal.json', 'dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json',
   'maya01.json', 'maya02.json', 'maya03.json', 'maya04.json', 'maya05.json', 'maya06.json', 'maya07.json', 'maya08.json', 'maya09.json', 'maya10.json',
   'maya11.json', 'maya12.json', 'maya13.json', 'maya15.json', 'mother.json', 'music.json', 'music1.json', 'raven.json', 'tortoise.json', 'wind.json'];
 
@@ -1021,8 +1021,7 @@ function addACanvas(height) {
     paint.draw = function () {
       if (paint.currentlyDrawing) {
         paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffsetY);
-        paint.point = paint.point + 1;
-
+        paint.point = paint.point + 2;
         // console.log('*** drawing ***', paint.point);
       }
     }
@@ -1090,7 +1089,6 @@ function addACanvas(height) {
   document.getElementById('paint-Container').appendChild(canvasContainer);
 
   return new p5(drawingsketch, window.document.getElementById('canvas-Container'));
-
 };
 
 
@@ -1108,7 +1106,6 @@ function initiateStory(subject, sentenceArr) {
   for (let index = 0; index < sentenceArr.length; index++) {
     const element = sentenceArr[index];
     let thisClass = ifInClass(element);
-    // console.log('thisclass', thisClass);
     if (thisClass) {
       for (let index = 0; index < thisClass.length; index++) {
         const element = thisClass[index];
@@ -1328,7 +1325,7 @@ function ifInClass(theSentance) {
         });
       } else {
         // didnt find any words do nothing
-        // console.log("run other enrichment");
+        console.log("run other enrichment");
       }
     }
 

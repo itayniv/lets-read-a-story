@@ -72,7 +72,7 @@
     top: 0;
     height: calc(100% - 50px);
     position: fixed;
-    border-left: 1px solid #a9a9a9;
+    border-left: 1px solid #e8e8e8;
   }
   .page-container {
     display: flex;
@@ -96,7 +96,7 @@
     right: 0;
     left: 0;
     height: 50px;
-    border-top: 1px solid #a9a9a9;
+    border-top: 1px solid #e8e8e8;
   }
   .interactive-container {
     /* background-color: white; */
@@ -114,7 +114,7 @@
     right: 0;
     left: 0;
     height: 50px;
-    border-bottom: 1px solid #a9a9a9;
+    border-bottom: 1px solid #e8e8e8;
   }
   .story-container {
     padding: 3%;
@@ -224,11 +224,11 @@
     outline: none;
   }
   .verticalLine {
-    border-left: 1px solid #a9a9a9;
+    border-left: 1px solid #e8e8e8;
     height: 100%;
   }
   .horizontalLine {
-    border-bottom: 1px solid #a9a9a9;
+    border-bottom: 1px solid #e8e8e8;
     height: 72%;
   }
   .custom-cursor {

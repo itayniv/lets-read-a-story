@@ -115,7 +115,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
 const birdsArr = ["jackdaw", "wing", "wings", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
-const dogArr = ["goat", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
+const dogArr = ["goat","ass","ass's", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
 const sheepArr = ["lamb", "flock"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
@@ -126,6 +126,11 @@ const catArr = ["tiger", "tiger's", "tigers", "cats"];
 const owlArr = ["owl's", 'bat', 'bats'];
 const frogArr = ['frogs', "frog's", "toad"];
 const rabitArr = ["mice", 'hare'];
+const skullArr = ["dead", "death", "kill", "died", "die"];
+const sandwichArr = ["food", "eat", "meal"];
+const whaleArr = ["fish"];
+const barnArr = ["house", "hut"];
+const palm_treeArr = ["woods", "tree", "forest"];
 
 init();
 

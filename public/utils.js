@@ -205,7 +205,71 @@ function enrichSketchClass(theSentance) {
       // console.log("found a frog", frogObject);
       newSimilaritiesArray.push(frogObject);
     }
+
+    else if (skullArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let skullObject = {
+        class: 'skull',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(skullObject);
+    }
+
+    else if (sandwichArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let sandwichObject = {
+        class: 'sandwich',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(sandwichObject);
+    }
+    else if (whaleArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let whaleObject = {
+        class: 'whale',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(whaleObject);
+    }
+    else if (barnArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let barnObject = {
+        class: 'barn',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(barnObject);
+    }
+    else if (palm_treeArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let palmObject = {
+        class: 'palm_tree',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(palmObject);
+    }
     else {
+     
+      
       // didnt find any words do nothing
       // console.log("didnt find anything");
     }
@@ -834,15 +898,15 @@ function getInputText() {
       resolve(promptText);
     }, 4000);
 
-      setTimeout(() => {
-    console.log('dissolve text');
-    // let fadeoutComponent1 = document.getElementById('characterOne');
-    const fadeoutComponent2 = document.getElementById('recordedText');
-    const fadeoutComponent3 = document.getElementById('recordedText-eg');
-    // fadeout(fadeoutComponent1);
-    fadeout(fadeoutComponent2);
-    fadeout(fadeoutComponent3);
-  }, 300);
+    setTimeout(() => {
+      console.log('dissolve text');
+      // let fadeoutComponent1 = document.getElementById('characterOne');
+      const fadeoutComponent2 = document.getElementById('recordedText');
+      const fadeoutComponent3 = document.getElementById('recordedText-eg');
+      // fadeout(fadeoutComponent1);
+      fadeout(fadeoutComponent2);
+      fadeout(fadeoutComponent3);
+    }, 300);
 
   });
 
@@ -860,7 +924,7 @@ function sendtoSentenceEncoder(text) {
 
 }
 
-function addLoadingAnimation (elementId) {
+function addLoadingAnimation(elementId) {
 
   storyCurrentlyRunning = false;
 
@@ -1076,21 +1140,21 @@ function mouseMove(e) {
 }
 
 
- 
+
 
 let point = 0;
 
-function drawIng (jsonDrawing){
-setTimeout(() => {
-  
-  if (point < drawing.length){
-    
-      line(jsonDrawing[point].tX,jsonDrawing[point].tY, jsonDrawing[point].pX, jsonDrawing[point].pY);
-      point ++;
+function drawIng(jsonDrawing) {
+  setTimeout(() => {
+
+    if (point < drawing.length) {
+
+      line(jsonDrawing[point].tX, jsonDrawing[point].tY, jsonDrawing[point].pX, jsonDrawing[point].pY);
+      point++;
       console.log(point)
       drawIng();
-  }
-      }, 120);
+    }
+  }, 120);
 }
 
 
@@ -1107,41 +1171,41 @@ function invertColor(hexTripletColor) {
 
 
 function LightenDarkenColor(col, amt) {
-  
+
   let usePound = false;
 
   if (col[0] == "#") {
-      col = col.slice(1);
-      usePound = true;
+    col = col.slice(1);
+    usePound = true;
   }
 
-  let num = parseInt(col,16);
+  let num = parseInt(col, 16);
 
   let r = (num >> 16) + amt;
 
   if (r > 255) r = 255;
-  else if  (r < 0) r = 0;
+  else if (r < 0) r = 0;
 
   let b = ((num >> 8) & 0x00FF) + amt;
 
   if (b > 255) b = 255;
-  else if  (b < 0) b = 0;
+  else if (b < 0) b = 0;
 
   let g = (num & 0x0000FF) + amt;
 
   if (g > 255) g = 255;
   else if (g < 0) g = 0;
 
-  return (usePound?"#":"") + (g | (b << 8) | (r << 16)).toString(16);
+  return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16);
 
 }
 
 
-function hexToComplimentary(hex){
+function hexToComplimentary(hex) {
 
   // Convert hex to rgb
   // Credit to Denis http://stackoverflow.com/a/36253499/4939630
-  var rgb = 'rgb(' + (hex = hex.replace('#', '')).match(new RegExp('(.{' + hex.length/3 + '})', 'g')).map(function(l) { return parseInt(hex.length%2 ? l+l : l, 16); }).join(',') + ')';
+  var rgb = 'rgb(' + (hex = hex.replace('#', '')).match(new RegExp('(.{' + hex.length / 3 + '})', 'g')).map(function (l) { return parseInt(hex.length % 2 ? l + l : l, 16); }).join(',') + ')';
 
   // Get array of RGB values
   rgb = rgb.replace(/[^\d,]/g, '').split(',');
@@ -1157,60 +1221,60 @@ function hexToComplimentary(hex){
   var min = Math.min(r, g, b);
   var h, s, l = (max + min) / 2.0;
 
-  if(max == min) {
-      h = s = 0;  //achromatic
+  if (max == min) {
+    h = s = 0;  //achromatic
   } else {
-      var d = max - min;
-      s = (l > 0.5 ? d / (2.0 - max - min) : d / (max + min));
+    var d = max - min;
+    s = (l > 0.5 ? d / (2.0 - max - min) : d / (max + min));
 
-      if(max == r && g >= b) {
-          h = 1.0472 * (g - b) / d ;
-      } else if(max == r && g < b) {
-          h = 1.0472 * (g - b) / d + 6.2832;
-      } else if(max == g) {
-          h = 1.0472 * (b - r) / d + 2.0944;
-      } else if(max == b) {
-          h = 1.0472 * (r - g) / d + 4.1888;
-      }
+    if (max == r && g >= b) {
+      h = 1.0472 * (g - b) / d;
+    } else if (max == r && g < b) {
+      h = 1.0472 * (g - b) / d + 6.2832;
+    } else if (max == g) {
+      h = 1.0472 * (b - r) / d + 2.0944;
+    } else if (max == b) {
+      h = 1.0472 * (r - g) / d + 4.1888;
+    }
   }
 
   h = h / 6.2832 * 360.0 + 0;
 
   // Shift hue to opposite side of wheel and convert to [0-1] value
-  h+= 180;
+  h += 180;
   if (h > 360) { h -= 360; }
   h /= 360;
 
   // Convert h s and l values into r g and b values
   // Adapted from answer by Mohsen http://stackoverflow.com/a/9493060/4939630
-  if(s === 0){
-      r = g = b = l; // achromatic
+  if (s === 0) {
+    r = g = b = l; // achromatic
   } else {
-      var hue2rgb = function hue2rgb(p, q, t){
-          if(t < 0) t += 1;
-          if(t > 1) t -= 1;
-          if(t < 1/6) return p + (q - p) * 6 * t;
-          if(t < 1/2) return q;
-          if(t < 2/3) return p + (q - p) * (2/3 - t) * 6;
-          return p;
-      };
+    var hue2rgb = function hue2rgb(p, q, t) {
+      if (t < 0) t += 1;
+      if (t > 1) t -= 1;
+      if (t < 1 / 6) return p + (q - p) * 6 * t;
+      if (t < 1 / 2) return q;
+      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6;
+      return p;
+    };
 
-      var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
-      var p = 2 * l - q;
+    var q = l < 0.5 ? l * (1 + s) : l + s - l * s;
+    var p = 2 * l - q;
 
-      r = hue2rgb(p, q, h + 1/3);
-      g = hue2rgb(p, q, h);
-      b = hue2rgb(p, q, h - 1/3);
+    r = hue2rgb(p, q, h + 1 / 3);
+    g = hue2rgb(p, q, h);
+    b = hue2rgb(p, q, h - 1 / 3);
   }
 
   r = Math.round(r * 255);
-  g = Math.round(g * 255); 
+  g = Math.round(g * 255);
   b = Math.round(b * 255);
 
   // Convert r b and g values to hex
-  rgb = b | (g << 8) | (r << 16); 
+  rgb = b | (g << 8) | (r << 16);
   return "#" + (0x1000000 | rgb).toString(16).substring(1);
-}  
+}
 
 
 
@@ -1219,7 +1283,7 @@ function sendNewPrompt(Prompt) {
   // pause the story
 
   // add line to story
- 
+
 
   // clear continue reading
 
@@ -1240,13 +1304,13 @@ function sendNewPrompt(Prompt) {
   setTimeout(() => {
     const element = `paragraph${sentanceNumber}`;
     addLoadingAnimation(element);
-    
+
   }, 800);
 
   setTimeout(() => {
     const elm = document.getElementById('loadingAnimation');
     elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    
+
   }, 1000);
 
 
@@ -1263,29 +1327,22 @@ function sendNewPrompt(Prompt) {
 function addReaderPromptToPage(text) {
 
   // add prompt here
-  console.log('text to add',text);
-  
+
   const readerDiv = document.createElement('div');
   readerDiv.classList.add('readerPrompts-container');
 
-  const secondNode = document.getElementById(`one-more-prompt${sentanceNumber}`);
 
   const span = document.createElement('span');
   span.classList.add('readerPrompts');
-  span.style.opacity ='0.0';
-  span.innerHTML = text;
+  span.style.opacity = '0.0';
+  span.innerHTML = '"' + text + '"';
   readerDiv.appendChild(span);
 
   const container = document.getElementById(`paragraph${sentanceNumber}`);
 
   container.insertBefore(readerDiv, container.childNodes[2]);
 
-  // document.getElementById(`paragraph${sentanceNumber}`).appendChild(readerDiv);
-
-
-
-
-  fadein(span);  
+  fadein(span);
 }
 
 

@@ -8,6 +8,8 @@ let mesh;
 let targetMesh;
 let phase = 4;
 
+let sessionNumber = 0;
+
 let currPrompt = '';
 let delta = 5;
 let deltaoneNumber = 0;
@@ -143,11 +145,22 @@ function modelReady() {
 
 function init() {
 
+  sessionNumber = `room${Math.floor(Math.random() * 9999) + 10000}`
+  console.log('sessionNumber: ', sessionNumber);
+  socket.emit('roomEntered', sessionNumber);
+
+
+  // socket.on('connect', function () {
+  //   // Connected, let's sign-up for to receive messages for this room
+    
+  // });
+
+
   getSpeech();
   sketchColor = getRandomColor();
   secondColor = LightenDarkenColor(sketchColor, 40);
 
-
+  
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
 
@@ -377,7 +390,7 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
-  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
+  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber  });
 
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');

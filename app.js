@@ -58,7 +58,6 @@ app.use(bodyParser.json())
 const port = process.env.PORT || 3000;
 // const sentimentjs = new Sentimentjs();
 
-
 function init() {
   universalSentenceEncoder.load().then(universalEncoderModel => {
     model = universalEncoderModel;
@@ -122,14 +121,30 @@ server = app.listen(port, function () {
 const sockets = io(server);
 // configure socket handlers
 sockets.on('connection', function (socket) {
-  // send current state to this client that connected only
 
+
+  const currClient = socket.id;
+  console.log("Joined :", currClient);
+
+  socket.on('roomEntered', function (room) {
+    console.log('room number ',room)
+    socket.join(room);
+    console.log('Joined room number: ',room)
+    var roster = io.sockets.clients(room);
+    console.log('people in the room', roster);
+  });
+
+  
   // recieving seed text and generating a whole story / a single sentence  --->
   socket.on('sendSeedSentance', function (data) {
-
     const seedSentance = data.randomSentance;
     const currStory = data.originalStory;
+    const currRoom = data.roomNumber;
 
+    console.log('got a room number', currRoom);
+    socket.join(currRoom);
+  
+    
     // // console.log('currStory', currStory);
 
     // let sameStorypromise = new Promise((resolve, reject) => {
@@ -169,7 +184,23 @@ sockets.on('connection', function (socket) {
 
       // console.log(similarStoryObject);
       // console.log('similarStoryObject', similarStoryObject);
-      sockets.emit('similarStory', similarStoryObject);
+      // sockets.emit('similarStory', similarStoryObject);
+
+      // socket.to(currClient).emit('similarStory', similarStoryObject);
+      
+      // socket.broadcast.to(room).emit('similarStory', similarStoryObject);
+      // socket.to(room).emit('similarStory', similarStoryObject);
+
+
+      // working -->
+      // sockets.emit('similarStory', similarStoryObject);
+      console.log('send to' ,currRoom)
+      sockets.in(currRoom).emit('similarStory', similarStoryObject);
+
+
+
+      // sockets.emit(currClient).emit('similarStory', similarStoryObject);
+
     });
 
 
@@ -355,6 +386,11 @@ sockets.on('connection', function (socket) {
 
 
   });
+
+  socket.on('disconnect', () => {
+    // remove the room
+    console.log('disconectet', socket.id)
+   });
 
 });
 

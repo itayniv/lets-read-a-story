@@ -205,9 +205,35 @@ function enrichSketchClass(theSentance) {
       // console.log("found a frog", frogObject);
       newSimilaritiesArray.push(frogObject);
     }
+
+    else if (skullArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let skullObject = {
+        class: 'skull',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(skullObject);
+    }
+
+    else if (sandwichArr.indexOf(sentenceToArray[i].toLowerCase()) > -1) {
+
+      let thisWord = sentenceToArray[i].toLowerCase();
+
+      let ssandwichObject = {
+        class: 'sandwich',
+        word: thisWord
+      }
+
+      // console.log("found a frog", frogObject);
+      newSimilaritiesArray.push(ssandwichObject);
+    }
     else {
       // didnt find any words do nothing
-      // console.log("didnt find anything");
+      // console.log("didnt find anything to draw");
     }
   }
   // console.log('newSimilaritiesArray', newSimilaritiesArray)
@@ -678,23 +704,35 @@ function addSentenceAfterbutton() {
 
   setTimeout(() => {
     addSentence(similarSentences[sentanceNumber], 'sentence2Vec');
-
-  }, 400);
+  }, 500);
 
   //delete this button
   setTimeout(() => {
-    const elm = document.getElementById('one-more-sentence');
     const fadeOutIllustration = document.getElementById(`drawing${sentanceNumber}`);
-    if (elm != undefined) {
-      fadeoutandDelete(elm);
-    }
-
+  
     if (fadeOutIllustration != undefined) {
       slowFadeOut(fadeOutIllustration);
     }
   }, 100);
 }
 
+
+function addReaderPromptToPage(text) {
+
+  // add prompt here
+  console.log('text to add',text);
+  
+  const readerDiv = document.createElement('div');
+  readerDiv.classList.add('readerPrompts-container');
+
+  const span = document.createElement('span');
+  span.classList.add('readerPrompts');
+  span.style.opacity ='0.0';
+  span.innerHTML = text;
+  readerDiv.appendChild(span);
+  document.getElementById(`paragraph${sentanceNumber}`).appendChild(readerDiv);
+  fadein(span);  
+}
 
 function convertRange(value, r1, r2) {
   return (value - r1[0]) * (r2[1] - r2[0]) / (r1[1] - r1[0]) + r2[0];
@@ -1223,19 +1261,20 @@ function sendNewPrompt(Prompt) {
   const buttonToRemove = document.getElementById('one-more-sentence-div');
   fadeout(buttonToRemove);
 
-  // add loading animation
+  // add the prompt to story
 
-  //TODO
+  readerPrompt = Prompt;
+ 
+  // add loading animation 
   setTimeout(() => {
-    const element = `one-more-prompt${sentanceNumber}`;
+    const element = `paragraph${sentanceNumber}`;
     addLoadingAnimation(element);
-  }, 300);
+  }, 500);
 
-  setTimeout(() => {
-    const elm = document.getElementById('loadingAnimation');
-    elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 400);
-
+  // setTimeout(() => {
+  //   const elm = document.getElementById('loadingAnimation');
+  //   elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  // }, 400);
 
 
   // wait for data to come in

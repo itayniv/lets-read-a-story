@@ -15,6 +15,24 @@
     font-size: 27px;
     line-height: 42px;
   }
+
+  .readerPrompts {
+    padding-bottom: 40px;
+    font-family: 'Sumana', serif;
+    color: #515254;
+    font-size: 22px;
+    line-height: 42px;
+    font-style: italic;
+  }
+
+  .readerPrompts-container {
+    padding-top: 70px;
+    padding-left: 10%;
+  }
+
+
+
+
   .left {
     /* background: white; */
     width: 50%;

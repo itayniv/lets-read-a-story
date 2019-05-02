@@ -21,7 +21,7 @@ const Sentence2Vec = require('./sentence2vec.js')
 console.log(Sentence2Vec);
 
 const embedings = require('./public/similarities-lite.json')
-// const embedings = require('./public/grimm_embedding.json')
+// const embedings = require('./public/similarities_grimm_lite.json')
 
 // console.log(use, tf);
 const userID = 0;
@@ -38,23 +38,6 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
-
-
-// app.get('/', function(req, res) {
-
-// });
-// // 
-// app.get('/generate', function(req, res) {
-//   //res.redirect('index.html?page=generate');
-//   res.sendFile("public/index.html");
-// });
-
-// app.get("/save", funtion(req, res) {
-//   // take that data and save to a database
-// })
-
-
-
 const port = process.env.PORT || 3000;
 // const sentimentjs = new Sentimentjs();
 
@@ -62,23 +45,20 @@ const port = process.env.PORT || 3000;
 function init() {
   universalSentenceEncoder.load().then(universalEncoderModel => {
     model = universalEncoderModel;
-    // console.log(model);
   });
-  // model = await universalSentenceEncoder.load();
 
+  // let sentance = "The Swallow and the Crow had an argument one day about their plumage.";
+  // let ThisstoryArr = [
+  //   "The Swallow and the Crow had an argument one day about their plumage.",
+  //   "Said the Swallow: Just look at my bright and downy feathers.",
+  //   "Your black stiff quills are not worth having.",
+  //   "Why don't you dress better? Show a little pride!",
+  //   "Your feathers may do very well in spring, replied the Crow, but I don't remember ever having seen you around in winter, and that's when I enjoy myself most."
+  // ]
+  // setTimeout(() => {
+  //   testingStories (sentance, ThisstoryArr);
 
-  let sentance = "The Swallow and the Crow had an argument one day about their plumage.";
-  let ThisstoryArr = [
-    "The Swallow and the Crow had an argument one day about their plumage.",
-    "Said the Swallow: Just look at my bright and downy feathers.",
-    "Your black stiff quills are not worth having.",
-    "Why don't you dress better? Show a little pride!",
-    "Your feathers may do very well in spring, replied the Crow, but I don't remember ever having seen you around in winter, and that's when I enjoy myself most."
-  ]
-  setTimeout(() => {
-    testingStories (sentance, ThisstoryArr);
-
-  }, 1000);
+  // }, 1000);
 
 }
 

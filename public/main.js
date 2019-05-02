@@ -8,6 +8,8 @@ let mesh;
 let targetMesh;
 let phase = 4;
 
+let readerPrompt = '';
+
 let currPrompt = '';
 let delta = 5;
 let deltaoneNumber = 0;
@@ -126,6 +128,8 @@ const catArr = ["tiger", "tiger's", "tigers", "cats"];
 const owlArr = ["owl's", 'bat', 'bats'];
 const frogArr = ['frogs', "frog's", "toad"];
 const rabitArr = ["mice", 'hare'];
+const skullArr = ["dead", "death", "kill", "died", "die"];
+const sandwichArr = ["food", "eat", "meal"]
 
 init();
 
@@ -597,53 +601,53 @@ async function addSentence(result, source) {
 
       // additional drawing on left Canvas -->
 
-      setTimeout(() => {
-        if (sentanceNumber % 2 == 0) {
-          // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionY = 50;
-          const startPositionX = canvasWidth - canvasHeight / 3;
-          // const additionalDrawing = sun;
+      // setTimeout(() => {
+      //   if (sentanceNumber % 2 == 0) {
+      //     // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+      //     const startPositionY = 50;
+      //     const startPositionX = canvasWidth - canvasHeight / 3;
+      //     // const additionalDrawing = sun;
 
-          let additionalDrawing;
-          let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-          let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
-          console.log(url);
+      //     let additionalDrawing;
+      //     let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+      //     let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+      //     console.log(url);
 
-          fetch(url)
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (myJson) {
-              additionalDrawing = myJson;
-              // console.log(JSON.stringify(myJson));
-              globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
-            });
+      //     fetch(url)
+      //       .then(function (response) {
+      //         return response.json();
+      //       })
+      //       .then(function (myJson) {
+      //         additionalDrawing = myJson;
+      //         // console.log(JSON.stringify(myJson));
+      //         globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+      //       });
 
 
-        } else {
-          // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionX = 100;
-          const startPositionY = 0;
+      //   } else {
+      //     // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+      //     const startPositionX = 100;
+      //     const startPositionY = 0;
 
-          let additionalDrawing;
-          let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-          let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+      //     let additionalDrawing;
+      //     let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+      //     let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
 
-          console.log(url);
+      //     console.log(url);
 
-          fetch(url)
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (myJson) {
-              additionalDrawing = myJson;
-              // console.log();
-              globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
-            });
+      //     fetch(url)
+      //       .then(function (response) {
+      //         return response.json();
+      //       })
+      //       .then(function (myJson) {
+      //         additionalDrawing = myJson;
+      //         // console.log();
+      //         globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+      //       });
 
-        }
+      //   }
 
-      }, 10000);
+      // }, 10000);
 
       // run loop again!
       setTimeout(() => {
@@ -774,13 +778,27 @@ function addOneMoreSentence() {
   inputPrompt.autocomplete = "off"
   inputPrompt.classList.add('prompt-input');
 
-
-
   inputPrompt.onsubmit = function () {
     let value = document.getElementById('newPromptInput').value
-    // console.log(value);
+    console.log(value);
 
     sendNewPrompt(value);
+    // insertcodehere
+
+    const elm = document.getElementById('one-more-sentence');
+  if (elm != undefined) {
+    fadeoutandDelete(elm);
+  }
+
+  // add prompt here
+  setTimeout( () => {
+    if (readerPrompt.length > 0) {
+      console.log('add prompt', readerPrompt);
+      addReaderPromptToPage(readerPrompt);
+      readerPrompt = '';
+    } 
+  }, 300);
+    
     return false;
   }
 
@@ -860,7 +878,6 @@ function addOneMoreSentence() {
     }
   }
 }
-
 
 
 function insertNewSeed(newSeedObject) {

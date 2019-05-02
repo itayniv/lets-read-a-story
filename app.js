@@ -21,15 +21,10 @@ const Sentence2Vec = require('./sentence2vec.js')
 console.log(Sentence2Vec);
 
 const embedings = require('./public/similarities-lite.json')
-// const embedings = require('./public/grimm_embedding.json')
 
-// console.log(use, tf);
 const userID = 0;
 
 let model;
-
-// console.log("average", Sentence2Vec.average(embedings[20].message_embedding, embedings[30].message_embedding));
-// console.log("distance", Sentence2Vec.distance(embedings[0].message_embedding, embedings[1].message_embedding));
 
 const app = express();
 let server = http.createServer(app);
@@ -37,21 +32,6 @@ let server = http.createServer(app);
 app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
-
-
-
-// app.get('/', function(req, res) {
-
-// });
-// // 
-// app.get('/generate', function(req, res) {
-//   //res.redirect('index.html?page=generate');
-//   res.sendFile("public/index.html");
-// });
-
-// app.get("/save", funtion(req, res) {
-//   // take that data and save to a database
-// })
 
 
 
@@ -63,22 +43,6 @@ function init() {
     model = universalEncoderModel;
     // console.log(model);
   });
-  // model = await universalSentenceEncoder.load();
-
-
-  // let sentance = "The Swallow and the Crow had an argument one day about their plumage.";
-  // let ThisstoryArr = [
-  //   "The Swallow and the Crow had an argument one day about their plumage.",
-  //   "Said the Swallow: Just look at my bright and downy feathers.",
-  //   "Your black stiff quills are not worth having.",
-  //   "Why don't you dress better? Show a little pride!",
-  //   "Your feathers may do very well in spring, replied the Crow, but I don't remember ever having seen you around in winter, and that's when I enjoy myself most."
-  // ]
-  // setTimeout(() => {
-  //   testingStories (sentance, ThisstoryArr);
-
-  // }, 1000);
-
 }
 
 init();
@@ -127,14 +91,14 @@ sockets.on('connection', function (socket) {
   console.log("Joined :", currClient);
 
   socket.on('roomEntered', function (room) {
-    console.log('room number ',room)
+    console.log('room number ', room)
     socket.join(room);
-    console.log('Joined room number: ',room)
-    var roster = io.sockets.clients(room);
-    console.log('people in the room', roster);
+    console.log('Joined room number: ', room)
+    // var roster = io.sockets.clients(room);
+    // console.log('people in the room', roster);
   });
 
-  
+
   // recieving seed text and generating a whole story / a single sentence  --->
   socket.on('sendSeedSentance', function (data) {
     const seedSentance = data.randomSentance;
@@ -143,26 +107,7 @@ sockets.on('connection', function (socket) {
 
     console.log('got a room number', currRoom);
     socket.join(currRoom);
-  
-    
-    // // console.log('currStory', currStory);
 
-    // let sameStorypromise = new Promise((resolve, reject) => {
-    //   const storySentiment = addSentimentToArray(currStory);
-    //   if (storySentiment.sentences.length > 0) {
-    //     resolve(storySentiment);
-    //   } else {
-    //     reject('failed');
-    //   }
-    // })
-
-    // sameStorypromise.then((storySentiment) => {
-    //   // console.log(storySentiment);
-    //   sockets.emit('originalStoryAndSentiment', storySentiment);
-    // });
-
-
-    ///// -------> 
     let promise = new Promise((resolve, reject) => {
       const storyVectors = getStoryVectors(currStory);
       if (storyVectors.length > 0) {
@@ -182,19 +127,9 @@ sockets.on('connection', function (socket) {
         'seed': seedSentance
       }
 
-      // console.log(similarStoryObject);
-      // console.log('similarStoryObject', similarStoryObject);
-      // sockets.emit('similarStory', similarStoryObject);
-
-      // socket.to(currClient).emit('similarStory', similarStoryObject);
-      
-      // socket.broadcast.to(room).emit('similarStory', similarStoryObject);
-      // socket.to(room).emit('similarStory', similarStoryObject);
-
-
       // working -->
       // sockets.emit('similarStory', similarStoryObject);
-      console.log('send to' ,currRoom)
+      console.log('send to', currRoom)
       sockets.in(currRoom).emit('similarStory', similarStoryObject);
 
 
@@ -203,36 +138,12 @@ sockets.on('connection', function (socket) {
 
     });
 
-
-    // promise for next line in stroy
-
-    // let getVectors = new Promise((resolve, reject) => {
-    //   const sentVectors = getStoryVectors(currStory);
-    //   if (sentVectors.length > 0) {
-    //     resolve(sentVectors);
-    //   } else {
-    //     reject('failed');
-    //   }
-    // })
-
-    // getVectors.then((sentVectors) => {
-    //   // vector next sentence
-    //   const nextLine = nextLineVector(currStory, seedSentance, sentVectors);
-    //   const similarAndSentiment = addSentimentToArray(nextLine);
-    //   const nextLineVec = {
-    //     'sentiment': similarAndSentiment,
-    //     'seed': seedSentance
-    //   }
-    //   sockets.emit('nextVectoredLine', nextLineVec);
-    //   // console.log('usecase 03', nextLineVec);
-    // });
-
     // similar Sentences
     let similarSentences = findVector(seedSentance);
     // console.log(similarSentences);
 
-
-    sockets.emit('similarSentences', similarSentences);
+    // sockets.in(currRoom).emit('similarStory', similarStoryObject);
+    // sockets.emit('similarStory', similarStoryObject);
   });
 
   // when New Prompt and Story is here
@@ -240,7 +151,7 @@ sockets.on('connection', function (socket) {
   socket.on('sendNewStoryFromPrompt', function (data) {
 
     const seedSentance = data.randomSentance;
-    const currStory = data.originalStory;
+    const currStory = data.originalStory;    
 
     let promise = new Promise((resolve, reject) => {
       const storyVectors = getStoryVectors(currStory);
@@ -261,7 +172,8 @@ sockets.on('connection', function (socket) {
         'seed': seedSentance
       }
       // console.log('rest of story: ', similarStoryObject)
-      sockets.emit('restOfStory', similarStoryObject);
+      // sockets.emit('restOfStory', similarStoryObject);
+      sockets.in(data.roomNumber).emit('restOfStory', similarStoryObject);
     });
   });
 
@@ -295,7 +207,10 @@ sockets.on('connection', function (socket) {
         'seed': seedSentance
       }
 
-      sockets.emit('nextVectoredLine', nextLineVec);
+      // sockets.emit('nextVectoredLine', nextLineVec);
+      //emit room here
+      sockets.in(data.roomNumber).emit('nextVectoredLine', nextLineVec);
+
       // console.log('usecase 02', nextLineVec);
     });
   });
@@ -329,27 +244,21 @@ sockets.on('connection', function (socket) {
     }
     // console.log('** object 2', similarLine);
 
-    sockets.emit('nextVectoredLine', similarLine);
+    sockets.in(data.roomNumber).emit('nextVectoredLine', similarLine);
+
     // console.log('usecase 01', similarLine);
   });
 
   // get similar sentence on dead end <---
 
 
-
-  socket.on('rebranchSentence', function (data) {
-    const rebranchSentence = data.rebranchSentance;
-    let similarSentences = findVector(rebranchSentence);
-    // console.log(similarSentences);
-    sockets.emit('NewSeedResult', similarSentences);
-  });
-
-
   socket.on('sendNewPrompt', async function (data) {
     // console.log(data.newPrompt)
     const newSimilarity = await getNewEmbedding(data.newPrompt);
     // console.log(newSimilarity);
-    sockets.emit('promptEmbedResults', newSimilarity);
+    // sockets.emit('promptEmbedResults', newSimilarity);
+    sockets.in(data.roomNumber).emit('promptEmbedResults', newSimilarity);
+
 
   });
 
@@ -366,33 +275,21 @@ sockets.on('connection', function (socket) {
 
     const newSimilarity = await getNewEmbedding(data.setenceToEmbed);
     // console.log('somthing: ', newSimilarity);
-    sockets.emit('sentenceToEmbedResults', newSimilarity);
+    console.log('-------> ThisRoomNumber', data.roomNumber)
+    sockets.in(data.roomNumber).emit('sentenceToEmbedResults', newSimilarity);
 
-    // model.embed(data.setenceToEmbed).then(embeddings => {
-    //   // embeddings.print(true /* verbose */);
-    //   let embeddingsData = embeddings.arraySync();
-    //   // console.log(arr);
-    //   // console.log(embeddingsData);
-    //   const nearestArr = findNearestandAdd(embeddingsData)
-    //   // console.log(nearestArr);
-    //   sockets.emit('sentenceToEmbedResults', nearestArr);
-
-    //   // send result back to front end
-
-    //   // downloadObjectAsJson(embeddingsData, 'exportName')
-    //   // return embeddingsData;
-    // });
-    // });
-
+    // sockets.emit('sentenceToEmbedResults', newSimilarity);
 
   });
 
   socket.on('disconnect', () => {
     // remove the room
     console.log('disconectet', socket.id)
-   });
+  });
 
 });
+
+
 
 // end socket work
 
@@ -595,16 +492,9 @@ function nextLineVector(pickedStory, seedSent, VectorsObject) {
 
 
 function findNearestVector(vector, n = 2) {
-  // let vec;
   let sentencesResults = [];
-
-  // for (let i = 0; i < Object.keys(embedings).length; i++) {
-  //   if (embedings[i].message === sentance) {
-  //     vec = embedings[i].message_embedding;
-  //   }
-  // }
-
   let sentences = [];
+
   let keys = Object.keys(embedings);
   for (let i = 0; i < keys.length; i++) {
     let key = keys[i];
@@ -657,8 +547,6 @@ function subtract(v1, v2) {
 function add(v1, v2) {
   return v1.map((a, i) => a + v2[i]);
 }
-
-
 
 
 function addSentimentToArray(recievedArr) {
@@ -721,39 +609,8 @@ function getTopics(array) {
 }
 
 
-// async function embeadLine(textArr) {
-
-//   universalSentenceEncoder.load().then(model => {
-//     // Embed an array of sentences.  
-//     model.embed(textArr).then(embeddings => {
-//       // embeddings.print(true /* verbose */);
-//       let embeddingsData = embeddings.arraySync();
-//       // console.log(arr);
-//       // console.log(embeddingsData);
-//       findNearestandAdd(embeddingsData)
-//       // downloadObjectAsJson(embeddingsData, 'exportName')
-//       return embeddingsData;
-//     });
-//   });
-// };
-
 function findNearestandAdd(embeding) {
   const closest = findNearestVector(embeding[0], n = 4)
   return closest;
   // console.log(closest);
 }
-// embeadLine (['today is monday']);
-
-
-// async function embed(text) {
-//   const result = universalSentenceEncoder.load().then(model => model.embed(text));
-//   console.log(result)
-//   return result;
-// };
-
-
-// embed(['this is a sentance']);
-
-
-
-

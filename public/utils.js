@@ -920,7 +920,7 @@ function sendtoSentenceEncoder(text) {
   let textToEmbed = [];
   textToEmbed.push(text)
   console.log(textToEmbed);
-  socket.emit('sentenceToEmbed', { 'setenceToEmbed': textToEmbed, });
+  socket.emit('sentenceToEmbed', { 'setenceToEmbed': textToEmbed, 'roomNumber':sessionNumber });
 
 }
 
@@ -1068,12 +1068,12 @@ function recieveLineSendStory(line) {
 
   if (sendNextLine != undefined) {
     setTimeout(() => {
-      socket.emit('sendNextSentance', { 'randomSentance': sendNextLine, 'originalStory': vectoredStory });
+      socket.emit('sendNextSentance', { 'randomSentance': sendNextLine, 'originalStory': vectoredStory, 'roomNumber':sessionNumber });
     }, 1000);
 
   } else {
     // console.log('🖐 end -->' , line);
-    socket.emit('getSimilarSentence', { 'randomSentance': line, 'originalStory': vectoredStory });
+    socket.emit('getSimilarSentence', { 'randomSentance': line, 'originalStory': vectoredStory, 'roomNumber':sessionNumber });
 
   }
   // send the next line for nearest neighbour
@@ -1319,7 +1319,7 @@ function sendNewPrompt(Prompt) {
   let CurrSentance = sentanceNumber;
   let storyArr = similarSentences;
 
-  socket.emit('sendNewPrompt', { 'currSentence': CurrSentance, 'currStory': storyArr, 'newPrompt': Prompt });
+  socket.emit('sendNewPrompt', { 'currSentence': CurrSentance, 'currStory': storyArr, 'newPrompt': Prompt, 'roomNumber':sessionNumber });
 
 }
 
@@ -1369,7 +1369,7 @@ function runjsonCheckNewPrompt(json, sentenceArr) {
   // maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
-  socket.emit('sendNewStoryFromPrompt', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
+  socket.emit('sendNewStoryFromPrompt', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber });
 
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');

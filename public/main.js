@@ -150,12 +150,6 @@ function init() {
   socket.emit('roomEntered', sessionNumber);
 
 
-  // socket.on('connect', function () {
-  //   // Connected, let's sign-up for to receive messages for this room
-    
-  // });
-
-
   getSpeech();
   sketchColor = getRandomColor();
   secondColor = LightenDarkenColor(sketchColor, 40);
@@ -256,7 +250,6 @@ socket.on('similarStory', function (result) {
   setTimeout(() => {
     initiateStory(currPrompt, similarSentences);
     addSentence(similarSentences[0], 'notnet');
-
   }, 400);
 
 
@@ -347,7 +340,9 @@ socket.on('NewSeedResult', function (result) {
 socket.on('sentenceToEmbedResults', function (result) {
   sentencesFromEncodingSeed = result;
   // console.log(sentencesFromEncodingSeed);
-  runjsonCheckEmbedding(fablesJson, sentencesFromEncodingSeed)
+  // console.log('!!!!!sentenceToEmbedResults!!!!!');
+
+  runjsonCheckEmbedding(fablesJson, sentencesFromEncodingSeed);
 
 });
 
@@ -390,7 +385,7 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
-  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber  });
+  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber });
 
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');
@@ -450,7 +445,7 @@ function runjsonCheck(json, checkword) {
   maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
-  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray });
+  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber  });
 
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');

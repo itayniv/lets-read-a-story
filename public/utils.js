@@ -1218,23 +1218,36 @@ function sendNewPrompt(Prompt) {
 
   // pause the story
 
+  // add line to story
+ 
+
   // clear continue reading
 
+  const promptToRemove = document.getElementById(`one-more-prompt${sentanceNumber}`);
   const buttonToRemove = document.getElementById('one-more-sentence-div');
-  fadeout(buttonToRemove);
+  fadeoutandDelete(buttonToRemove);
+
+  setTimeout(() => {
+    fadeoutandDelete(promptToRemove);
+  }, 200);
 
   // add loading animation
-
-  //TODO
   setTimeout(() => {
-    const element = `one-more-prompt${sentanceNumber}`;
+    addReaderPromptToPage(Prompt);
+  }, 700);
+
+
+  setTimeout(() => {
+    const element = `paragraph${sentanceNumber}`;
     addLoadingAnimation(element);
-  }, 300);
+    
+  }, 800);
 
   setTimeout(() => {
     const elm = document.getElementById('loadingAnimation');
     elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }, 400);
+    
+  }, 1000);
 
 
 
@@ -1244,6 +1257,35 @@ function sendNewPrompt(Prompt) {
 
   socket.emit('sendNewPrompt', { 'currSentence': CurrSentance, 'currStory': storyArr, 'newPrompt': Prompt });
 
+}
+
+
+function addReaderPromptToPage(text) {
+
+  // add prompt here
+  console.log('text to add',text);
+  
+  const readerDiv = document.createElement('div');
+  readerDiv.classList.add('readerPrompts-container');
+
+  const secondNode = document.getElementById(`one-more-prompt${sentanceNumber}`);
+
+  const span = document.createElement('span');
+  span.classList.add('readerPrompts');
+  span.style.opacity ='0.0';
+  span.innerHTML = text;
+  readerDiv.appendChild(span);
+
+  const container = document.getElementById(`paragraph${sentanceNumber}`);
+
+  container.insertBefore(readerDiv, container.childNodes[2]);
+
+  // document.getElementById(`paragraph${sentanceNumber}`).appendChild(readerDiv);
+
+
+
+
+  fadein(span);  
 }
 
 

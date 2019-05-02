@@ -67,18 +67,18 @@ function init() {
   // model = await universalSentenceEncoder.load();
 
 
-  let sentance = "The Swallow and the Crow had an argument one day about their plumage.";
-  let ThisstoryArr = [
-    "The Swallow and the Crow had an argument one day about their plumage.",
-    "Said the Swallow: Just look at my bright and downy feathers.",
-    "Your black stiff quills are not worth having.",
-    "Why don't you dress better? Show a little pride!",
-    "Your feathers may do very well in spring, replied the Crow, but I don't remember ever having seen you around in winter, and that's when I enjoy myself most."
-  ]
-  setTimeout(() => {
-    testingStories (sentance, ThisstoryArr);
+  // let sentance = "The Swallow and the Crow had an argument one day about their plumage.";
+  // let ThisstoryArr = [
+  //   "The Swallow and the Crow had an argument one day about their plumage.",
+  //   "Said the Swallow: Just look at my bright and downy feathers.",
+  //   "Your black stiff quills are not worth having.",
+  //   "Why don't you dress better? Show a little pride!",
+  //   "Your feathers may do very well in spring, replied the Crow, but I don't remember ever having seen you around in winter, and that's when I enjoy myself most."
+  // ]
+  // setTimeout(() => {
+  //   testingStories (sentance, ThisstoryArr);
 
-  }, 1000);
+  // }, 1000);
 
 }
 

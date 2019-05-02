@@ -299,14 +299,18 @@ socket.on('restOfStory', function (result) {
 
   // remove the loading animation now!
   setTimeout(() => {
+
+    //remove animation 
     let element = document.getElementById('loadingAnimation');
     fadeoutandDelete(element);
+
     storyCurrentlyRunning = true;
-  }, 2400);
+  }, 2000);
 
   setTimeout(() => {
+    // add content to the page
     addNewContentAfterPressed();
-  }, 2800);
+  }, 2400);
 
   // make sure everything is completed before  ---> addinfg a new sentence.
 
@@ -597,53 +601,53 @@ async function addSentence(result, source) {
 
       // additional drawing on left Canvas -->
 
-      setTimeout(() => {
-        if (sentanceNumber % 2 == 0) {
-          // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionY = 50;
-          const startPositionX = canvasWidth - canvasHeight / 3;
-          // const additionalDrawing = sun;
+      // setTimeout(() => {
+      //   if (sentanceNumber % 2 == 0) {
+      //     // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+      //     const startPositionY = 50;
+      //     const startPositionX = canvasWidth - canvasHeight / 3;
+      //     // const additionalDrawing = sun;
 
-          let additionalDrawing;
-          let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-          let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
-          console.log(url);
+      //     let additionalDrawing;
+      //     let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+      //     let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+      //     console.log(url);
 
-          fetch(url)
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (myJson) {
-              additionalDrawing = myJson;
-              // console.log(JSON.stringify(myJson));
-              globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
-            });
+      //     fetch(url)
+      //       .then(function (response) {
+      //         return response.json();
+      //       })
+      //       .then(function (myJson) {
+      //         additionalDrawing = myJson;
+      //         // console.log(JSON.stringify(myJson));
+      //         globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+      //       });
 
 
-        } else {
-          // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
-          const startPositionX = 100;
-          const startPositionY = 0;
+      //   } else {
+      //     // const startPositionY = checkDivPosition(`paragraph${sentanceNumber}`) + 200;
+      //     const startPositionX = 100;
+      //     const startPositionY = 0;
 
-          let additionalDrawing;
-          let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-          let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+      //     let additionalDrawing;
+      //     let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+      //     let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
 
-          console.log(url);
+      //     console.log(url);
 
-          fetch(url)
-            .then(function (response) {
-              return response.json();
-            })
-            .then(function (myJson) {
-              additionalDrawing = myJson;
-              // console.log();
-              globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
-            });
+      //     fetch(url)
+      //       .then(function (response) {
+      //         return response.json();
+      //       })
+      //       .then(function (myJson) {
+      //         additionalDrawing = myJson;
+      //         // console.log();
+      //         globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+      //       });
 
-        }
+      //   }
 
-      }, 10000);
+      // }, 10000);
 
       // run loop again!
       setTimeout(() => {

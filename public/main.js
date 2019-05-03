@@ -750,6 +750,13 @@ function addOneMoreSentence() {
   btn.classList.add('what-happened-button');
   btn.onclick = function () {
 
+    // see if textbox is empty or full
+    const input = document.getElementById('newPromptInput').innerHTML;
+    console.log('input', input);
+    if (input.length > 0) {
+      console.log('got input', input);
+    }
+
     addSentenceAfterbutton();
     // interval to 100 here
     clearInterval(buttonTimer);

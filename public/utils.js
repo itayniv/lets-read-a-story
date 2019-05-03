@@ -1401,8 +1401,8 @@ function addNewContentAfterPressed() {
 
 function addRandomDrawingToPage() {
    // draw a thing to the canvas
-   const startPositionY = 0;
-   const startPositionX = canvasWidth - canvasHeight / 3;
+   const startPositionY = canvasHeight / 6 ;
+   const startPositionX = canvasWidth / 6;
 
    let additionalDrawing;
    let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
@@ -1416,6 +1416,6 @@ function addRandomDrawingToPage() {
      .then(function (myJson) {
        additionalDrawing = myJson;
        // console.log(JSON.stringify(myJson));
-       globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+       globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
      });
 }

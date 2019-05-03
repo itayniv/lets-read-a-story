@@ -1396,3 +1396,26 @@ function addNewContentAfterPressed() {
   fadeoutandDelete(playPause);
 
 }
+
+
+
+function addRandomDrawingToPage() {
+   // draw a thing to the canvas
+   const startPositionY = 0;
+   const startPositionX = canvasWidth - canvasHeight / 3;
+
+   let additionalDrawing;
+   let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+   let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+   console.log(url);
+
+   fetch(url)
+     .then(function (response) {
+       return response.json();
+     })
+     .then(function (myJson) {
+       additionalDrawing = myJson;
+       // console.log(JSON.stringify(myJson));
+       globalCanv.startNewDrawing(true, additionalDrawing, startPositionX, startPositionY);
+     });
+}

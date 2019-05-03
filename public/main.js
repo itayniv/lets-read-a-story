@@ -983,6 +983,11 @@ function resetStory() {
     globalCanv = addACanvas(viewportHeight - 100);
   }, 1400);
 
+
+  setTimeout(() => {
+    // add a random drawing to page
+    addRandomDrawingToPage();
+  },2400)
   // reset Sentiment Arr
   similarSentences = [];
 
@@ -991,6 +996,8 @@ function resetStory() {
   sentimentContainer = [];
 
 }
+
+
 
 
 function addACanvas(height) {
@@ -1018,7 +1025,7 @@ function addACanvas(height) {
     paint.draw = function () {
       if (paint.currentlyDrawing) {
         paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffsetY);
-        paint.point = paint.point + 2;
+        paint.point = paint.point + 1;
         // console.log('*** drawing ***', paint.point);
       }
     }
@@ -1257,6 +1264,12 @@ function startbuttonPressed(clicked_id) {
     elm.remove();
     section.remove();
   }, 2400);
+
+
+  // add a random drawing to page
+  setTimeout(() => {
+    addRandomDrawingToPage();
+  },3000)
 }
 
 
@@ -1322,7 +1335,7 @@ function ifInClass(theSentance) {
         });
       } else {
         // didnt find any words do nothing
-        console.log("run other enrichment");
+        // console.log("run other enrichment");
       }
     }
 

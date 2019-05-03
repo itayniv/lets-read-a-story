@@ -930,8 +930,12 @@ function addLoadingAnimation(elementId) {
 
   const div = document.createElement('div');
   div.id = 'loadingAnimation';
-  div.style.opacity = '0.0'
-  div.classList.add("loading-animation");
+  div.style.opacity = '0.0';
+  if (sentanceNumber > 1) {
+    div.classList.add("loading-animation-prompt");  
+  } else { 
+    div.classList.add("loading-animation");
+  }
   let loadingImage = new Image(180, 130);
   loadingImage.src = './images/turn_page.gif';
 

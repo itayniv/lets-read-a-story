@@ -145,16 +145,12 @@ function modelReady() {
 
 function init() {
 
-  sessionNumber = `room${Math.floor(Math.random() * 9999) + 10000}`
-  console.log('sessionNumber: ', sessionNumber);
+  sessionNumber = `room${Math.floor(Math.random() * 9999) + 10000}`;
   socket.emit('roomEntered', sessionNumber);
-
-
   getSpeech();
   sketchColor = getRandomColor();
   secondColor = LightenDarkenColor(sketchColor, 40);
 
-  
   viewportWidth = window.innerWidth;
   viewportHeight = window.innerHeight;
 
@@ -184,22 +180,6 @@ function init() {
 
 window.onload = function () {
 
-  // let fadeinElement2 = document.getElementById("start-container");
-  // // fadeinElement2.style.visibility = "visible";
-  // fadein(fadeinElement2);
-  // //turn bg to 0.9 opaque
-
-  // setTimeout(() => {
-  //   let startBackground = document.getElementById("start-background");
-  //   startBackground.style.opacity = 0.9;
-  // }, 1000);
-
-  // //fade the sentence into the page.
-  // let fadeinElement = document.getElementById("start-button");
-  // fadeinButton(fadeinElement);
-
-  // let fadeinElement1 = document.getElementById("start-background");
-  // fadeinButton(fadeinElement1);
 };
 
 

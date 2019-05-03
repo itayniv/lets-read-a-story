@@ -55,14 +55,24 @@
     font-family: 'Roboto', sans-serif;
   }
   .loading-animation {
-    padding-top: 50px;
+    /* padding-top: 100px; */
     width: 200px;
     height: 150px;
     position: absolute;
     left: 50%;
     top: 50%;
-    ;
-    padding-top: calc(100vh / 2);
+    padding-top: calc(100vh / 1.4);
+    transform: translate(-50%, -50%);
+  }
+
+  .loading-animation-prompt {
+    /* padding-top: 100px; */
+    width: 200px;
+    height: 150px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    padding-top: calc(100vh / 1.6);
     transform: translate(-50%, -50%);
   }
   .right {

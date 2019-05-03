@@ -18,7 +18,6 @@ global.fetch = require('node-fetch');
 const Sentence2Vec = require('./sentence2vec.js')
 
 // console.log(Sentimentjs);
-console.log(Sentence2Vec);
 
 const embedings = require('./public/similarities-lite.json')
 
@@ -41,7 +40,6 @@ const port = process.env.PORT || 3000;
 function init() {
   universalSentenceEncoder.load().then(universalEncoderModel => {
     model = universalEncoderModel;
-    // console.log(model);
   });
 }
 
@@ -70,7 +68,6 @@ function testingStories(sent, storyArr) {
       'sentiment': similarAndSentiment,
       'seed': seedSentance
     }
-    console.log('rest of story: ', similarStoryObject)
     // sockets.emit('restOfStory', similarStoryObject);
   });
 
@@ -88,12 +85,9 @@ sockets.on('connection', function (socket) {
 
 
   const currClient = socket.id;
-  console.log("Joined :", currClient);
 
   socket.on('roomEntered', function (room) {
-    console.log('room number ', room)
     socket.join(room);
-    console.log('Joined room number: ', room)
     // var roster = io.sockets.clients(room);
     // console.log('people in the room', roster);
   });
@@ -129,7 +123,6 @@ sockets.on('connection', function (socket) {
 
       // working -->
       // sockets.emit('similarStory', similarStoryObject);
-      console.log('send to', currRoom)
       sockets.in(currRoom).emit('similarStory', similarStoryObject);
 
 
@@ -171,7 +164,6 @@ sockets.on('connection', function (socket) {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
-      // console.log('rest of story: ', similarStoryObject)
       // sockets.emit('restOfStory', similarStoryObject);
       sockets.in(data.roomNumber).emit('restOfStory', similarStoryObject);
     });
@@ -274,8 +266,6 @@ sockets.on('connection', function (socket) {
   socket.on('sentenceToEmbed', async function (data) {
 
     const newSimilarity = await getNewEmbedding(data.setenceToEmbed);
-    // console.log('somthing: ', newSimilarity);
-    console.log('-------> ThisRoomNumber', data.roomNumber)
     sockets.in(data.roomNumber).emit('sentenceToEmbedResults', newSimilarity);
 
     // sockets.emit('sentenceToEmbedResults', newSimilarity);
@@ -284,7 +274,6 @@ sockets.on('connection', function (socket) {
 
   socket.on('disconnect', () => {
     // remove the room
-    console.log('disconectet', socket.id)
   });
 
 });
@@ -296,11 +285,8 @@ sockets.on('connection', function (socket) {
 
 async function getNewEmbedding(text) {
   const embeddings = await model.embed(text);
-  // console.log('embeddings: ', embeddings)
   let embeddingsData = embeddings.arraySync();
-  // console.log('embeddingsData: ', embeddingsData)
   const nearestArr = findNearestandAdd(embeddingsData);
-  // console.log('nearestArr: ', nearestArr)
   return nearestArr;
 }
 
@@ -341,7 +327,6 @@ function findVector(sentance, n = 20) {
   for (let i = 0; i < sentencesResults.length; i++) {
     const sentiment = new Sentiment();
     const result = sentiment.analyze(sentencesResults[i]);
-    // console.log(result);    // Score: -2, Comparative: -0.666
     sentimentResults.push(result.score);
 
   }
@@ -357,10 +342,8 @@ function findVector(sentance, n = 20) {
 
 function getStoryVectors(story) {
 
-  // console.log( 'getStoryVectors operate!')
 
   const storyArray = story;
-  // console.log('storyArray');
 
   let storyEmbedding = [];
 
@@ -385,7 +368,6 @@ function getStoryVectors(story) {
 
   for (let i = 0; i < Object.keys(storyEmbedding).length; i++) {
     if (i != 0) {
-      //  console.log(storyEmbedding[i].sentence);
       const thisVector = subtract(storyEmbedding[i - 1].embedding, storyEmbedding[i].embedding);
       storyEmbedding[i - 1].vector = thisVector;
     }
@@ -405,13 +387,11 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
 
   for (let i = 0; i < pickedStory.length; i++) {
     if (pickedStory[i] === seedSent) {
-      // console.log('seedSent index = ', i);
       seedindex = i
     }
   }
 
   for (let i = 0; i < Object.keys(VectorsObject).length; i++) {
-    // console.log(VectorsObject[i].vector);
     vectors.push(VectorsObject[i].vector);
   }
 
@@ -422,7 +402,6 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
     const tempVector = subtract(VectorsObject[i].embedding, vectors[i]);
     const nearestSentance = findNearestVector(tempVector, n = 2);
 
-    // console.log(Tempsentance);
     newStory.push(nearestSentance.sentences[1]);
   }
 
@@ -432,11 +411,9 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
   // let indexToRemove = 0;
 
   // newStory.splice(indexToRemove, seedindex);
-  // console.log(newStory);
 
   // for (let index = 0; index < newStory.length; index++) {
   //   const element = newStory[index];
-  //   console.log(element);
   // }
 
   return newStory;
@@ -444,8 +421,6 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
   // const vector4 = subtract(VectorsObject[0].embedding, vectors[0]);
   // const sent3 = findNearestVector(vector3, n = 4);
   // const sent4 = findNearestVector(vector4, n = 4);
-  // console.log('sent3', sent3);
-  // console.log('sent4', sent4);
   // reconstruct the story
 }
 
@@ -459,13 +434,11 @@ function nextLineVector(pickedStory, seedSent, VectorsObject) {
 
   for (let i = 0; i < pickedStory.length; i++) {
     if (pickedStory[i] === seedSent) {
-      // console.log('seedSent index = ', i);
       seedindex = i
     }
   }
 
   for (let i = 0; i < Object.keys(VectorsObject).length; i++) {
-    // console.log(VectorsObject[i].vector);
     vectors.push(VectorsObject[i].vector);
   }
 
@@ -481,7 +454,6 @@ function nextLineVector(pickedStory, seedSent, VectorsObject) {
     newSentance.push(nearestSentance.sentences[1]);
   } else {
     // find nearest vector and return
-    // console.log(' dead end ');
     const thisNearest = findNearestVector(VectorsObject[seedindex].embedding, n = 2);
     newSentance.push(thisNearest.sentences[1]);
 
@@ -577,14 +549,11 @@ function getTopics(array) {
   let storyTopics = [];
 
   const thisStory = array.join(' ');
-  // console.log(thisStory);
   const thisNLPPeople = nlp(thisStory).people().slice(0, 50).out('frequency');
-  // console.log('thisNLPPeople: ', thisNLPPeople);
 
 
   for (let index = 0; index < thisNLPPeople.length; index++) {
     const element = thisNLPPeople[index].normal;
-    // console.log(element);
     if (storyTopics.includes(element) === false) {
       storyTopics.push(element);
     }
@@ -593,18 +562,15 @@ function getTopics(array) {
 
   let doc = nlp(thisStory)
   let topics = doc.topics().data();
-  // console.log('topics: ', topics);
 
 
   for (let index = 0; index < topics.length; index++) {
     const element = topics[index].text;
-    // console.log(element);
     if (storyTopics.includes(element) === false) {
       storyTopics.push(element);
     }
   }
 
-  // console.log('storyTopics', storyTopics);
   return storyTopics;
 }
 
@@ -612,5 +578,4 @@ function getTopics(array) {
 function findNearestandAdd(embeding) {
   const closest = findNearestVector(embeding[0], n = 4)
   return closest;
-  // console.log(closest);
 }

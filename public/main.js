@@ -544,7 +544,7 @@ async function addSentence(result, source) {
 
         setTimeout(() => {
           // scroll into the sentence
-          const elm = document.getElementById(`paragraph${sentanceNumber}`);
+          const elm = document.getElementById(`content-container${sentanceNumber}`);
           elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
           // fade the sentence into the page.
@@ -1017,6 +1017,7 @@ function addACanvas(height) {
     paint.setup = function () {
       paint.createCanvas(viewportWidth, height);
       paint.point = 0;
+      paint.frameRate(300);
       // console.log('clear',canvasWidth, canvasHeight);
       paint.background(255);
     }
@@ -1032,7 +1033,7 @@ function addACanvas(height) {
     paint.draw = function () {
       if (paint.currentlyDrawing) {
         paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffsetY);
-        paint.point = paint.point + 1;
+        paint.point = paint.point + 2;
         // console.log('*** drawing ***', paint.point);
       }
     }

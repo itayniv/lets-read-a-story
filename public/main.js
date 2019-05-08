@@ -1275,9 +1275,9 @@ function startbuttonPressed(clicked_id) {
 
 
   // add a random drawing to page
-  setTimeout(() => {
-    addRandomDrawingToPage();
-  },3000)
+  // setTimeout(() => {
+  //   addRandomDrawingToPage();
+  // },4500)
 }
 
 

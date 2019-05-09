@@ -549,11 +549,14 @@ function getTopics(array) {
   let storyTopics = [];
 
   const thisStory = array.join(' ');
-  const thisNLPPeople = nlp(thisStory).people().slice(0, 50).out('frequency');
+  // const thisNLPPeople = nlp(thisStory).topics().slice(0, 50).out('frequency');
+  // const thisNLPPeople1 = nlp(thisStory).verbs().slice(0, 50).out('frequency');
+  // const thisNLPPeople2 = nlp(thisStory).people().slice(0, 50).out('frequency');
+  const thisNLPPeople3 = nlp(thisStory).nouns().slice(0, 50).out('frequency');
 
 
-  for (let index = 0; index < thisNLPPeople.length; index++) {
-    const element = thisNLPPeople[index].normal;
+  for (let index = 0; index < thisNLPPeople3.length; index++) {
+    const element = thisNLPPeople3[index].normal;
     if (storyTopics.includes(element) === false) {
       storyTopics.push(element);
     }
@@ -570,7 +573,6 @@ function getTopics(array) {
       storyTopics.push(element);
     }
   }
-
   return storyTopics;
 }
 

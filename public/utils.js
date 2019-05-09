@@ -56,7 +56,7 @@ function enrichSketchClass(theSentance) {
 
       let thisWord = sentenceToArray[i].toLowerCase();
       let sea_turtleObject = {
-        class: '',
+        class: 'sea_turtle',
         word: thisWord
       }
 
@@ -267,9 +267,10 @@ function enrichSketchClass(theSentance) {
       // console.log("found a frog", frogObject);
       newSimilaritiesArray.push(palmObject);
     }
+
     else {
-     
-      
+
+
       // didnt find any words do nothing
       // console.log("didnt find anything");
     }
@@ -920,7 +921,7 @@ function sendtoSentenceEncoder(text) {
   let textToEmbed = [];
   textToEmbed.push(text)
   console.log(textToEmbed);
-  socket.emit('sentenceToEmbed', { 'setenceToEmbed': textToEmbed, 'roomNumber':sessionNumber });
+  socket.emit('sentenceToEmbed', { 'setenceToEmbed': textToEmbed, 'roomNumber': sessionNumber });
 
 }
 
@@ -932,8 +933,8 @@ function addLoadingAnimation(elementId) {
   div.id = 'loadingAnimation';
   div.style.opacity = '0.0';
   if (sentanceNumber > 1) {
-    div.classList.add("loading-animation-prompt");  
-  } else { 
+    div.classList.add("loading-animation-prompt");
+  } else {
     div.classList.add("loading-animation");
   }
   let loadingImage = new Image(180, 130);
@@ -1072,12 +1073,12 @@ function recieveLineSendStory(line) {
 
   if (sendNextLine != undefined) {
     setTimeout(() => {
-      socket.emit('sendNextSentance', { 'randomSentance': sendNextLine, 'originalStory': vectoredStory, 'roomNumber':sessionNumber });
+      socket.emit('sendNextSentance', { 'randomSentance': sendNextLine, 'originalStory': vectoredStory, 'roomNumber': sessionNumber });
     }, 1000);
 
   } else {
     // console.log('🖐 end -->' , line);
-    socket.emit('getSimilarSentence', { 'randomSentance': line, 'originalStory': vectoredStory, 'roomNumber':sessionNumber });
+    socket.emit('getSimilarSentence', { 'randomSentance': line, 'originalStory': vectoredStory, 'roomNumber': sessionNumber });
 
   }
   // send the next line for nearest neighbour
@@ -1323,7 +1324,7 @@ function sendNewPrompt(Prompt) {
   let CurrSentance = sentanceNumber;
   let storyArr = similarSentences;
 
-  socket.emit('sendNewPrompt', { 'currSentence': CurrSentance, 'currStory': storyArr, 'newPrompt': Prompt, 'roomNumber':sessionNumber });
+  socket.emit('sendNewPrompt', { 'currSentence': CurrSentance, 'currStory': storyArr, 'newPrompt': Prompt, 'roomNumber': sessionNumber });
 
 }
 
@@ -1373,7 +1374,7 @@ function runjsonCheckNewPrompt(json, sentenceArr) {
   // maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
-  socket.emit('sendNewStoryFromPrompt', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber });
+  socket.emit('sendNewStoryFromPrompt', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber': sessionNumber });
 
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');
@@ -1400,22 +1401,22 @@ function addNewContentAfterPressed() {
 
 
 function addRandomDrawingToPage() {
-   // draw a thing to the canvas
-   const startPositionY = canvasHeight / 6 ;
-   const startPositionX = canvasWidth / 6;
+  // draw a thing to the canvas
+  const startPositionY = canvasHeight / 6;
+  const startPositionX = canvasWidth / 6;
 
-   let additionalDrawing;
-   let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-   let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
-   console.log(url);
+  let additionalDrawing;
+  let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
+  let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
+  console.log(url);
 
-   fetch(url)
-     .then(function (response) {
-       return response.json();
-     })
-     .then(function (myJson) {
-       additionalDrawing = myJson;
-       // console.log(JSON.stringify(myJson));
-       globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
-     });
+  fetch(url)
+    .then(function (response) {
+      return response.json();
+    })
+    .then(function (myJson) {
+      additionalDrawing = myJson;
+      // console.log(JSON.stringify(myJson));
+      globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
+    });
 }

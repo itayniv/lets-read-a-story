@@ -7,9 +7,9 @@ let currColor = 0;
 let mesh;
 let targetMesh;
 let phase = 4;
-
+let aOrAn = [];
 let sessionNumber = 0;
-
+let compromiseResult = [];
 let currPrompt = '';
 let delta = 5;
 let deltaoneNumber = 0;
@@ -117,7 +117,7 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
 const birdsArr = ["jackdaw", "wing", "wings", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
-const dogArr = ["goat","ass","ass's", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
+const dogArr = ["goat","ass","ass's","oxen", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
 const sheepArr = ["lamb", "flock"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
@@ -125,7 +125,7 @@ const turtleArr = ["tortoise", "tortoises"];
 const squirrelArr = ["mice", "hare", "mouse", "chipmunk", "chipmunks"];
 const lionArr = ["lion's"];
 const catArr = ["tiger", "tiger's", "tigers", "cats"];
-const owlArr = ["owl's", 'bat', 'bats'];
+const owlArr = ["owl's", "bat", "bats"];
 const frogArr = ['frogs', "frog's", "toad"];
 const rabitArr = ["mice", 'hare'];
 const skullArr = ["dead", "death", "kill", "died", "die"];
@@ -211,9 +211,11 @@ socket.on('similarStory', function (result) {
     for (let index = 0; index < result.sentiment.sentences.length; index++) {
       similarSentences.push(result.sentiment.sentences[index]);
       sentimentContainer.push(result.sentiment.sentiment[index]);
+      compromiseResult.push(result.sentiment.compromise[index])
     }
 
-    console.log('📚 story method similarStory ', storyMethod.similarStory)
+    console.log(compromiseResult);
+    // console.log('📚 story method similarStory ', storyMethod.similarStory)
     // console.log(similarSentences);
     // console.log(result);
   }
@@ -362,7 +364,7 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   // story Start Bool
 
 
-  maxSentences = thisStoryArray.length - 1;
+  // maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
   socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber });
@@ -370,11 +372,6 @@ function runjsonCheckEmbedding(json, sentenceArr) {
   // add the sentance to the page
   // addSentence(thisStoryArray[0], 'notnet');
 }
-
-
-
-
-
 
 
 function runjsonCheck(json, checkword) {
@@ -422,7 +419,7 @@ function runjsonCheck(json, checkword) {
 
   // story Start Bool
 
-  maxSentences = thisStoryArray.length - 1;
+  // maxSentences = thisStoryArray.length - 1;
 
   // console.log(thisStoryArray);
   socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber  });
@@ -916,6 +913,7 @@ function resetStory() {
 
   storyCurrentlyRunning = false;
   storyBegan = false;
+  compromiseResult = [];
 
   const fadeOutElement = document.getElementById('story-name');
   fadeout(fadeOutElement);
@@ -991,10 +989,10 @@ function resetStory() {
   }, 1400);
 
 
-  setTimeout(() => {
-    // add a random drawing to page
-    addRandomDrawingToPage();
-  },2400)
+  // setTimeout(() => {
+  //   // add a random drawing to page
+  //   addRandomDrawingToPage();
+  // },2400)
   // reset Sentiment Arr
   similarSentences = [];
 
@@ -1050,12 +1048,12 @@ function addACanvas(height) {
 
         let randomPlay = Math.floor((Math.random() * 20) + 60)
 
-        if (paint.point % randomPlay == 0) {
-          generateSounds(paint.drawingOffsetX, jsonDrawing[point].thisY)
-        }
+        // if (paint.point % randomPlay == 0) {
+        //   generateSounds(paint.drawingOffsetX, jsonDrawing[point].thisY)
+        // }
 
         let randomdist = Math.floor((Math.random() * 2) + 5)
-        paint.strokeWeight(3);
+        paint.strokeWeight(2.5);
         paint.stroke(secondColor);
 
         setTimeout(() => {
@@ -1074,8 +1072,6 @@ function addACanvas(height) {
           jsonDrawing[point].prevX + paint.drawingOffsetX + randomdist,
           jsonDrawing[point].prevY + paint.drawingOffsetY + randomdist);
 
-
-        // console.log('something', point, jsonDrawing[point].thisX );
       } else {
         paint.currentlyDrawing = false;
         paint.point = 0;
@@ -1146,7 +1142,26 @@ function initiateStory(subject, sentenceArr) {
 
   // create the story name
   const storyName = document.getElementById('story-name');
-  storyName.innerHTML = `A story about a ${charactersInStory[0]} and ${charactersInStory.length} friends`;
+  const topics = [compromiseResult[Math.floor(Math.random()*compromiseResult.length)],compromiseResult[Math.floor(Math.random()*compromiseResult.length)],compromiseResult[Math.floor(Math.random()*compromiseResult.length)],compromiseResult[Math.floor(Math.random()*compromiseResult.length)]];
+ 
+  let vowel = ['a','e','i','o','u'];
+
+  for (let j = 0; j < topics.length; j++) {
+    for (let index = 0; index < vowel.length; index++) {
+      if (topics[j] == vowel[index]){
+        console.log('use an', topics[j]);
+        aOrAn.push('an')
+      } else {
+        console.log('use a', topics[j]);
+        aOrAn.push('a')
+      }
+    }
+  }
+
+  
+
+
+  storyName.innerHTML = `A story about ${aOrAn[0]} ${topics[0]}, ${topics[1]} and ${aOrAn[2]} ${topics[3]}`;
 
   storyName.style.display = "none";
   storyName.style.opacity = '0.0';
@@ -1276,7 +1291,7 @@ function startbuttonPressed(clicked_id) {
 
   // add a random drawing to page
   // setTimeout(() => {
-  //   addRandomDrawingToPage();
+  //   // addRandomDrawingToPage();
   // },4500)
 }
 

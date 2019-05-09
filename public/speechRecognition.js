@@ -45,7 +45,6 @@ const getSpeech = () => {
       } else {
         speechToNextPrompt(speechResult);
       }
-      
 
       // generate actions
       gotAction(speechResult);
@@ -53,7 +52,7 @@ const getSpeech = () => {
   };
 
   recognition.onend = () => {
-    console.log('it is over');
+    // console.log('it is over');
     // for "endless" mode, comment out the next line and uncomment getSpeech()
     recordingOff ();
     recognition.stop();
@@ -148,103 +147,6 @@ function gotAction(actionSpeech) {
 }
 
 
-function gotSpeech(speech, arr) {
-  // console.log('gotSpeech', speech, arr);
-  switch (speech) {
-    default:
-    // do nothing
-    case 'what happend next':
-      // console.log('switch', 'next');
-      addSentenceAfterbutton();
-      break;
-    case 'happend next':
-      // console.log('switch', 'next');
-      addSentenceAfterbutton();
-      break;
-    case 'next':
-      // console.log('switch', 'next');
-      addSentenceAfterbutton();
-      break;
-    case 'lion':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'lion');
-      break;
-    case 'sheep':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'sheep');
-      break;
-    case 'cat':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'cat');
-      break;
-    case 'bird':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'bird');
-      break;
-    case 'fish':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'bird');
-      break;
-    case 'owl':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'owl');
-      break;
-    case 'fox':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'fox');
-      break;
-    case 'bear':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'bear');
-      break;
-    case 'dog':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'dog');
-      break;
-    case 'crow':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'crow');
-      break;
-    case 'chicken':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'chicken');
-      break;
-    case 'goat':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'chicken');
-      break;
-    case 'hare':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'hare');
-      break;
-    case 'boy':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'boy');
-      break;
-    case 'mouse':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'mouse');
-      break;
-    case 'wolf':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'wolf');
-      break;
-    case 'tortoise':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'tortoise');
-      break;
-    case 'horse':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'horse');
-      break;
-    case 'woman':
-      buttonPressed(speech, arr);
-      // console.log('switch', 'woman');
-      break;
-  }
-}
-
-
 function startSpeech(clicked_id) {
   console.log('pressed', clicked_id);
   const elm = document.getElementById('start-listening');
@@ -278,30 +180,3 @@ function recordingOff () {
     elm.classList.remove('recording-button-active');
     elm.classList.add('recording-button');
 }
-
-
-function checkForAnimal(arr) {
-
-  // console.log('sentence Arr', arr);
-
-  for (let i = 0; i < arr.length; i++) {
-    if (animalsArray.indexOf(arr[i].toLowerCase()) > -1) {
-      const animalIntent = arr[i].toLowerCase();
-      setTimeout(() => {
-        gotSpeech(animalIntent, arr);
-      }, 800);
-
-      // let thisWord = sentenceToArray[i].toLowerCase();
-      // let squirrelObject = {
-      //   class: 'squirrel',
-      //   word: thisWord
-      // }
-
-      // newSimilaritiesArray.push(squirrelObject);
-      // // console.log("found a squirrel", squirrelObject);
-    }
-  }
-}
-
-
-

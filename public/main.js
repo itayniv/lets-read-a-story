@@ -214,7 +214,6 @@ socket.on('similarStory', function (result) {
       compromiseResult.push(result.sentiment.compromise[index])
     }
 
-    console.log(compromiseResult);
     // console.log('📚 story method similarStory ', storyMethod.similarStory)
     // console.log(similarSentences);
     // console.log(result);
@@ -272,7 +271,7 @@ socket.on('nextVectoredLine', function (result) {
     }
 
     if (vectoredStory.length === 6) {
-      console.log('generated story: ', vectoredStory);
+      // console.log('generated story: ', vectoredStory);
     }
   }
 });
@@ -334,7 +333,7 @@ socket.on('promptEmbedResults', function (result) {
   let resultArr = result
   runjsonCheckNewPrompt(fablesJson, resultArr);
 
-  console.log('sending again')
+  // console.log('sending again')
 
 });
 
@@ -749,9 +748,9 @@ function addOneMoreSentence() {
 
     // see if textbox is empty or full
     const input = document.getElementById('newPromptInput').innerHTML;
-    console.log('input', input);
+    // console.log('input', input);
     if (input.length > 0) {
-      console.log('got input', input);
+      // console.log('got input', input);
     }
 
     addSentenceAfterbutton();
@@ -793,14 +792,14 @@ function addOneMoreSentence() {
 
   // on focus clear box
   promptInput.onfocus = function () {
-    console.log('focus');
+    // console.log('focus');
     document.getElementById('newPromptInput').placeholder = '';
     pauseBool = false;
   }
 
   // on focus out repopulate with text
   promptInput.onfocusout = function () {
-    console.log('focusOut');
+    // console.log('focusOut');
     pauseBool = true;
     document.getElementById('newPromptInput').placeholder = 'What happened next? (enter key to submit)';
   }
@@ -1085,7 +1084,7 @@ function addACanvas(height) {
 
         } else {
           pauseBool = true;
-          console.log('pausebool', pauseBool);
+          // console.log('pausebool', pauseBool);
         }
 
       }, 1000);

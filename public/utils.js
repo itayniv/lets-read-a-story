@@ -900,7 +900,7 @@ function getInputText() {
     }, 4000);
 
     setTimeout(() => {
-      console.log('dissolve text');
+      // console.log('dissolve text');
       // let fadeoutComponent1 = document.getElementById('characterOne');
       const fadeoutComponent2 = document.getElementById('recordedText');
       const fadeoutComponent3 = document.getElementById('recordedText-eg');

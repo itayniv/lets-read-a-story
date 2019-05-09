@@ -9,7 +9,7 @@ function generateSounds(posX, posY) {
         // sentiment is positive
 
         // for these animals play this synth
-        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
+        if ((currIllustration == 'lion') || (currIllustration == 'skull') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
             // each 25th pen stroke
 
             let noteLenngth = noteLength(soundX);
@@ -33,7 +33,7 @@ function generateSounds(posX, posY) {
         // Sentiment is negeative
 
         // for these animals play this synth
-        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'bear')) {
+        if ((currIllustration == 'lion') || (currIllustration == 'dog') || (currIllustration == 'skull') || (currIllustration == 'bear')) {
             // each 25th pen stroke
 
             let noteLenngth = noteLength(soundX);

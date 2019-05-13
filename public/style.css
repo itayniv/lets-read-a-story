@@ -45,6 +45,8 @@
     line-height: 42px;
     font-style: italic;
     padding-left: 10%;
+    user-select: none;
+    -moz-user-select: none;
     /* padding-: 10%; */
   }
   .readerPrompts-container {

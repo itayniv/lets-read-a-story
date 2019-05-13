@@ -767,25 +767,52 @@ function convertRange(value, r1, r2) {
 
 
 function endStory() {
-  var div = document.createElement("div");
-  div.id = `paragraph${sentanceNumber + 1}`;
+
+  const moralDiv = document.createElement("div");
+  moralDiv.id = `paragraph${sentanceNumber + 1}`;
+  moralDiv.style.background = "white";
+  moralDiv.style.opacity = 0;
+  moralDiv.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
+  moralDiv.style.paddingBottom = "0px";
+
+
+  const moralpara = document.createElement("p");
+  moralpara.classList.add("moral");
+  const moralnode = document.createTextNode('--' + moralArr[0]);
+  moralpara.appendChild(moralnode);
+  document.getElementById(`paragraph${sentanceNumber}`).appendChild(moralDiv).appendChild(moralpara);
+
+  const fadeinElementmoral = document.getElementById(`paragraph${sentanceNumber + 1}`);
+
+  //fade the sentence into the page.
+  setTimeout(() => {
+    fadein(fadeinElementmoral);
+  }, 1200);
+
+
+
+
+  const div = document.createElement("div");
+  div.id = `paragraph${sentanceNumber + 2}`;
   div.style.background = "white";
   div.style.opacity = 0;
   div.style.filter = 'alpha(opacity=' + 0 * 0 + ")";
   div.style.paddingBottom = "0px";
 
-  let para = document.createElement("p");
+  const para = document.createElement("p");
   para.classList.add("voice");
-  let node = document.createTextNode("The End.");
+  const node = document.createTextNode("The End.");
   para.appendChild(node);
   document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(para);
 
-  let fadeinElement = document.getElementById(`paragraph${sentanceNumber + 1}`);
+
+
+  const fadeinElement = document.getElementById(`paragraph${sentanceNumber + 2}`);
 
   //fade the sentence into the page.
   setTimeout(() => {
     fadein(fadeinElement);
-  }, 1200);
+  }, 2200);
 
   setTimeout(() => {
     addOneMoreButton();

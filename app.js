@@ -16,10 +16,8 @@ global.fetch = require('node-fetch');
 
 // require the Sentence2Vec class
 const Sentence2Vec = require('./sentence2vec.js')
-
-// console.log(Sentimentjs);
-
 const embedings = require('./public/similarities-lite.json')
+const storyEmbedings = require('./public/aesop_Fables_embedding.json')
 
 const userID = 0;
 
@@ -88,8 +86,6 @@ sockets.on('connection', function (socket) {
 
   socket.on('roomEntered', function (room) {
     socket.join(room);
-    // var roster = io.sockets.clients(room);
-    // console.log('people in the room', roster);
   });
 
 
@@ -99,7 +95,6 @@ sockets.on('connection', function (socket) {
     const currStory = data.originalStory;
     const currRoom = data.roomNumber;
 
-    console.log('got a room number', currRoom);
     socket.join(currRoom);
 
     let promise = new Promise((resolve, reject) => {
@@ -120,23 +115,11 @@ sockets.on('connection', function (socket) {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
-
-      // working -->
-      // sockets.emit('similarStory', similarStoryObject);
       sockets.in(currRoom).emit('similarStory', similarStoryObject);
-
-
-
-      // sockets.emit(currClient).emit('similarStory', similarStoryObject);
-
     });
 
     // similar Sentences
     let similarSentences = findVector(seedSentance);
-    // console.log(similarSentences);
-
-    // sockets.in(currRoom).emit('similarStory', similarStoryObject);
-    // sockets.emit('similarStory', similarStoryObject);
   });
 
   // when New Prompt and Story is here
@@ -144,7 +127,7 @@ sockets.on('connection', function (socket) {
   socket.on('sendNewStoryFromPrompt', function (data) {
 
     const seedSentance = data.randomSentance;
-    const currStory = data.originalStory;    
+    const currStory = data.originalStory;
 
     let promise = new Promise((resolve, reject) => {
       const storyVectors = getStoryVectors(currStory);
@@ -164,8 +147,10 @@ sockets.on('connection', function (socket) {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
-      // sockets.emit('restOfStory', similarStoryObject);
+
+      // send story moral
       sockets.in(data.roomNumber).emit('restOfStory', similarStoryObject);
+
     });
   });
 
@@ -176,10 +161,6 @@ sockets.on('connection', function (socket) {
 
     const seedSentance = data.randomSentance;
     const currStory = data.originalStory;
-
-    // console.log('next sentence --->', seedSentance);
-
-    // promise for next line in stroy
 
     let getVectors = new Promise((resolve, reject) => {
       const sentVectors = getStoryVectors(currStory);
@@ -198,12 +179,8 @@ sockets.on('connection', function (socket) {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
-
-      // sockets.emit('nextVectoredLine', nextLineVec);
       //emit room here
       sockets.in(data.roomNumber).emit('nextVectoredLine', nextLineVec);
-
-      // console.log('usecase 02', nextLineVec);
     });
   });
 
@@ -215,50 +192,40 @@ sockets.on('connection', function (socket) {
   socket.on('getSimilarSentence', function (data) {
 
     const seedSentance = data.randomSentance;
-    // const currStory = data.originalStory;
-
-    // console.log('%$%$%$%', seedSentance)
 
 
     let similarSentences = findVector(seedSentance[0]);
-    // console.log('similarSentences', similarSentences);
 
     const sentenceAndSentiment = {
       sentences: [similarSentences.sentences[1]],
       sentiment: [similarSentences.sentiment[1]]
     }
 
-    // console.log('** object 1', sentenceAndSentiment);
-
     const similarLine = {
       'sentiment': sentenceAndSentiment,
       'seed': similarSentences.sentences[2]
     }
-    // console.log('** object 2', similarLine);
 
     sockets.in(data.roomNumber).emit('nextVectoredLine', similarLine);
-
-    // console.log('usecase 01', similarLine);
   });
 
   // get similar sentence on dead end <---
 
 
   socket.on('sendNewPrompt', async function (data) {
-    // console.log(data.newPrompt)
     const newSimilarity = await getNewEmbedding(data.newPrompt);
-    // console.log(newSimilarity);
-    // sockets.emit('promptEmbedResults', newSimilarity);
+
     sockets.in(data.roomNumber).emit('promptEmbedResults', newSimilarity);
+  });
 
-
+  socket.on('getStoryMoral', async function (data) {
+    const moralSimilarity = await getStoryEmbedding(data.currStory);
+    sockets.in(data.roomNumber).emit('StoryMoral', moralSimilarity);
   });
 
 
   socket.on('recieveStory', function (data) {
     const storyArr = data;
-    // console.log(storyVectors);
-    // sockets.emit('NewStoryVector', similarSentences);
   });
 
 
@@ -289,6 +256,9 @@ async function getNewEmbedding(text) {
   const nearestArr = findNearestandAdd(embeddingsData);
   return nearestArr;
 }
+
+
+
 
 function findVector(sentance, n = 20) {
   let vec;
@@ -580,4 +550,66 @@ function getTopics(array) {
 function findNearestandAdd(embeding) {
   const closest = findNearestVector(embeding[0], n = 4)
   return closest;
+}
+
+
+
+function prepareArrayForMoral(storyArr) {
+
+  let story = []
+  for (let i = 0; i < storyArr.length; i++) {
+    const element = storyArr[i];
+    story.push(element);
+  }
+  const storyStr = story.join(' ');
+  return storyStr;
+}
+
+
+async function getStoryEmbedding(text) {
+
+  const storyString = prepareArrayForMoral(text);
+  const embeddings = await model.embed(storyString);
+  const embeddingsData = await embeddings.arraySync();
+  const nearestMoral = await findNearestMoral(embeddingsData[0], n = 2);
+  return nearestMoral;
+}
+
+
+
+
+async function findNearestMoral(vector, n = 2) {
+
+  let sentencesResults = [];
+  let sentences = [];
+
+  let keys = Object.keys(storyEmbedings.stories);
+
+  for (let i = 0; i < keys.length; i++) {
+
+    let key = keys[i];
+    let d = Sentence2Vec.distance(vector, storyEmbedings.stories[key].embedding);
+    sentences.push({ wordKey: key, distance: d });
+  }
+
+  //sort results
+  sentences.sort((a, b) => {
+    return b.distance - a.distance;
+  });
+
+  //narrowdown to n results
+  const closeset = sentences.slice(0, n);
+
+  //fetch sentences from json
+  let closestKeys = Object.keys(closeset);
+
+  for (let i = 0; i < closestKeys.length; i++) {
+    sentencesResults.push(storyEmbedings.stories[closeset[i].wordKey].moral);
+  }
+
+  const similarityObject = {
+    morals: sentencesResults,
+  }
+
+  return similarityObject;
 }

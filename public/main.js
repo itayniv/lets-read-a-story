@@ -31,6 +31,8 @@ let viewportHeight;
 let contentContainerArr = [];
 const illustrationStroke = 6;
 
+let moralArr = [];
+
 let storyBegan = false;
 
 let colorArray = [];
@@ -114,10 +116,10 @@ const drawingClasses = ["alarm_clock", "ambulance", "angel", "ant", "antyoga", "
   "toothpaste", "tractor", "trombone", "truck", "whale",
   "windmill", "yoga", "yogabicycle", "everything"];
 
-const birdsArr = ["jackdaw", "lark","wing", "wings", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
+const birdsArr = ["jackdaw", "lark", "wing", "wings", "cock", "cocks", "eagle", "crow", "crows", "swallow", "raven", "swallow", "kite", "lark", "birds", "chicken", "chickens", "stork"];
 const swanArr = ["crane", "cranes", "goose", "ducks", "peacock", "peacocks", "heron", "herons", "stork"];
 const mosquitoArr = ["gnat", "grasshopper", "grasshoppers", "flies", "wasps", "hornet"];
-const dogArr = ["goat","ass","ass's","oxen", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
+const dogArr = ["goat", "ass", "ass's", "oxen", "hounds", "hound", "goats", "wolf", "leopard", "fox", "dogs", "boar", "weasels", "weasel"];
 const sheepArr = ["lamb", "flock"];
 const spiderArr = ["beetle"];
 const basketArr = ["pail"];
@@ -196,27 +198,14 @@ function loadJsonfile() {
 }
 
 
-socket.on('similarSentences', function (result) {
-  if (storyMethod.similarSentences === 'true') {
-    similarSentences = result.sentences;
-    sentimentContainer = result.sentiment;
-    console.log('📚 story method similarSentences ', storyMethod.similarSentences)
-  }
-});
-
 // incoming Socket for similar story 
 socket.on('similarStory', function (result) {
   if (storyMethod.similarStory === 'true') {
-
     for (let index = 0; index < result.sentiment.sentences.length; index++) {
       similarSentences.push(result.sentiment.sentences[index]);
       sentimentContainer.push(result.sentiment.sentiment[index]);
       compromiseResult.push(result.sentiment.compromise[index])
     }
-
-    // console.log('📚 story method similarStory ', storyMethod.similarStory)
-    // console.log(similarSentences);
-    // console.log(result);
   }
   maxSentences = similarSentences.length - 1;
 
@@ -252,30 +241,6 @@ socket.on('originalStoryAndSentiment', function (result) {
 
 });
 
-socket.on('nextVectoredLine', function (result) {
-  if (storyMethod.snakesAndLadders === 'true') {
-    console.log('📚 story method snakesAndLadders ', storyMethod.snakesAndLadders)
-
-    // console.log('nextVectoredLine result', result);
-
-    const nextVectorLine = result.sentiment.sentences;
-    const nextVectorSentiment = result.sentiment.sentiment;
-
-    vectoredStory.push(nextVectorLine[0]);
-
-    similarSentences.push(nextVectorLine[0]);
-    sentimentContainer.push(nextVectorSentiment[0])
-
-    if (vectoredStory.length <= 6) {
-      recieveLineSendStory(nextVectorLine);
-    }
-
-    if (vectoredStory.length === 6) {
-      // console.log('generated story: ', vectoredStory);
-    }
-  }
-});
-
 
 socket.on('restOfStory', function (result) {
 
@@ -309,8 +274,6 @@ socket.on('restOfStory', function (result) {
 });
 
 
-
-
 // get the new seed response
 socket.on('NewSeedResult', function (result) {
   insertNewSeed(result);
@@ -320,9 +283,6 @@ socket.on('NewSeedResult', function (result) {
 // get results back from embedings
 socket.on('sentenceToEmbedResults', function (result) {
   sentencesFromEncodingSeed = result;
-  // console.log(sentencesFromEncodingSeed);
-  // console.log('!!!!!sentenceToEmbedResults!!!!!');
-
   runjsonCheckEmbedding(fablesJson, sentencesFromEncodingSeed);
 
 });
@@ -332,17 +292,14 @@ socket.on('promptEmbedResults', function (result) {
 
   let resultArr = result
   runjsonCheckNewPrompt(fablesJson, resultArr);
-
-  // console.log('sending again')
-
 });
 
 
 
-// socket.on('sentencesSentiment', function(result){
-//   // console.log(result);
-//   sentimentContainer = result;
-// });
+socket.on('StoryMoral', function (result) {
+  // moral of the story
+  moralArr = result.morals;
+});
 
 function runjsonCheckEmbedding(json, sentenceArr) {
 
@@ -360,16 +317,8 @@ function runjsonCheckEmbedding(json, sentenceArr) {
     }
   }
 
-  // story Start Bool
-
-
-  // maxSentences = thisStoryArray.length - 1;
-
   // console.log(thisStoryArray);
-  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber });
-
-  // add the sentance to the page
-  // addSentence(thisStoryArray[0], 'notnet');
+  socket.emit('sendSeedSentance', { 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber': sessionNumber });
 }
 
 
@@ -417,26 +366,22 @@ function runjsonCheck(json, checkword) {
   }
 
   // story Start Bool
-
-  // maxSentences = thisStoryArray.length - 1;
-
   // console.log(thisStoryArray);
-  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber':sessionNumber  });
+  socket.emit('sendSeedSentance', { 'animal': checkword, 'randomSentance': randomSentance, 'originalStory': thisStoryArray, 'roomNumber': sessionNumber });
 
-  // add the sentance to the page
-  // addSentence(thisStoryArray[0], 'notnet');
 }
 
 async function addSentence(result, source) {
 
   // if app is not paused
   if (storyCurrentlyRunning) {
-    // console.log('****result****', result);
 
     //  if the current sentence is smaller than the entire length of the story
     if (sentanceNumber <= maxSentences) {
       //  increase sentence number
       sentanceNumber++;
+
+      socket.emit('getStoryMoral', { 'currStory': similarSentences, 'roomNumber': sessionNumber });
 
       // create content container to hold new sentence and buttons
       const container = document.createElement('div');
@@ -448,10 +393,9 @@ async function addSentence(result, source) {
       div.id = `paragraph${sentanceNumber}`;
       div.classList.add('paragraph-container');
 
-
-      let resultToLower = result.toLowerCase();
-      let res = result.split(' ');
-      let resLower = resultToLower.split(' ');
+      const resultToLower = result.toLowerCase();
+      const res = result.split(' ');
+      const resLower = resultToLower.split(' ');
 
 
       // check source of the sentence
@@ -471,8 +415,8 @@ async function addSentence(result, source) {
 
 
         //  run check to see if there is an illustration that fits here
-        let thisClassObject = ifInClass(result);
-        let thisClass = [];
+        const thisClassObject = ifInClass(result);
+        const thisClass = [];
 
         //  if the object is not undefined then set thisClass to the object's class
 
@@ -554,7 +498,7 @@ async function addSentence(result, source) {
           // paint.resizeCanvas(500, newStoryHeight);
 
           if (sentanceNumber > 1) {
-            globalCanv = addACanvas(viewportHeight-50);
+            globalCanv = addACanvas(viewportHeight - 50);
           }
 
         }, 500);
@@ -576,8 +520,6 @@ async function addSentence(result, source) {
           }
         }
       }
-
-
       // Read the paragraph
 
       if (speakBool) {
@@ -692,9 +634,6 @@ function addOneMoreButton() {
   }, 500);
 
 }
-
-
-
 
 function addOneMoreSentence() {
 
@@ -913,6 +852,7 @@ function resetStory() {
   storyCurrentlyRunning = false;
   storyBegan = false;
   compromiseResult = [];
+  moralArr = [];
 
   const fadeOutElement = document.getElementById('story-name');
   fadeout(fadeOutElement);
@@ -1141,24 +1081,19 @@ function initiateStory(subject, sentenceArr) {
 
   // create the story name
   const storyName = document.getElementById('story-name');
-  const topics = [compromiseResult[Math.floor(Math.random()*compromiseResult.length)],compromiseResult[Math.floor(Math.random()*compromiseResult.length)],compromiseResult[Math.floor(Math.random()*compromiseResult.length)],compromiseResult[Math.floor(Math.random()*compromiseResult.length)]];
- 
-  let vowel = ['a','e','i','o','u'];
+  const topics = [compromiseResult[Math.floor(Math.random() * compromiseResult.length)], compromiseResult[Math.floor(Math.random() * compromiseResult.length)], compromiseResult[Math.floor(Math.random() * compromiseResult.length)], compromiseResult[Math.floor(Math.random() * compromiseResult.length)]];
+
+  let vowel = ['a', 'e', 'i', 'o', 'u'];
 
   for (let j = 0; j < topics.length; j++) {
     for (let index = 0; index < vowel.length; index++) {
-      if (topics[j] == vowel[index]){
-        console.log('use an', topics[j]);
+      if (topics[j] == vowel[index]) {
         aOrAn.push('an')
       } else {
-        console.log('use a', topics[j]);
         aOrAn.push('a')
       }
     }
   }
-
-  
-
 
   storyName.innerHTML = `A story about ${aOrAn[0]} ${topics[0]}, ${topics[1]} and ${aOrAn[2]} ${topics[3]}`;
 
@@ -1264,8 +1199,6 @@ function startbuttonPressed(clicked_id) {
 
   setTimeout(() => {
 
-    // const fadeinComponent2 = document.getElementById('characterOne');
-    // fadein(fadeinComponent2);
     const fadeinComponent1 = document.getElementById('prompt');
     const format = document.getElementById('one-page');
     fadein(fadeinComponent1);
@@ -1293,9 +1226,6 @@ function startbuttonPressed(clicked_id) {
   //   // addRandomDrawingToPage();
   // },4500)
 }
-
-
-
 
 
 // drawingClasses

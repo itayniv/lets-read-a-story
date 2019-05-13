@@ -21,6 +21,21 @@
     color: #15235a;
     font-size: 27px;
     line-height: 42px;
+    user-select: none;
+    -moz-user-select: none;
+  }
+
+  .moral {
+    padding-top: 20;
+    padding-bottom: 40px;
+    font-family: 'Sumana', serif;
+    color: #531ef4;
+    font-size: 25px;
+    letter-spacing: 1.0px;
+    line-height: 42px;
+    font-style: italic;
+    user-select: none;
+    -moz-user-select: none;
   }
   .readerPrompts {
     padding-bottom: 40px;

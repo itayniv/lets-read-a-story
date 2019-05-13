@@ -129,7 +129,7 @@ function addRNNCanvas() {
 
 
           p5RNNdrawing.stroke(secondColorArray[currentDrawIndex]);
-          p5RNNdrawing.strokeWeight(1);
+          p5RNNdrawing.strokeWeight(2);
           let randomdist = Math.floor((Math.random() * 1) + 3)
           p5RNNdrawing.line(x + randomdist, y + randomdist, x + sketch.dx / drawingRatio + randomdist, y + sketch.dy / drawingRatio + randomdist);
 

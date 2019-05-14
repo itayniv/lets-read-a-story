@@ -82,7 +82,7 @@ let sentimentContainer = [];
 
 // sketchRnnDrawing stuff
 
-let vecIllustrations = ['home_01.json', 'asfe02.json', 'bird01.json', 'asfe04.json', 'asfe_rat.json', 'crystal.json', 'dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json',
+let vecIllustrations = ['begin_a_new_story.json', 'home_01.json', 'asfe02.json', 'bird01.json', 'asfe04.json', 'asfe_rat.json', 'crystal.json', 'dr-cat.json', 'ears.json', 'home.json', 'idea.json', 'jupiter.json', 'Jupiter1.json', 'kingoftortoise.json',
   'maya01.json', 'maya02.json', 'maya03.json', 'maya04.json', 'maya05.json', 'maya06.json', 'maya07.json', 'maya08.json', 'maya09.json', 'maya10.json',
   'maya11.json', 'maya12.json', 'maya13.json', 'maya15.json', 'mother.json', 'music.json', 'music1.json', 'raven.json', 'tortoise.json', 'wind.json'];
 
@@ -970,7 +970,7 @@ function addACanvas(height) {
     paint.draw = function () {
       if (paint.currentlyDrawing) {
         paint.drawSomthing(paint.point, paint.currDrawing, paint.drawingOffsetY);
-        paint.point = paint.point + 2;
+        paint.point = paint.point + 1;
         // console.log('*** drawing ***', paint.point);
       }
     }
@@ -991,13 +991,13 @@ function addACanvas(height) {
         //   generateSounds(paint.drawingOffsetX, jsonDrawing[point].thisY)
         // }
 
-        let randomdist = Math.floor((Math.random() * 2) + 5)
-        paint.strokeWeight(2.5);
+        let randomdist = Math.floor((Math.random() * 2) + 3)
+        paint.strokeWeight(1.0);
         paint.stroke(secondColor);
 
         setTimeout(() => {
 
-          paint.strokeWeight(illustrationStroke);
+          paint.strokeWeight(illustrationStroke-1);
           paint.stroke(sketchColor);
           paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX,
             jsonDrawing[point].thisY + paint.drawingOffsetY,
@@ -1040,13 +1040,6 @@ function addACanvas(height) {
 
 
 function initiateStory(subject, sentenceArr) {
-
-  let hero = subject;
-
-  //convert to lowercase
-  let heroLower = hero.toLowerCase();
-
-  // console.log('subject', subject);
 
   let charactersInStory = [];
 
@@ -1222,9 +1215,9 @@ function startbuttonPressed(clicked_id) {
 
 
   // add a random drawing to page
-  // setTimeout(() => {
-  //   // addRandomDrawingToPage();
-  // },4500)
+  setTimeout(() => {
+    addTutorial();
+  },7500)
 }
 
 

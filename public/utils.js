@@ -896,6 +896,10 @@ function identifyAnimalsIntent(theSentance) {
 // get input of textbox
 
 function getInputText() {
+
+  // clear the canvas
+  globalCanv.clear();
+
   const promptText = document.getElementById('recordedText').value;
   // console.log('promptText',promptText);
   currPrompt = promptText;
@@ -1427,15 +1431,15 @@ function addNewContentAfterPressed() {
 
 
 
-function addRandomDrawingToPage() {
+function addTutorial() {
   // draw a thing to the canvas
-  const startPositionY = canvasHeight / 6;
+  const startPositionY = canvasHeight / 10;
   const startPositionX = canvasWidth / 6;
 
   let additionalDrawing;
   let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-  let url = `./images/vector_illustrations/${vecIllustrations[randomDrawing]}`;
-  console.log(url);
+  let url = `./images/vector_illustrations/${vecIllustrations[0]}`;
+  // console.log(url);
 
   fetch(url)
     .then(function (response) {

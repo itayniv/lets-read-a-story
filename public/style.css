@@ -152,7 +152,7 @@
   .header-logo-text {
     height: 30%;
     position: relative;
-    top: 50%;
+    top: 30%;
     -ms-transform: translateY(-50%);
     font-weight: 300;
     transform: translateY(-50%);
@@ -579,6 +579,15 @@
     top: -15px;
   }
   /*TYPOGRAPHY*/
+
+  p {
+    display: block;
+    margin-block-start: 0em;
+    margin-block-end: 0em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+
+  }
   a {
     outline: none;
     color: #4419e0;

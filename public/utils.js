@@ -1433,12 +1433,12 @@ function addNewContentAfterPressed() {
 
 function addTutorial() {
   // draw a thing to the canvas
-  const startPositionY = canvasHeight / 10;
+  const startPositionY = 30;
   const startPositionX = canvasWidth / 6;
 
   let additionalDrawing;
   let randomDrawing = Math.floor((Math.random() * beginStoryArr.length));
-  let url = `./images/vector_illustrations/begin_story/${vecIllustrations[randomDrawing]}`;
+  let url = `./images/vector_illustrations/begin_story/${beginStoryArr[randomDrawing]}`;
   // console.log(url);
 
   fetch(url)

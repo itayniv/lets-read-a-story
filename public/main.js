@@ -995,7 +995,7 @@ function addACanvas(height) {
         // }
 
         let randomdist = Math.floor((Math.random() * 2) + 3)
-        paint.strokeWeight(1.0);
+        paint.strokeWeight(1.5);
         paint.stroke(secondColor);
 
         setTimeout(() => {

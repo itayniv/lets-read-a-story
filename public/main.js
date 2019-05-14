@@ -86,6 +86,9 @@ let vecIllustrations = ['begin_a_new_story.json', 'home_01.json', 'asfe02.json',
   'maya01.json', 'maya02.json', 'maya03.json', 'maya04.json', 'maya05.json', 'maya06.json', 'maya07.json', 'maya08.json', 'maya09.json', 'maya10.json',
   'maya11.json', 'maya12.json', 'maya13.json', 'maya15.json', 'mother.json', 'music.json', 'music1.json', 'raven.json', 'tortoise.json', 'wind.json'];
 
+
+
+let beginStoryArr = ['begin_a_new_story1.json', 'begin_a_new_story2.json', 'begin_a_new_story3.json', 'begin_a_new_story4.json','begin_a_new_story5.json' ]
 let vectoredStory = [];
 
 
@@ -1026,7 +1029,6 @@ function addACanvas(height) {
           pauseBool = true;
           // console.log('pausebool', pauseBool);
         }
-
       }, 1000);
     }
   };

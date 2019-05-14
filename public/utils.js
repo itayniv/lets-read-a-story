@@ -1437,8 +1437,8 @@ function addTutorial() {
   const startPositionX = canvasWidth / 6;
 
   let additionalDrawing;
-  let randomDrawing = Math.floor((Math.random() * vecIllustrations.length));
-  let url = `./images/vector_illustrations/${vecIllustrations[0]}`;
+  let randomDrawing = Math.floor((Math.random() * beginStoryArr.length));
+  let url = `./images/vector_illustrations/begin_story/${vecIllustrations[randomDrawing]}`;
   // console.log(url);
 
   fetch(url)

@@ -496,12 +496,8 @@ async function addSentence(result, source) {
 
           // calculate Ysize of story element
 
-          const newStoryHeight = checkDivHeight('story-holder');
-          // console.log('height is ', newStoryHeight);
-          // paint.resizeCanvas(500, newStoryHeight);
-
           if (sentanceNumber > 1) {
-            globalCanv = addACanvas(viewportHeight - 50);
+            globalCanv = addACanvas(viewportHeight - 100);
           }
 
         }, 500);
@@ -946,7 +942,6 @@ function resetStory() {
 
 
 
-
 function addACanvas(height) {
   drawingsketch = function (paint) {
 
@@ -1217,9 +1212,9 @@ function startbuttonPressed(clicked_id) {
 
 
   // add a random drawing to page
-  setTimeout(() => {
-    addTutorial();
-  },7500)
+  // setTimeout(() => {
+  //   addTutorial();
+  // },7500)
 }
 
 

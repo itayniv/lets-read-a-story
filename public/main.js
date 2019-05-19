@@ -488,7 +488,7 @@ async function addSentence(result, source) {
         setTimeout(() => {
           // scroll into the sentence
           const elm = document.getElementById(`content-container${sentanceNumber}`);
-          elm.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          elm.scrollIntoView({ behavior: 'smooth', block: 'center' });
 
           // fade the sentence into the page.
           const fadeinElement = document.getElementById(`paragraph${sentanceNumber}`);
@@ -500,7 +500,7 @@ async function addSentence(result, source) {
             globalCanv = addACanvas(viewportHeight - 100);
           }
 
-        }, 500);
+        }, 700);
 
         // run sentence enrichment
 

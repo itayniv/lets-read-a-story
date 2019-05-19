@@ -115,6 +115,7 @@ sockets.on('connection', function (socket) {
         'sentiment': similarAndSentiment,
         'seed': seedSentance
       }
+      // console.log(similarStoryObject);
       sockets.in(currRoom).emit('similarStory', similarStoryObject);
     });
 
@@ -374,24 +375,13 @@ function vectorVariation(pickedStory, seedSent, VectorsObject) {
 
     newStory.push(nearestSentance.sentences[1]);
   }
+  // add first element last element
 
   newStory.unshift(seedSent);
-  // TODO get a sentence vector on original sentances from other stories.
 
-  // let indexToRemove = 0;
-
-  // newStory.splice(indexToRemove, seedindex);
-
-  // for (let index = 0; index < newStory.length; index++) {
-  //   const element = newStory[index];
-  // }
-
+  // remove last element
+  newStory.pop();
   return newStory;
-  // const vector3 = add(VectorsObject[0].embedding, vectors[0]);
-  // const vector4 = subtract(VectorsObject[0].embedding, vectors[0]);
-  // const sent3 = findNearestVector(vector3, n = 4);
-  // const sent4 = findNearestVector(vector4, n = 4);
-  // reconstruct the story
 }
 
 

@@ -56,6 +56,7 @@ let drawingsketch;
 
 let buttonTimer;
 let speakBool = true;
+let startButtonPressed = false;
 
 let penStrokes = 0;
 
@@ -64,7 +65,7 @@ let storyMethod = {
   similarSentences: 'false',
   similarStory: 'true',
   originalStory: 'false'
-}
+};
 
 let textInput;
 let tempSlider;
@@ -1157,6 +1158,7 @@ function startbuttonPressed(clicked_id) {
 
   sketch = null;
   startStory = true;
+  startButtonPressed = true;
 
   setTimeout(() => {
     let fadeoutComponent1 = document.getElementById('book');

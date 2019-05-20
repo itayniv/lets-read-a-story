@@ -150,6 +150,8 @@ function modelReady() {
 
 function init() {
 
+  browserQuery();
+
   sessionNumber = `room${Math.floor(Math.random() * 9999) + 10000}`;
   socket.emit('roomEntered', sessionNumber);
   getSpeech();

@@ -1151,9 +1151,10 @@ function footerInsert() {
 
 
 
-// function windowResized() {
-//   resizeCanvas(windowWidth, windowHeight);
-// }
+function windowResized() {
+
+  browserQuery();
+}
 
 
 function checkDivHeight(divId) {
@@ -1451,3 +1452,26 @@ function addTutorial() {
       globalCanv.startNewDrawing(true, additionalDrawing, startPositionY, startPositionX);
     });
 }
+
+
+
+function browserQuery() {
+  // media Query stuff
+  const isChrome = !!window.chrome && (!!window.chrome.webstore || !!window.chrome.runtime);
+  const windowWidth = window.innerWidth;
+
+  if ((isChrome) && (windowWidth > 500)) {
+    document.getElementById('start-button').style.display = 'block';
+    document.getElementById('media-query-disclaimer').style.display = 'none';
+
+    // browser is chrome, lets go!
+  } else {
+    document.getElementById('start-button').style.display = 'none';
+    document.getElementById('media-query-disclaimer').style.display = 'block';
+  }
+
+}
+
+
+
+window.addEventListener("resize", windowResized);

@@ -21,7 +21,7 @@ const getSpeech = () => {
   const recognition = new SpeechRecognition();
   recognition.lang = 'en-US';
   recognition.start();
-    recognition.continuous = false;
+  recognition.continuous = false;
   // recognition.interimResults = true;
   console.log('started rec');
 
@@ -40,7 +40,7 @@ const getSpeech = () => {
 
     if (isListening) {
 
-      if (!storyBegan){
+      if (!storyBegan) {
         speechToPrompt(speechResult);
       } else {
         speechToNextPrompt(speechResult);
@@ -54,7 +54,7 @@ const getSpeech = () => {
   recognition.onend = () => {
     // console.log('it is over');
     // for "endless" mode, comment out the next line and uncomment getSpeech()
-    recordingOff ();
+    recordingOff();
     recognition.stop();
     // getSpeech();
   };
@@ -151,32 +151,32 @@ function startSpeech(clicked_id) {
   console.log('pressed', clicked_id);
   const elm = document.getElementById('start-listening');
 
+
   if (!isListening) {
     getSpeech();
+    audioStartSound.play();
     elm.style.backgroundImage = "url('/images/recording-on.svg')";
     elm.classList.remove('recording-button');
     elm.classList.add('recording-button-active');
     isListening = true;
 
-    // setTimeout(() => {
-    //   isListening = false;
-    //   elm.style.backgroundImage = "url('/images/recording-off.svg')";
-    //   elm.classList.remove('recording-button-active');
-    //   elm.classList.add('recording-button');
-    // }, 6000);
   } else {
     isListening = false;
+    audioEndSound.play();
     elm.style.backgroundImage = "url('/images/recording-off.svg')";
     elm.classList.remove('recording-button-active');
     elm.classList.add('recording-button');
   }
 }
 
+function recordingOff() {
 
-function recordingOff () {
-    const elm = document.getElementById('start-listening');
-    isListening = false;
-    elm.style.backgroundImage = "url('/images/recording-off.svg')";
-    elm.classList.remove('recording-button-active');
-    elm.classList.add('recording-button');
+  if (startButtonPressed) {
+    audioEndSound.play();
+  }
+  const elm = document.getElementById('start-listening');
+  isListening = false;
+  elm.style.backgroundImage = "url('/images/recording-off.svg')";
+  elm.classList.remove('recording-button-active');
+  elm.classList.add('recording-button');
 }

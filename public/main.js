@@ -31,6 +31,9 @@ let viewportHeight;
 let contentContainerArr = [];
 const illustrationStroke = 6;
 
+let audioStartSound;
+let audioEndSound;
+
 let moralArr = [];
 
 let storyBegan = false;
@@ -89,7 +92,7 @@ let vecIllustrations = ['begin_a_new_story.json', 'home_01.json', 'asfe02.json',
 
 
 
-let beginStoryArr = ['begin_a_new_story1.json', 'begin_a_new_story2.json', 'begin_a_new_story3.json', 'begin_a_new_story4.json','begin_a_new_story5.json' ]
+let beginStoryArr = ['begin_a_new_story1.json', 'begin_a_new_story2.json', 'begin_a_new_story3.json', 'begin_a_new_story4.json', 'begin_a_new_story5.json']
 let vectoredStory = [];
 
 
@@ -184,6 +187,10 @@ function init() {
 
   const format = document.getElementById('one-page');
   format.style.opacity = '0.0';
+
+  audioStartSound = new Audio('./images/audioStartSound.mp3');
+  audioEndSound = new Audio('./images/audioEndSound.mp3');
+
 }
 
 window.onload = function () {
@@ -688,22 +695,26 @@ function addOneMoreSentence() {
   btn.onclick = function () {
 
     // see if textbox is empty or full
-    const input = document.getElementById('newPromptInput').innerHTML;
-    // console.log('input', input);
+    const input = document.getElementById('newPromptInput').value;
+    console.log('input', input);
+
     if (input.length > 0) {
+      // get the input text as prompt
+      sendNewPrompt(input);
       // console.log('got input', input);
-    }
-
-    addSentenceAfterbutton();
-    // interval to 100 here
-    clearInterval(buttonTimer);
-    let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
-    prgsBar.style.width = '100%';
-    addedSentence = true;
-    pauseBool = true;
-
-    const playPause = document.getElementById('pause-button');
-    fadeoutandDelete(playPause);
+    } else {
+      // console.log('continue straigt');
+      // continue to next line
+      addSentenceAfterbutton();
+      // interval to 100 here
+      clearInterval(buttonTimer);
+      let prgsBar = document.getElementById(`one-more-sentence-loader${sentanceNumber}`);
+      prgsBar.style.width = '100%';
+      addedSentence = true;
+      pauseBool = true;
+      const playPause = document.getElementById('pause-button');
+      fadeoutandDelete(playPause);
+    } 
   };
 
   // create input for next thing:
@@ -715,11 +726,8 @@ function addOneMoreSentence() {
   inputPrompt.autocomplete = "off"
   inputPrompt.classList.add('prompt-input');
 
-
-
   inputPrompt.onsubmit = function () {
-    let value = document.getElementById('newPromptInput').value
-    // console.log(value);
+    let value = document.getElementById('newPromptInput').value;
 
     sendNewPrompt(value);
     return false;
@@ -757,9 +765,6 @@ function addOneMoreSentence() {
 
   document.getElementById(`paragraph${sentanceNumber}`).appendChild(div).appendChild(inputDiv);
   document.getElementById('one-more-sentence').appendChild(buttonWrapper).appendChild(btn);
-
-  // document.getElementById(`paragraph${sentanceNumber}`)
-  // document.getElementById(`content-container${sentanceNumber}`).appendChild(div)
 
   // insert footer timeline element
 
@@ -998,7 +1003,7 @@ function addACanvas(height) {
 
         setTimeout(() => {
 
-          paint.strokeWeight(illustrationStroke-1);
+          paint.strokeWeight(illustrationStroke - 1);
           paint.stroke(sketchColor);
           paint.line(jsonDrawing[point].thisX + paint.drawingOffsetX,
             jsonDrawing[point].thisY + paint.drawingOffsetY,
